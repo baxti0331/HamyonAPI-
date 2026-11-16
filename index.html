@@ -1,848 +1,2657 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Telegram Ads Platform</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <title>Telegram Ads Platform — ads.telegram.org</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+          },
+          colors: {
+            tg: {
+              bg: '#FFFFFF',
+              surface: '#F8F9FA',
+              subtle: '#F4F4F5',
+              border: '#E4E4E7',
+              borderStrong: '#D4D4D8',
+              blue: '#2481CC',
+              blueHover: '#1E70B3',
+              blueTint: 'rgba(36, 129, 204, 0.10)',
+              blueTintHover: 'rgba(36, 129, 204, 0.16)',
+              text: '#18181B',
+              secondary: '#52525B',
+              muted: '#71717A',
+              green: '#16A34A',
+              greenBg: '#DCFCE7',
+              amber: '#D97706',
+              amberBg: '#FEF3C7',
+              red: '#DC2626',
+              redBg: '#FEE2E2',
+            }
+          }
+        }
+      }
+    };
+  </script>
   <style>
-    :root {
-      --bg: #f4f4f5;
-      --surface: #ffffff;
-      --border: #e4e4e7;
-      --text: #18181b;
-      --muted: #71717a;
-      --accent: #2481cc;
-      --accent-hover: #1d6fb3;
-      --accent-soft: #eff6ff;
-      --green: #16a34a;
-      --green-bg: #dcfce7;
-      --amber: #d97706;
-      --amber-bg: #fef3c7;
-      --red: #dc2626;
-      --red-bg: #fee2e2;
-      --radius: 12px;
-      --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: var(--font);
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.45;
+      background-color: #FFFFFF;
+      color: #18181B;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
       -webkit-font-smoothing: antialiased;
-      padding-bottom: 32px;
     }
 
-    .tabular { font-variant-numeric: tabular-nums; }
-
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 20;
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      font-size: 16px;
-    }
-
-    .brand-icon {
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
-      background: var(--accent);
-      color: #fff;
-      display: grid;
-      place-items: center;
-    }
-
-    .user-pill {
-      font-size: 12px;
-      color: var(--muted);
-      background: var(--bg);
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-    }
-
-    .container {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 16px;
-    }
-
-    .balance-card {
-      background: var(--accent);
-      color: #fff;
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 16px;
-    }
-
-    .balance-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
-      opacity: 0.9;
-    }
-
-    .balance-amount {
-      font-size: 30px;
-      font-weight: 700;
-      margin: 6px 0 14px;
-    }
-
-    .balance-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .btn {
-      border: 1px solid transparent;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: background 0.15s, opacity 0.15s;
-    }
-
-    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
-    .btn-white { background: #fff; color: var(--accent); flex: 1; }
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
-    .btn-outline { background: var(--surface); border-color: var(--border); color: var(--text); }
-    .btn-sm { padding: 6px 10px; font-size: 12px; border-radius: 8px; }
-
-    .tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 4px;
-      margin-bottom: 16px;
-    }
-
-    .tab-btn {
-      border: none;
-      background: transparent;
-      padding: 9px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--muted);
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .tab-btn.active {
-      background: var(--accent);
-      color: #fff;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-
-    .card-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .form-group { margin-bottom: 14px; }
-    label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
-    .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
-
-    input[type="text"],
-    input[type="number"],
-    textarea,
-    select {
+    /* Official Telegram Form Controls */
+    .tg-field {
       width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 14px;
-      font-family: inherit;
-      background: var(--surface);
-      color: var(--text);
-      outline: none;
-    }
-
-    input:focus, textarea:focus, select:focus {
-      border-color: var(--accent);
-    }
-
-    .row-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .segmented {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-    }
-
-    .seg-item {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      padding: 8px 4px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .seg-item.active {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-    }
-
-    /* Telegram Sponsored Message Preview */
-    .tg-preview-canvas {
-      background: #9bb57b;
-      background-image: radial-gradient(rgba(255,255,255,0.14) 1px, transparent 1px);
-      background-size: 14px 14px;
-      border-radius: 12px;
-      padding: 16px;
-      margin-top: 8px;
-    }
-
-    .sponsored-bubble {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 10px 12px;
-      max-width: 340px;
-      margin: 0 auto;
-      border: 1px solid rgba(0,0,0,0.06);
-    }
-
-    .sp-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-    }
-
-    .sp-title {
-      font-weight: 700;
-      font-size: 14px;
-      color: var(--accent);
-    }
-
-    .sp-badge {
-      font-size: 11px;
-      color: var(--muted);
-      background: var(--bg);
-      padding: 1px 6px;
-      border-radius: 4px;
-    }
-
-    .sp-media {
-      width: 100%;
-      max-height: 170px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin: 6px 0;
-      display: none;
-    }
-
-    .sp-text {
+      background-color: #FFFFFF;
+      border: 1px solid #E4E4E7;
+      border-radius: 7px;
+      padding: 8px 11px;
       font-size: 13.5px;
-      color: #111827;
-      white-space: pre-wrap;
-      word-break: break-word;
-      margin-bottom: 8px;
+      line-height: 1.4;
+      color: #18181B;
+      transition: border-color 0.14s ease, box-shadow 0.14s ease;
+    }
+    .tg-field:focus {
+      outline: none;
+      border-color: #2481CC;
+      box-shadow: 0 0 0 2px rgba(36, 129, 204, 0.12);
+    }
+    .tg-field::placeholder {
+      color: #A1A1AA;
+    }
+    .tg-field:disabled {
+      background-color: #F4F4F5;
+      color: #71717A;
+      cursor: not-allowed;
     }
 
-    .sp-cta {
-      display: block;
-      text-align: center;
-      border-top: 1px solid var(--border);
-      padding-top: 7px;
-      color: var(--accent);
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
+    /* Authentic Telegram Patterned Green Chat Wallpaper */
+    .tg-chat-canvas {
+      background-color: #7FA977;
+      background-image:
+        linear-gradient(160deg, rgba(142, 184, 129, 0.55) 0%, rgba(108, 158, 105, 0.65) 100%),
+        url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23234520' stroke-opacity='0.14' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 26l16-7-5 16-4-5-7-4z'/%3E%3Ccircle cx='88' cy='25' r='8'/%3E%3Cpath d='M85 25h6M88 22v6'/%3E%3Cpath d='M28 86c4-7 13-7 17 0 4 7-4 15-8.5 17-4.5-2-12.5-10-8.5-17z'/%3E%3Crect x='84' y='80' width='18' height='13' rx='3'/%3E%3Cpath d='M89 80v-3a4 4 0 0 1 8 0v3'/%3E%3Cpath d='M60 54l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z'/%3E%3Ccircle cx='18' cy='120' r='4.5'/%3E%3Cpath d='M114 54c4 0 7 3 7 7s-3 7-7 7'/%3E%3Cpath d='M52 16c2-3 6-3 8 0'/%3E%3Cpath d='M112 116l10-10m0 0h-7m7 0v7'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: cover, 140px 140px;
     }
 
-    /* Table */
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
-    th { color: var(--muted); font-weight: 600; font-size: 12px; }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 600;
+    /* Official Telegram Message Bubble with Characteristic Left Tail */
+    .tg-bubble {
+      position: relative;
+      background: #FFFFFF;
+      border-radius: 12px 12px 12px 4px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
     }
-    .st-active { background: var(--green-bg); color: var(--green); }
-    .st-in_review, .st-pending_queue { background: var(--amber-bg); color: var(--amber); }
-    .st-paused { background: var(--bg); color: var(--muted); }
-    .st-declined, .st-error { background: var(--red-bg); color: var(--red); }
-
-    .reach-box {
-      background: var(--accent-soft);
-      border: 1px solid #bfdbfe;
-      border-radius: 10px;
-      padding: 10px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-      font-size: 13px;
+    .tg-bubble::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: -7px;
+      width: 8px;
+      height: 14px;
+      background: radial-gradient(circle at 0 0, transparent 7px, #FFFFFF 7.5px);
     }
 
-    .toast {
-      position: fixed;
-      bottom: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #18181b;
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-size: 13px;
-      z-index: 100;
-      display: none;
-      max-width: 92vw;
+    /* Crisp Table Scrollbar */
+    .table-scroll::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .table-scroll::-webkit-scrollbar-track {
+      background: #F4F4F5;
+    }
+    .table-scroll::-webkit-scrollbar-thumb {
+      background: #D4D4D8;
+      border-radius: 3px;
+    }
+    .table-scroll::-webkit-scrollbar-thumb:hover {
+      background: #A1A1AA;
     }
 
-    dialog {
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px;
-      max-width: 420px;
-      width: 92%;
-      margin: auto;
+    /* Progress Bar Animation */
+    .progress-fill {
+      transition: width 0.25s ease;
     }
-    dialog::backdrop { background: rgba(0,0,0,0.45); }
-
-    .hidden { display: none !important; }
   </style>
 </head>
-<body>
+<body class="text-tg-text bg-tg-bg min-h-screen flex flex-col">
 
-<header>
-  <div class="brand">
-    <div class="brand-icon">✈</div>
-    <span>Telegram Ads</span>
-  </div>
-  <div class="user-pill tabular" id="userBadge">ID: —</div>
-</header>
-
-<main class="container">
-  <section class="balance-card">
-    <div class="balance-top">
-      <span>Баланс рекламного кабинета</span>
-      <span class="tabular" id="rateBadge">1 TON = 75 000 сум</span>
-    </div>
-    <div class="balance-amount tabular" id="balanceValue">0 сум</div>
-    <div class="balance-actions">
-      <button class="btn btn-white" onclick="openDepositModal()">+ Пополнить баланс</button>
-      <button class="btn btn-white" style="flex:0 0 auto" onclick="loadBootstrap()">↻</button>
-    </div>
-  </section>
-
-  <nav class="tabs">
-    <button class="tab-btn active" id="tabAdsBtn" onclick="switchTab('ads')">Мои объявления</button>
-    <button class="tab-btn" id="tabCreateBtn" onclick="switchTab('create')">+ Создать рекламу</button>
-  </nav>
-
-  <!-- Вкладка списка объявлений -->
-  <section id="viewAds">
-    <div class="card">
-      <div class="card-title">
-        <span>Активные и отправленные кампании</span>
-        <span class="hint tabular" id="adsCount">0 шт.</span>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>ID / Название</th>
-              <th>Статус</th>
-              <th>Показы</th>
-              <th>Клики</th>
-              <th>CTR</th>
-              <th>Расход / Бюджет</th>
-              <th>Действия</th>
-            </tr>
-          </thead>
-          <tbody id="adsTableBody">
-            <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px;">Загрузка данных...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span>История операций</span></div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Дата</th>
-              <th>Операция</th>
-              <th>Сумма</th>
-              <th>Статус</th>
-            </tr>
-          </thead>
-          <tbody id="txTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- Вкладка создания рекламы -->
-  <section id="viewCreate" class="hidden">
-    <div class="card">
-      <div class="card-title"><span>Предпросмотр Sponsored Message</span></div>
-      <div class="tg-preview-canvas">
-        <div class="sponsored-bubble">
-          <div class="sp-header">
-            <span class="sp-title" id="prevTitle">Название канала или бота</span>
-            <span class="sp-badge">Реклама</span>
+  <!-- ==================== TOP NAVIGATION BAR (OFFICIAL ADS.TELEGRAM.ORG) ==================== -->
+  <header class="sticky top-0 z-30 bg-tg-bg border-b border-tg-border">
+    <div class="max-w-[1360px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+      <!-- Left: Official Telegram Plane + Brand + Organization Switcher -->
+      <div class="flex items-center gap-3 min-w-0">
+        <button onclick="switchMainTab('ads')" class="flex items-center gap-2.5 text-left focus:outline-none shrink-0 group">
+          <div class="w-8 h-8 rounded-full bg-tg-blue flex items-center justify-center text-white">
+            <svg class="w-[18px] h-[18px] -ml-0.5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"/>
+            </svg>
           </div>
-          <img id="prevImg" class="sp-media" alt="" />
-          <div class="sp-text" id="prevText">Здесь появится текст вашего рекламного объявления (до 160 символов).</div>
-          <a class="sp-cta" id="prevUrl" href="javascript:void(0)">Открыть канал</a>
+          <span class="font-semibold text-[16px] tracking-[-0.01em] text-tg-text">Telegram Ads</span>
+        </button>
+
+        <span class="text-tg-borderStrong select-none hidden sm:inline">/</span>
+
+        <!-- Organization / Workspace Switcher Dropdown -->
+        <div class="relative">
+          <button id="org-dropdown-btn" onclick="toggleDropdown('org-dropdown-menu')" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[7px] border border-tg-border bg-tg-surface hover:bg-tg-subtle text-[13px] font-medium text-tg-text transition-colors max-w-[190px] sm:max-w-[240px]">
+            <span id="current-org-name" class="truncate">Personal Account</span>
+            <svg class="w-3.5 h-3.5 text-tg-muted shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+          </button>
+
+          <div id="org-dropdown-menu" class="hidden absolute left-0 mt-1.5 w-64 bg-tg-bg border border-tg-border rounded-[8px] shadow-sm py-1 z-40">
+            <div class="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-tg-muted" data-i18n="org_workspaces">Workspaces</div>
+            <div id="org-list-container" class="divide-y divide-tg-subtle"></div>
+            <div class="border-t border-tg-border mt-1 pt-1 px-1">
+              <button onclick="openModal('modal-new-org'); closeAllDropdowns();" class="w-full text-left px-2.5 py-1.5 rounded-[6px] text-[13px] font-medium text-tg-blue hover:bg-tg-blueTint flex items-center gap-1.5">
+                <span>+</span>
+                <span data-i18n="org_create_btn">Create New Organization</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Currency Toggle (TON/EUR), Language (EN/RU), Notifications, User Profile -->
+      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        <!-- Currency Mode Badge Switcher -->
+        <div class="flex items-center bg-tg-subtle border border-tg-border rounded-[7px] p-0.5 text-[12px] font-semibold tabular-nums">
+          <button id="curr-btn-TON" onclick="setCurrency('TON')" class="px-2 py-1 rounded-[5px] bg-tg-bg text-tg-blue shadow-2xs transition-colors">TON</button>
+          <button id="curr-btn-EUR" onclick="setCurrency('EUR')" class="px-2 py-1 rounded-[5px] text-tg-muted hover:text-tg-text transition-colors">EUR</button>
+        </div>
+
+        <!-- Language Switcher (EN / RU) -->
+        <div class="hidden md:flex items-center bg-tg-subtle border border-tg-border rounded-[7px] p-0.5 text-[12px] font-semibold">
+          <button id="lang-btn-en" onclick="setLang('en')" class="px-2 py-1 rounded-[5px] bg-tg-bg text-tg-text transition-colors">EN</button>
+          <button id="lang-btn-ru" onclick="setLang('ru')" class="px-2 py-1 rounded-[5px] text-tg-muted hover:text-tg-text transition-colors">RU</button>
+        </div>
+
+        <!-- Notification Bell -->
+        <div class="relative">
+          <button onclick="toggleDropdown('notif-popover')" class="relative w-8 h-8 rounded-[7px] border border-tg-border bg-tg-bg hover:bg-tg-subtle flex items-center justify-center text-tg-secondary transition-colors" aria-label="Notifications">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+            </svg>
+            <span id="notif-dot" class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-tg-blue text-white text-[10px] font-bold flex items-center justify-center tabular-nums">2</span>
+          </button>
+
+          <div id="notif-popover" class="hidden absolute right-0 mt-1.5 w-80 bg-tg-bg border border-tg-border rounded-[8px] shadow-sm z-40 overflow-hidden">
+            <div class="px-3.5 py-2.5 border-b border-tg-border bg-tg-surface flex items-center justify-between">
+              <span class="text-[12.5px] font-semibold" data-i18n="notif_header">Moderation & Billing Alerts</span>
+              <button onclick="markNotificationsRead()" class="text-[11.5px] font-medium text-tg-blue hover:underline" data-i18n="notif_mark_read">Mark all read</button>
+            </div>
+            <div id="notif-items-list" class="max-h-72 overflow-y-auto divide-y divide-tg-border"></div>
+          </div>
+        </div>
+
+        <!-- User Profile Pill -->
+        <div class="relative">
+          <button onclick="toggleDropdown('profile-dropdown-menu')" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-[7px] border border-tg-border bg-tg-bg hover:bg-tg-subtle transition-colors">
+            <div class="w-6 h-6 rounded-full bg-tg-blue text-white text-[11px] font-bold flex items-center justify-center">AK</div>
+            <span class="text-[13px] font-medium text-tg-text hidden sm:inline">@alex_k</span>
+            <svg class="w-3.5 h-3.5 text-tg-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+          </button>
+
+          <div id="profile-dropdown-menu" class="hidden absolute right-0 mt-1.5 w-56 bg-tg-bg border border-tg-border rounded-[8px] shadow-sm py-1 z-40 text-[13px]">
+            <div class="px-3 py-2 border-b border-tg-border">
+              <div class="font-semibold text-tg-text">Alexey K.</div>
+              <div class="text-[11.5px] text-tg-muted tabular-nums">ID: 48291044 · @alex_k</div>
+            </div>
+            <div class="md:hidden px-3 py-2 border-b border-tg-border flex items-center justify-between">
+              <span class="text-tg-muted text-[12px]">Language:</span>
+              <div class="flex gap-1">
+                <button onclick="setLang('en')" class="px-2 py-0.5 rounded border border-tg-border text-[11px] font-semibold">EN</button>
+                <button onclick="setLang('ru')" class="px-2 py-0.5 rounded border border-tg-border text-[11px] font-semibold">RU</button>
+              </div>
+            </div>
+            <button onclick="openModal('modal-account-settings'); closeAllDropdowns();" class="w-full text-left px-3 py-2 hover:bg-tg-subtle text-tg-text flex items-center justify-between">
+              <span data-i18n="menu_settings">Account Settings</span>
+            </button>
+            <button onclick="switchMainTab('budget'); closeAllDropdowns();" class="w-full text-left px-3 py-2 hover:bg-tg-subtle text-tg-text flex items-center justify-between">
+              <span data-i18n="menu_billing">Billing & TON Wallet</span>
+              <span id="menu-balance-badge" class="text-[11.5px] font-semibold text-tg-blue tabular-nums">42.50 TON</span>
+            </button>
+            <div class="border-t border-tg-border mt-1 pt-1">
+              <button onclick="resetDemoData(); closeAllDropdowns();" class="w-full text-left px-3 py-2 hover:bg-tg-redBg text-tg-red text-[12.5px] font-medium">
+                Reset Demo Data
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <form class="card" id="createAdForm" onsubmit="submitAd(event)">
-      <div class="card-title"><span>Параметры кампании</span></div>
+    <!-- ==================== SUB-NAVIGATION TABS (OFFICIAL UNDERLINE TABS) ==================== -->
+    <div class="bg-tg-bg border-t border-tg-subtle">
+      <div class="max-w-[1360px] mx-auto px-4 sm:px-6 flex items-center justify-between overflow-x-auto">
+        <nav class="flex items-center gap-6" aria-label="Primary Tabs">
+          <button onclick="switchMainTab('ads')" id="tab-link-ads" class="py-2.5 text-[13.5px] font-semibold border-b-2 border-tg-blue text-tg-blue whitespace-nowrap transition-colors">
+            <span data-i18n="nav_ads">Ads</span>
+            <span id="tab-ads-count" class="ml-1.5 px-1.5 py-0.2 rounded-full bg-tg-blueTint text-tg-blue text-[11px] tabular-nums">5</span>
+          </button>
+          <button onclick="switchMainTab('budget')" id="tab-link-budget" class="py-2.5 text-[13.5px] font-medium border-b-2 border-transparent text-tg-secondary hover:text-tg-text whitespace-nowrap transition-colors">
+            <span data-i18n="nav_budget">Budget</span>
+          </button>
+          <button onclick="switchMainTab('statistics')" id="tab-link-statistics" class="py-2.5 text-[13.5px] font-medium border-b-2 border-transparent text-tg-secondary hover:text-tg-text whitespace-nowrap transition-colors">
+            <span data-i18n="nav_statistics">Statistics</span>
+          </button>
+          <button onclick="switchMainTab('guidelines')" id="tab-link-guidelines" class="py-2.5 text-[13.5px] font-medium border-b-2 border-transparent text-tg-secondary hover:text-tg-text whitespace-nowrap transition-colors">
+            <span data-i18n="nav_guidelines">Info &amp; Guidelines</span>
+          </button>
+        </nav>
 
-      <div class="form-group">
-        <label>Кабинет размещения</label>
-        <div class="row-2">
-          <button type="button" class="seg-item active" id="accTon" onclick="setAccountType('ton')">TG Реклама (TON)</button>
-          <button type="button" class="seg-item" id="accEur" onclick="setAccountType('eur')">TG Евро реклама (EUR)</button>
+        <!-- Quick Balance Pill in Sub-nav -->
+        <div class="hidden sm:flex items-center gap-2 text-[12.5px] py-1.5 shrink-0">
+          <span class="text-tg-muted" data-i18n="available_balance">Available Balance:</span>
+          <button onclick="switchMainTab('budget')" class="font-semibold text-tg-text hover:text-tg-blue tabular-nums flex items-center gap-1">
+            <span id="subnav-balance">42.50 TON</span>
+            <span class="text-tg-blue text-[11px] font-semibold bg-tg-blueTint px-1.5 py-0.5 rounded">+ Top Up</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+  <div class="flex-1 max-w-[1360px] w-full mx-auto px-4 sm:px-6 py-5">
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 1: ADS MANAGEMENT DATA TABLE (ADS TAB)                               -->
+    <!-- ========================================================================= -->
+    <section id="view-ads" class="space-y-4">
+      <!-- Top Action Bar -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2.5">
+          <button onclick="openCreateAdView()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[7px] bg-tg-blue hover:bg-tg-blueHover text-white text-[13.5px] font-semibold transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            <span data-i18n="btn_create_new_ad">Create a New Ad</span>
+          </button>
+
+          <!-- Search Input -->
+          <div class="relative w-full sm:w-64">
+            <svg class="w-3.5 h-3.5 text-tg-muted absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+            <input id="ads-search-input" type="text" oninput="renderAdsTable()" class="tg-field pl-8 py-1.5 text-[13px]" placeholder="Search by title or URL..." />
+          </div>
+        </div>
+
+        <!-- Date Range & Export CSV -->
+        <div class="flex flex-wrap items-center gap-2">
+          <select id="ads-date-filter" onchange="renderAdsTable()" class="tg-field w-auto py-1.5 text-[13px] font-medium text-tg-secondary bg-tg-surface">
+            <option value="today">Today</option>
+            <option value="7d" selected>Last 7 days</option>
+            <option value="30d">Last 30 days</option>
+            <option value="all">All time</option>
+          </select>
+
+          <button onclick="exportAdsCsv()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[7px] border border-tg-border bg-tg-bg hover:bg-tg-subtle text-[13px] font-medium text-tg-secondary transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            </svg>
+            <span>Export CSV</span>
+          </button>
         </div>
       </div>
 
-      <div class="form-group">
-        <label>Название объявления (внутреннее)</label>
-        <input type="text" id="adTitle" maxlength="64" required placeholder="Напр., Продвижение бота #1" oninput="syncPreview()" />
+      <!-- Status Filter Pills -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1" id="status-filter-bar">
+        <button onclick="setStatusFilter('all')" data-status="all" class="status-pill px-3 py-1 rounded-[6px] text-[12.5px] font-semibold bg-tg-blueTint text-tg-blue">All</button>
+        <button onclick="setStatusFilter('Active')" data-status="Active" class="status-pill px-3 py-1 rounded-[6px] text-[12.5px] font-medium text-tg-secondary hover:bg-tg-subtle">Active</button>
+        <button onclick="setStatusFilter('In Review')" data-status="In Review" class="status-pill px-3 py-1 rounded-[6px] text-[12.5px] font-medium text-tg-secondary hover:bg-tg-subtle">In Review</button>
+        <button onclick="setStatusFilter('Stopped')" data-status="Stopped" class="status-pill px-3 py-1 rounded-[6px] text-[12.5px] font-medium text-tg-secondary hover:bg-tg-subtle">Stopped</button>
+        <button onclick="setStatusFilter('Declined')" data-status="Declined" class="status-pill px-3 py-1 rounded-[6px] text-[12.5px] font-medium text-tg-secondary hover:bg-tg-subtle">Declined</button>
+        <button onclick="setStatusFilter('On Hold')" data-status="On Hold" class="status-pill px-3 py-1 rounded-[6px] text-[12.5px] font-medium text-tg-secondary hover:bg-tg-subtle">On Hold</button>
       </div>
 
-      <div class="form-group">
-        <label>Текст объявления <span class="hint tabular" id="charCounter" style="float:right">0 / 160</span></label>
-        <textarea id="adText" rows="3" maxlength="160" required placeholder="Краткий оффер без лишних восклицательных знаков" oninput="syncPreview()"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Продвигаемая ссылка (t.me/...)</label>
-        <input type="text" id="adUrl" required placeholder="https://t.me/your_channel или @username" oninput="syncPreview()" />
-      </div>
-
-      <div class="form-group">
-        <label>Медиафайл (необязательно, JPG/PNG/MP4 до 10 МБ)</label>
-        <input type="file" id="adMediaFile" accept="image/jpeg,image/png,image/webp,video/mp4" onchange="handleMediaSelect(this)" />
-        <div class="hint" id="mediaUploadStatus">Изображение повышает CTR, но увеличивает минимальный CPM.</div>
-      </div>
-
-      <div class="row-2">
-        <div class="form-group">
-          <label>CPM за 1000 показов (сум)</label>
-          <input type="number" id="adCpm" min="2466" step="100" value="2500" required oninput="recalcReach()" />
+      <!-- Authentic High-Density 10-Column Telegram Ads Data Table -->
+      <div class="border border-tg-border rounded-[8px] bg-tg-bg overflow-hidden">
+        <div class="overflow-x-auto table-scroll">
+          <table class="w-full text-left border-collapse min-w-[1060px]">
+            <thead>
+              <tr class="bg-tg-surface border-b border-tg-border text-[11.5px] font-semibold text-tg-muted uppercase tracking-wider select-none">
+                <th class="py-2.5 px-3.5 cursor-pointer hover:text-tg-text" onclick="sortAdsBy('title')">Ad Title <span class="text-[10px]">↕</span></th>
+                <th class="py-2.5 px-3 cursor-pointer hover:text-tg-text" onclick="sortAdsBy('status')">Status</th>
+                <th class="py-2.5 px-3 text-right cursor-pointer hover:text-tg-text" onclick="sortAdsBy('views')">Views ↕</th>
+                <th class="py-2.5 px-3 text-right cursor-pointer hover:text-tg-text" onclick="sortAdsBy('opened')">Opened ↕</th>
+                <th class="py-2.5 px-3 text-right cursor-pointer hover:text-tg-text" onclick="sortAdsBy('clicks')">Clicks ↕</th>
+                <th class="py-2.5 px-3 text-right">CTR</th>
+                <th class="py-2.5 px-3 text-right cursor-pointer hover:text-tg-text" onclick="sortAdsBy('cpm')">CPM</th>
+                <th class="py-2.5 px-3 text-right cursor-pointer hover:text-tg-text" onclick="sortAdsBy('spent')">Spent</th>
+                <th class="py-2.5 px-3 text-right">Budget</th>
+                <th class="py-2.5 px-3.5 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ads-table-body" class="divide-y divide-tg-border text-[13px]">
+              <!-- Populated dynamically by JS -->
+            </tbody>
+          </table>
         </div>
-        <div class="form-group">
-          <label>Бюджет кампании (сум)</label>
-          <input type="number" id="adBudget" min="23000" step="1000" value="23000" required oninput="recalcReach()" />
+
+        <!-- Empty State -->
+        <div id="ads-empty-state" class="hidden py-14 px-4 text-center space-y-2.5">
+          <div class="text-[14px] font-medium text-tg-secondary">No advertisements match your current filters</div>
+          <p class="text-[12.5px] text-tg-muted">Create a new campaign or clear your search criteria.</p>
+          <button onclick="openCreateAdView()" class="mt-2 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[7px] bg-tg-blue text-white text-[13px] font-semibold">
+            + Create a New Ad
+          </button>
+        </div>
+
+        <!-- Table Footer Totals -->
+        <div id="ads-table-footer" class="bg-tg-surface border-t border-tg-border px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-3 text-[12px] text-tg-secondary tabular-nums">
+          <div id="ads-footer-count">Showing 5 ads</div>
+          <div class="flex flex-wrap items-center gap-4 font-medium">
+            <span>Total Views: <strong id="footer-total-views" class="text-tg-text">0</strong></span>
+            <span>Total Clicks: <strong id="footer-total-clicks" class="text-tg-text">0</strong></span>
+            <span>Total Spent: <strong id="footer-total-spent" class="text-tg-text">0.00 TON</strong></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 2: CREATE A NEW AD (2-COLUMN SPLIT — ADS.TELEGRAM.ORG/ACCOUNT/AD/NEW) -->
+    <!-- ========================================================================= -->
+    <section id="view-create-ad" class="hidden space-y-4">
+      <!-- Breadcrumb Back Link -->
+      <div class="flex items-center justify-between border-b border-tg-border pb-3">
+        <div class="flex items-center gap-2 text-[13px]">
+          <button onclick="switchMainTab('ads')" class="text-tg-blue hover:underline font-medium inline-flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+            <span>Back to Ads</span>
+          </button>
+          <span class="text-tg-borderStrong">/</span>
+          <span id="create-view-breadcrumb" class="font-semibold text-tg-text">Create a New Ad</span>
+        </div>
+        <span id="create-currency-pill" class="text-[12px] font-semibold px-2.5 py-0.5 rounded-[6px] bg-tg-blueTint text-tg-blue tabular-nums">Billing: TON</span>
+      </div>
+
+      <!-- 2-Column Split Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- LEFT COLUMN (7 Cols): Official Telegram Ads Form Fields -->
+        <div class="lg:col-span-7 space-y-5 bg-tg-bg border border-tg-border rounded-[8px] p-4 sm:p-6">
+
+          <!-- 1. Ad Title -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="form-ad-title" class="text-[13px] font-semibold text-tg-text">Ad Title <span class="text-tg-red">*</span></label>
+              <span id="counter-title" class="text-[11.5px] text-tg-muted tabular-nums">0 / 64</span>
+            </div>
+            <input id="form-ad-title" type="text" maxlength="64" oninput="syncAdPreview()" class="tg-field" placeholder="e.g., Crypto Wallet Launch Q4" />
+            <p class="mt-1 text-[11.5px] text-tg-muted">Internal campaign identifier. Not displayed to end users.</p>
+          </div>
+
+          <!-- 2. Ad Text (Strict 160 chars) -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="form-ad-text" class="text-[13px] font-semibold text-tg-text">Ad Text <span class="text-tg-red">*</span></label>
+              <span id="counter-text" class="text-[11.5px] font-semibold text-tg-muted tabular-nums">0 / 160</span>
+            </div>
+            <textarea id="form-ad-text" rows="3" maxlength="160" oninput="syncAdPreview()" class="tg-field resize-none" placeholder="Write concise, clear ad copy without excessive uppercase or line breaks..."></textarea>
+            <div class="mt-1.5 flex flex-wrap items-center justify-between gap-2 text-[11.5px] text-tg-muted">
+              <span>Custom emojis &amp; inline links supported via <span class="text-tg-blue font-medium">@AdsMarkdownBot</span></span>
+              <div class="flex items-center gap-1">
+                <button type="button" onclick="appendTextSnippet('⚡️')" class="px-1.5 py-0.5 rounded border border-tg-border bg-tg-surface hover:bg-tg-subtle text-xs">⚡️</button>
+                <button type="button" onclick="appendTextSnippet('🚀')" class="px-1.5 py-0.5 rounded border border-tg-border bg-tg-surface hover:bg-tg-subtle text-xs">🚀</button>
+                <button type="button" onclick="appendTextSnippet('💎')" class="px-1.5 py-0.5 rounded border border-tg-border bg-tg-surface hover:bg-tg-subtle text-xs">💎</button>
+                <button type="button" onclick="appendTextSnippet('✅')" class="px-1.5 py-0.5 rounded border border-tg-border bg-tg-surface hover:bg-tg-subtle text-xs">✅</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Promoted URL -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="form-ad-url" class="text-[13px] font-semibold text-tg-text">Promoted URL <span class="text-tg-red">*</span></label>
+              <span id="url-detected-type" class="text-[11.5px] font-medium text-tg-blue"></span>
+            </div>
+            <input id="form-ad-url" type="text" oninput="syncAdPreview()" onblur="normalizePromotedUrl()" class="tg-field" placeholder="https://t.me/your_channel or @your_bot" />
+            <p id="form-url-error" class="hidden mt-1 text-[11.5px] text-tg-red">Only internal Telegram links (t.me/username, t.me/channel/123, or @username) are permitted.</p>
+          </div>
+
+          <!-- 4. Media (Optional) -->
+          <div class="pt-2 border-t border-tg-border space-y-2.5">
+            <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+              <input id="form-show-media" type="checkbox" onchange="toggleMediaDropzone()" class="w-4 h-4 rounded accent-[#2481CC]" />
+              <span class="text-[13px] font-semibold text-tg-text">Show Media</span>
+              <span class="text-[11.5px] text-tg-muted">(Optional image or video attachment)</span>
+            </label>
+
+            <div id="media-dropzone-container" class="hidden space-y-2">
+              <div id="media-dropzone"
+                   ondragover="event.preventDefault(); this.classList.add('border-tg-blue', 'bg-tg-blueTint');"
+                   ondragleave="this.classList.remove('border-tg-blue', 'bg-tg-blueTint');"
+                   ondrop="handleMediaDrop(event)"
+                   onclick="document.getElementById('form-media-file').click()"
+                   class="border border-dashed border-tg-borderStrong hover:border-tg-blue rounded-[8px] p-4 text-center cursor-pointer bg-tg-surface transition-colors">
+                <input id="form-media-file" type="file" accept="image/jpeg,image/png,image/webp,video/mp4" onchange="handleMediaFileSelect(event)" class="hidden" />
+                <div class="text-[13px] font-medium text-tg-blue">Click to upload or drag &amp; drop media</div>
+                <div class="text-[11.5px] text-tg-muted mt-0.5">JPG, PNG, WEBP or MP4 · 16:9 recommended · Max 5 MB</div>
+              </div>
+
+              <div id="media-attached-bar" class="hidden flex items-center justify-between px-3 py-2 rounded-[7px] bg-tg-subtle border border-tg-border text-[12.5px]">
+                <span id="media-attached-name" class="font-medium text-tg-text truncate">banner.png</span>
+                <button type="button" onclick="removeAttachedMedia()" class="text-tg-red font-semibold hover:underline ml-3 shrink-0">Remove</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. CPM (Cost Per Mille) & Auction Competition Indicator -->
+          <div class="pt-2 border-t border-tg-border space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label for="form-ad-cpm" class="text-[13px] font-semibold text-tg-text">CPM (<span class="curr-label">TON</span>) <span class="text-tg-red">*</span></label>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[11.5px] text-tg-muted">Win Probability:</span>
+                <span id="auction-prob-badge" class="px-2 py-0.5 rounded-[5px] text-[11px] font-semibold bg-tg-greenBg text-tg-green">Optimal</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="relative flex-1">
+                <input id="form-ad-cpm" type="number" step="0.05" min="0.10" value="0.50" oninput="recalcCampaignEstimates()" class="tg-field pr-14 tabular-nums font-medium" />
+                <span class="curr-label absolute right-3 top-1/2 -translate-y-1/2 text-[12px] font-semibold text-tg-muted">TON</span>
+              </div>
+              <button type="button" onclick="boostBid(1.2)" class="px-2.5 py-2 rounded-[7px] border border-tg-border bg-tg-surface hover:bg-tg-subtle text-[12px] font-semibold text-tg-text tabular-nums">+20%</button>
+              <button type="button" onclick="boostBid(1.5)" class="px-2.5 py-2 rounded-[7px] border border-tg-border bg-tg-surface hover:bg-tg-subtle text-[12px] font-semibold text-tg-text tabular-nums">+50%</button>
+            </div>
+            <div class="text-[11.5px] text-tg-muted tabular-nums">
+              Minimum CPM: <strong id="min-cpm-hint">0.10 TON</strong> · Cost per 1,000 impressions.
+            </div>
+          </div>
+
+          <!-- 6. Initial Budget & Daily Limit -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label for="form-ad-budget" class="text-[13px] font-semibold text-tg-text">Initial Budget (<span class="curr-label">TON</span>) <span class="text-tg-red">*</span></label>
+              <button type="button" onclick="toggleDailyLimitRow()" class="text-[12px] font-medium text-tg-blue hover:underline">+ Daily Budget Limit</button>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="relative flex-1">
+                <input id="form-ad-budget" type="number" step="0.5" min="1.00" value="10.00" oninput="recalcCampaignEstimates()" class="tg-field pr-24 tabular-nums font-medium" />
+                <button type="button" onclick="fillMaxBudget()" class="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded bg-tg-blueTint hover:bg-tg-blueTintHover text-tg-blue text-[11px] font-semibold">Max</button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-[11.5px] text-tg-muted tabular-nums">
+              <span>Available: <strong id="form-avail-balance" class="text-tg-text">42.50 TON</strong></span>
+              <span>Est. Delivery: <strong id="form-inline-est-views" class="text-tg-blue">20,000 views</strong></span>
+            </div>
+
+            <!-- Collapsible Daily Budget Limit -->
+            <div id="daily-limit-row" class="hidden pt-1">
+              <label class="block text-[12px] font-medium text-tg-secondary mb-1">Daily Spend Cap (<span class="curr-label">TON</span> / day)</label>
+              <input id="form-daily-cap" type="number" step="0.5" min="0.5" placeholder="Optional daily limit" class="tg-field tabular-nums" />
+            </div>
+          </div>
+
+          <!-- 7. Daily Views Limit per User (1 | 2 | 3 | 4) -->
+          <div>
+            <label class="block text-[13px] font-semibold text-tg-text mb-1.5">Daily Views Limit per User</label>
+            <div class="grid grid-cols-4 gap-2" id="daily-views-limit-group">
+              <button type="button" onclick="setDailyUserViews(1)" data-v="1" class="vlimit-btn py-1.5 rounded-[7px] border border-tg-border bg-tg-bg text-tg-text text-[13px] font-semibold tabular-nums">1</button>
+              <button type="button" onclick="setDailyUserViews(2)" data-v="2" class="vlimit-btn py-1.5 rounded-[7px] border border-tg-blue bg-tg-blue text-white text-[13px] font-semibold tabular-nums">2</button>
+              <button type="button" onclick="setDailyUserViews(3)" data-v="3" class="vlimit-btn py-1.5 rounded-[7px] border border-tg-border bg-tg-bg text-tg-text text-[13px] font-semibold tabular-nums">3</button>
+              <button type="button" onclick="setDailyUserViews(4)" data-v="4" class="vlimit-btn py-1.5 rounded-[7px] border border-tg-border bg-tg-bg text-tg-text text-[13px] font-semibold tabular-nums">4</button>
+            </div>
+          </div>
+
+          <!-- 8. Initial Status & Optional Schedule -->
+          <div class="pt-2 border-t border-tg-border grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <div class="text-[13px] font-semibold text-tg-text mb-1.5">Initial Status</div>
+              <div class="space-y-1.5 text-[13px]">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="initial_status" value="Active" checked class="accent-[#2481CC]" />
+                  <span>Active <span class="text-tg-muted text-[11.5px]">(after review)</span></span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="initial_status" value="Stopped" class="accent-[#2481CC]" />
+                  <span>Stopped <span class="text-tg-muted text-[11.5px]">(on hold)</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-[13px] font-semibold text-tg-text">Schedule &amp; End Date</span>
+                <button type="button" onclick="toggleScheduleBox()" class="text-[12px] font-medium text-tg-blue hover:underline">Configure</button>
+              </div>
+              <p class="text-[12px] text-tg-muted">Runs 24/7 until budget is spent unless restricted.</p>
+            </div>
+          </div>
+
+          <!-- Collapsible Schedule / Dayparting Grid -->
+          <div id="schedule-config-box" class="hidden p-3.5 rounded-[8px] bg-tg-surface border border-tg-border space-y-3">
+            <div>
+              <label class="block text-[12px] font-semibold text-tg-text mb-1">Campaign End Date (Optional)</label>
+              <input id="form-end-date" type="date" class="tg-field text-[12.5px]" />
+            </div>
+            <div>
+              <div class="text-[12px] font-semibold text-tg-text mb-1.5">Active Delivery Windows (UTC)</div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-[11.5px]">
+                <label class="flex items-center gap-1.5 bg-tg-bg px-2.5 py-1.5 rounded border border-tg-border cursor-pointer">
+                  <input type="checkbox" checked class="accent-[#2481CC]" /> 00:00 – 06:00
+                </label>
+                <label class="flex items-center gap-1.5 bg-tg-bg px-2.5 py-1.5 rounded border border-tg-border cursor-pointer">
+                  <input type="checkbox" checked class="accent-[#2481CC]" /> 06:00 – 12:00
+                </label>
+                <label class="flex items-center gap-1.5 bg-tg-bg px-2.5 py-1.5 rounded border border-tg-border cursor-pointer">
+                  <input type="checkbox" checked class="accent-[#2481CC]" /> 12:00 – 18:00
+                </label>
+                <label class="flex items-center gap-1.5 bg-tg-bg px-2.5 py-1.5 rounded border border-tg-border cursor-pointer">
+                  <input type="checkbox" checked class="accent-[#2481CC]" /> 18:00 – 24:00
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 9. TARGETING SECTION (EXACT ADS.TELEGRAM.ORG TARGET TYPE TABS & FIELDS) -->
+          <div class="pt-3 border-t border-tg-border space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-[14px] font-semibold text-tg-text">Target Audience</span>
+              <div class="inline-flex bg-tg-subtle border border-tg-border rounded-[7px] p-0.5 text-[12.5px] font-semibold" id="target-type-tabs">
+                <button type="button" onclick="setTargetType('Channels')" data-tt="Channels" class="tt-btn px-3 py-1 rounded-[5px] bg-tg-bg text-tg-blue shadow-2xs">Channels</button>
+                <button type="button" onclick="setTargetType('Bots')" data-tt="Bots" class="tt-btn px-3 py-1 rounded-[5px] text-tg-secondary hover:text-tg-text">Bots</button>
+                <button type="button" onclick="setTargetType('Search')" data-tt="Search" class="tt-btn px-3 py-1 rounded-[5px] text-tg-secondary hover:text-tg-text">Search</button>
+                <button type="button" onclick="setTargetType('Users')" data-tt="Users" class="tt-btn px-3 py-1 rounded-[5px] text-tg-secondary hover:text-tg-text">Users</button>
+              </div>
+            </div>
+
+            <!-- Dynamic Target Fields Container -->
+            <div id="dynamic-targeting-fields" class="space-y-3.5">
+              <!-- Rendered dynamically per Target Type -->
+            </div>
+
+            <!-- Official Immutable Targeting Warning Box -->
+            <div class="p-3 rounded-[7px] bg-tg-amberBg/70 border border-amber-300 flex items-start gap-2.5 text-[12.5px] text-amber-950">
+              <svg class="w-4 h-4 text-tg-amber shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+              </svg>
+              <span><strong>Targeting parameters cannot be changed after the ad is created.</strong> Please double-check your selected channels, topics, and languages before submitting.</span>
+            </div>
+          </div>
+
+          <!-- 10. Terms Acceptance & Submit Controls -->
+          <div class="pt-3 border-t border-tg-border space-y-4">
+            <label class="flex items-start gap-2.5 cursor-pointer text-[12.5px] text-tg-secondary">
+              <input id="form-accept-terms" type="checkbox" class="w-4 h-4 mt-0.5 rounded accent-[#2481CC]" />
+              <span>
+                I have read and accept the <button type="button" onclick="switchMainTab('guidelines')" class="text-tg-blue hover:underline font-medium">Telegram Ad Platform Terms of Service</button> and Advertising Guidelines.
+              </span>
+            </label>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+              <button type="button" onclick="clearAdDraft()" class="px-3.5 py-2 rounded-[7px] border border-tg-border bg-tg-bg hover:bg-tg-subtle text-[13px] font-medium text-tg-secondary transition-colors">
+                Clear Draft
+              </button>
+
+              <button id="btn-submit-campaign" type="button" onclick="submitCampaignForm()" class="px-6 py-2.5 rounded-[7px] bg-tg-blue hover:bg-tg-blueHover text-white text-[13.5px] font-semibold transition-colors">
+                Create Ad
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN (5 Cols): Sticky Real-Time Telegram Message Bubble Preview -->
+        <div class="lg:col-span-5 lg:sticky lg:top-20 space-y-4">
+          <div class="border border-tg-border rounded-[8px] bg-tg-bg overflow-hidden">
+            <div class="px-4 py-2.5 bg-tg-surface border-b border-tg-border flex items-center justify-between">
+              <span class="text-[12.5px] font-semibold text-tg-text">Ad Preview</span>
+              <span class="text-[11px] text-tg-muted">Channel Feed Placement</span>
+            </div>
+
+            <!-- Authentic Telegram Green Wallpaper Canvas -->
+            <div class="tg-chat-canvas p-4 sm:p-5 space-y-3">
+              <!-- Context Channel Post Above Sponsored Message -->
+              <div class="bg-white/90 backdrop-blur-xs rounded-[11px] px-3 py-2 text-[12px] text-zinc-600 border border-black/5">
+                <div class="flex items-center justify-between text-[11px] font-semibold text-tg-blue mb-0.5">
+                  <span>Telegram News</span>
+                  <span class="text-zinc-400 font-normal">14:28</span>
+                </div>
+                <p class="line-clamp-2 text-[11.5px] text-zinc-600">Latest platform updates and channel monetization features are now live for creators worldwide.</p>
+              </div>
+
+              <!-- Unread / Sponsored Divider Pill -->
+              <div class="flex justify-center">
+                <span class="px-2.5 py-0.5 rounded-full bg-black/25 text-white text-[10.5px] font-medium">Sponsored Message</span>
+              </div>
+
+              <!-- PIXEL-ACCURATE TELEGRAM SPONSORED MESSAGE BUBBLE -->
+              <div class="tg-bubble p-3 text-tg-text max-w-[360px] mx-auto relative">
+                <!-- Top Row: Promoted Title + Sponsored Badge + ••• Menu -->
+                <div class="flex items-center justify-between gap-2 mb-1">
+                  <div class="flex items-center gap-1.5 min-w-0">
+                    <span id="prev-channel-title" class="font-semibold text-[13.5px] text-tg-blue truncate">Your Channel or Bot</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 shrink-0 relative">
+                    <span class="text-[11px] font-medium text-tg-muted">Sponsored</span>
+                    <button type="button" onclick="togglePreviewMenu()" class="w-5 h-5 rounded hover:bg-tg-subtle flex items-center justify-center text-tg-muted text-xs font-bold" title="Ad options">•••</button>
+
+                    <!-- Authentic Telegram ••• Sponsored Menu Popover -->
+                    <div id="preview-dots-menu" class="hidden absolute right-0 top-6 w-40 bg-white border border-tg-border rounded-[8px] shadow-md py-1 z-20 text-[12px]">
+                      <button type="button" onclick="showToast('Sponsored messages appear at the bottom of public channels.'); togglePreviewMenu();" class="w-full text-left px-3 py-1.5 hover:bg-tg-subtle text-tg-text">What is this?</button>
+                      <button type="button" onclick="showToast('Telegram Premium users can hide sponsored messages.'); togglePreviewMenu();" class="w-full text-left px-3 py-1.5 hover:bg-tg-subtle text-tg-text">Hide Ad</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Optional Media Preview -->
+                <div id="prev-media-wrapper" class="hidden my-2 rounded-[8px] overflow-hidden border border-tg-border bg-zinc-100">
+                  <img id="prev-img" src="" alt="Ad visual" class="w-full max-h-44 object-cover hidden" />
+                  <video id="prev-vid" src="" class="w-full max-h-44 object-cover hidden" muted loop autoplay playsinline></video>
+                </div>
+
+                <!-- Ad Body Copy -->
+                <p id="prev-ad-body" class="text-[13.5px] leading-[1.38] text-tg-text break-words">
+                  Your ad copy will appear here in real time. Keep it clear, informative, and within 160 characters.
+                </p>
+
+                <!-- Bottom Full-Width Telegram Inline CTA Button -->
+                <div class="mt-2.5 pt-2 border-t border-tg-subtle">
+                  <div id="prev-cta-button" class="w-full py-1.5 px-3 rounded-[6px] bg-tg-blueTint text-tg-blue text-center text-[12px] font-bold tracking-wide uppercase">
+                    VIEW CHANNEL
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Campaign Summary Card Below Preview -->
+          <div class="border border-tg-border rounded-[8px] bg-tg-surface p-4 space-y-2.5 text-[12.5px] tabular-nums">
+            <div class="font-semibold text-[13px] text-tg-text border-b border-tg-border pb-2">Campaign Delivery Summary</div>
+            <div class="flex justify-between">
+              <span class="text-tg-muted">Estimated Impressions:</span>
+              <span id="sum-est-views" class="font-semibold text-tg-text">20,000</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-tg-muted">Estimated Clicks (~1.8% CTR):</span>
+              <span id="sum-est-clicks" class="font-semibold text-tg-text">360</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-tg-muted">Target Placement:</span>
+              <span id="sum-target-type" class="font-semibold text-tg-blue">Channels</span>
+            </div>
+            <div class="flex justify-between pt-2 border-t border-tg-border">
+              <span class="text-tg-muted">Remaining Balance After Creation:</span>
+              <span id="sum-rem-balance" class="font-bold text-tg-green">32.50 TON</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 3: BUDGET & BILLING (BUDGET TAB)                                     -->
+    <!-- ========================================================================= -->
+    <section id="view-budget" class="hidden space-y-5">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Primary Wallet Card -->
+        <div class="md:col-span-2 border border-tg-border rounded-[8px] bg-tg-bg p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div class="text-[12px] font-semibold uppercase tracking-wider text-tg-muted">Current Advertising Balance</div>
+            <div class="mt-1 flex items-baseline gap-3">
+              <span id="budget-main-balance" class="text-[30px] font-bold text-tg-text tabular-nums">42.50 TON</span>
+              <span id="budget-secondary-balance" class="text-[13px] text-tg-muted tabular-nums">EUR Wallet: 180.00 EUR</span>
+            </div>
+            <p class="mt-1 text-[12.5px] text-tg-secondary">Funds are allocated to active campaigns in real time as impressions are delivered.</p>
+          </div>
+          <div class="shrink-0">
+            <button onclick="openModal('modal-topup')" class="px-4 py-2.5 rounded-[7px] bg-tg-blue hover:bg-tg-blueHover text-white text-[13.5px] font-semibold transition-colors">
+              + Top Up Budget
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Commitments Summary -->
+        <div class="border border-tg-border rounded-[8px] bg-tg-surface p-5 space-y-2 tabular-nums">
+          <div class="text-[12px] font-semibold uppercase tracking-wider text-tg-muted">Budget Allocation</div>
+          <div class="flex justify-between text-[13px] pt-1">
+            <span class="text-tg-secondary">Reserved in Active Ads:</span>
+            <span id="budget-reserved-val" class="font-semibold text-tg-text">28.40 TON</span>
+          </div>
+          <div class="flex justify-between text-[13px]">
+            <span class="text-tg-secondary">Lifetime Ad Spend:</span>
+            <span id="budget-lifetime-val" class="font-semibold text-tg-text">114.20 TON</span>
+          </div>
+          <div class="flex justify-between text-[13px]">
+            <span class="text-tg-secondary">Account Tier:</span>
+            <span class="font-semibold text-tg-blue">Direct Advertiser</span>
+          </div>
         </div>
       </div>
 
-      <div class="reach-box tabular">
-        <span>Прогноз охвата:</span>
-        <strong id="reachEstimate">≈ 9 200 просмотров</strong>
+      <!-- Transactions & Spend Ledger Table -->
+      <div class="border border-tg-border rounded-[8px] bg-tg-bg overflow-hidden">
+        <div class="px-4 py-3 bg-tg-surface border-b border-tg-border flex items-center justify-between">
+          <h2 class="text-[14px] font-semibold text-tg-text">Transactions &amp; Spend Ledger</h2>
+          <span class="text-[12px] text-tg-muted">All amounts recorded in account currency</span>
+        </div>
+        <div class="overflow-x-auto table-scroll">
+          <table class="w-full text-left border-collapse min-w-[680px]">
+            <thead>
+              <tr class="border-b border-tg-border bg-tg-surface/60 text-[11.5px] font-semibold text-tg-muted uppercase tracking-wider">
+                <th class="py-2.5 px-4">Date &amp; Time (UTC)</th>
+                <th class="py-2.5 px-3">Type</th>
+                <th class="py-2.5 px-3">Reference / Method</th>
+                <th class="py-2.5 px-3 text-right">Amount</th>
+                <th class="py-2.5 px-4 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody id="ledger-table-body" class="divide-y divide-tg-border text-[13px] tabular-nums">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
       </div>
+    </section>
 
-      <div class="form-group">
-        <label>Показов в день на 1 пользователя</label>
-        <div class="segmented" id="freqGroup">
-          <div class="seg-item active" onclick="setFreq(1, this)">1</div>
-          <div class="seg-item" onclick="setFreq(2, this)">2</div>
-          <div class="seg-item" onclick="setFreq(3, this)">3</div>
-          <div class="seg-item" onclick="setFreq(4, this)">4</div>
+    <!-- ========================================================================= -->
+    <!-- VIEW 4: ACCOUNT STATISTICS (STATISTICS TAB)                               -->
+    <!-- ========================================================================= -->
+    <section id="view-statistics" class="hidden space-y-5">
+      <!-- KPI Summary Strip -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 tabular-nums">
+        <div class="border border-tg-border rounded-[8px] bg-tg-bg p-3.5">
+          <div class="text-[11.5px] font-medium text-tg-muted">Total Views</div>
+          <div id="kpi-views" class="text-[20px] font-bold text-tg-text mt-1">148,920</div>
+        </div>
+        <div class="border border-tg-border rounded-[8px] bg-tg-bg p-3.5">
+          <div class="text-[11.5px] font-medium text-tg-muted">Total Opened</div>
+          <div id="kpi-opened" class="text-[20px] font-bold text-tg-text mt-1">18,410</div>
+        </div>
+        <div class="border border-tg-border rounded-[8px] bg-tg-bg p-3.5">
+          <div class="text-[11.5px] font-medium text-tg-muted">Total Clicks</div>
+          <div id="kpi-clicks" class="text-[20px] font-bold text-tg-text mt-1">3,194</div>
+        </div>
+        <div class="border border-tg-border rounded-[8px] bg-tg-bg p-3.5">
+          <div class="text-[11.5px] font-medium text-tg-muted">Average CTR</div>
+          <div id="kpi-ctr" class="text-[20px] font-bold text-tg-blue mt-1">2.14%</div>
+        </div>
+        <div class="border border-tg-border rounded-[8px] bg-tg-bg p-3.5">
+          <div class="text-[11.5px] font-medium text-tg-muted">Average CPM</div>
+          <div id="kpi-cpm" class="text-[20px] font-bold text-tg-text mt-1">0.48 TON</div>
+        </div>
+        <div class="border border-tg-border rounded-[8px] bg-tg-bg p-3.5">
+          <div class="text-[11.5px] font-medium text-tg-muted">Total Spent</div>
+          <div id="kpi-spent" class="text-[20px] font-bold text-tg-text mt-1">71.48 TON</div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label>Где показывать рекламу</label>
-        <select id="targetType">
-          <option value="channels">Каналы (Channels)</option>
-          <option value="bots">Боты (Bots)</option>
-          <option value="search">Поиск Telegram (Search)</option>
-          <option value="users">Пользователи (Users)</option>
-        </select>
+      <!-- Custom Interactive SVG Multi-Series Delivery Chart -->
+      <div class="border border-tg-border rounded-[8px] bg-tg-bg p-4 sm:p-5 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 class="text-[15px] font-semibold text-tg-text">Delivery &amp; Engagement Performance</h2>
+            <p class="text-[12px] text-tg-muted">Hover over any day to inspect daily Views vs. Clicks.</p>
+          </div>
+          <div class="flex items-center gap-4 text-[12px]">
+            <span class="inline-flex items-center gap-1.5 font-medium"><span class="w-2.5 h-2.5 rounded-xs bg-tg-blue inline-block"></span> Views</span>
+            <span class="inline-flex items-center gap-1.5 font-medium"><span class="w-2.5 h-2.5 rounded-full bg-tg-green inline-block"></span> Clicks</span>
+            <div class="inline-flex bg-tg-subtle border border-tg-border rounded-[6px] p-0.5 text-[11.5px] font-semibold">
+              <button onclick="setStatsRange(7)" id="stats-rng-7" class="px-2 py-0.5 rounded bg-tg-bg text-tg-blue">7d</button>
+              <button onclick="setStatsRange(14)" id="stats-rng-14" class="px-2 py-0.5 rounded text-tg-muted">14d</button>
+              <button onclick="setStatsRange(30)" id="stats-rng-30" class="px-2 py-0.5 rounded text-tg-muted">30d</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative pt-2" id="stats-chart-wrapper">
+          <svg id="analytics-svg-chart" class="w-full h-60 overflow-visible" viewBox="0 0 840 220"></svg>
+          <!-- Interactive Hover Tooltip -->
+          <div id="chart-hover-tooltip" class="hidden pointer-events-none absolute top-2 right-4 bg-zinc-900 text-white rounded-[7px] px-3 py-2 text-[12px] tabular-nums shadow-sm">
+            <div id="tt-date" class="font-semibold text-zinc-300 mb-0.5">Nov 17</div>
+            <div>Views: <strong id="tt-views">24,100</strong></div>
+            <div>Clicks: <strong id="tt-clicks" class="text-emerald-400">512</strong></div>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>Целевые каналы (через запятую)</label>
-        <input type="text" id="targetChannels" placeholder="@channel1, https://t.me/channel2" />
+      <!-- Campaign Breakdown Table -->
+      <div class="border border-tg-border rounded-[8px] bg-tg-bg overflow-hidden">
+        <div class="px-4 py-3 bg-tg-surface border-b border-tg-border font-semibold text-[14px] text-tg-text">
+          Performance Breakdown by Campaign
+        </div>
+        <div class="overflow-x-auto table-scroll">
+          <table class="w-full text-left border-collapse min-w-[640px]">
+            <thead>
+              <tr class="border-b border-tg-border bg-tg-surface/50 text-[11.5px] font-semibold text-tg-muted uppercase">
+                <th class="py-2.5 px-4">Campaign</th>
+                <th class="py-2.5 px-3">Target</th>
+                <th class="py-2.5 px-3 text-right">Views</th>
+                <th class="py-2.5 px-3 text-right">Clicks</th>
+                <th class="py-2.5 px-3 text-right">CTR</th>
+                <th class="py-2.5 px-4 text-right">Spent</th>
+              </tr>
+            </thead>
+            <tbody id="stats-breakdown-body" class="divide-y divide-tg-border text-[13px] tabular-nums"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 5: INFO & GUIDELINES (GUIDELINES TAB)                                -->
+    <!-- ========================================================================= -->
+    <section id="view-guidelines" class="hidden max-w-4xl space-y-5">
+      <div class="border border-tg-border rounded-[8px] bg-tg-bg p-5 sm:p-6 space-y-4">
+        <h1 class="text-[18px] font-bold text-tg-text">Telegram Ad Platform — Official Specifications &amp; Policies</h1>
+        <p class="text-[13.5px] text-tg-secondary leading-relaxed">
+          Sponsored messages on Telegram are designed to respect user privacy. Ads are targeted strictly based on the context of public channels, bots, or search queries where they appear—never using personal user profiling or behavioral tracking.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div class="p-4 rounded-[8px] bg-tg-surface border border-tg-border space-y-1.5">
+            <h3 class="text-[14px] font-semibold text-tg-text">1. Ad Format &amp; Character Limits</h3>
+            <ul class="text-[13px] text-tg-secondary space-y-1 list-disc pl-4">
+              <li>Maximum text length: <strong>160 characters</strong> (including spaces).</li>
+              <li>Line breaks and bulleted lists inside ad copy are prohibited.</li>
+              <li>Destination URL must point to a public Telegram channel, post, or bot (<code>t.me/...</code>).</li>
+            </ul>
+          </div>
+
+          <div class="p-4 rounded-[8px] bg-tg-surface border border-tg-border space-y-1.5">
+            <h3 class="text-[14px] font-semibold text-tg-text">2. Auction &amp; CPM Pricing</h3>
+            <ul class="text-[13px] text-tg-secondary space-y-1 list-disc pl-4">
+              <li>Minimum CPM starts at <strong>0.10 TON</strong> (or <strong>2.00 EUR</strong> for Euro accounts).</li>
+              <li>Higher CPM bids win priority placement in high-traffic public channels.</li>
+              <li>Unused campaign budget can be reclaimed at any time by stopping the ad.</li>
+            </ul>
+          </div>
+
+          <div class="p-4 rounded-[8px] bg-tg-surface border border-tg-border space-y-1.5">
+            <h3 class="text-[14px] font-semibold text-tg-text">3. Prohibited Content &amp; Formatting</h3>
+            <ul class="text-[13px] text-tg-secondary space-y-1 list-disc pl-4">
+              <li>Excessive capitalization (ALL CAPS) or clickbait claims are automatically rejected.</li>
+              <li>Unlicensed financial guarantees, shock content, and misleading buttons are prohibited.</li>
+            </ul>
+          </div>
+
+          <div class="p-4 rounded-[8px] bg-tg-surface border border-tg-border space-y-1.5">
+            <h3 class="text-[14px] font-semibold text-tg-text">4. Moderation Turnaround</h3>
+            <ul class="text-[13px] text-tg-secondary space-y-1 list-disc pl-4">
+              <li>New campaigns enter <strong>In Review</strong> immediately upon submission.</li>
+              <li>Standard moderation completes within 15–60 minutes.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="border-t border-tg-border bg-tg-surface py-4 px-4 sm:px-6 text-[12px] text-tg-muted">
+    <div class="max-w-[1360px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>Telegram Ad Platform · <span class="text-tg-text font-medium">ads.telegram.org</span></div>
+      <div class="flex items-center gap-4">
+        <button onclick="switchMainTab('guidelines')" class="hover:text-tg-blue">Terms of Service</button>
+        <button onclick="switchMainTab('guidelines')" class="hover:text-tg-blue">Ad Policies</button>
+        <button onclick="switchMainTab('budget')" class="hover:text-tg-blue">TON Billing</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- MODALS & DRAWERS                                                          -->
+  <!-- ========================================================================= -->
+
+  <!-- MODAL 1: AD DETAILS & HOURLY PERFORMANCE DRAWER/MODAL -->
+  <div id="modal-ad-details" class="hidden fixed inset-0 z-50 bg-black/35 flex items-center justify-center p-4" onclick="closeModalOnOverlay(event, 'modal-ad-details')">
+    <div class="bg-tg-bg border border-tg-border rounded-[10px] w-full max-w-2xl overflow-hidden shadow-lg">
+      <div class="px-5 py-3.5 bg-tg-surface border-b border-tg-border flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 id="det-title" class="text-[16px] font-bold text-tg-text">Campaign Title</h3>
+            <span id="det-status-badge"></span>
+          </div>
+          <div id="det-url" class="text-[12px] text-tg-blue mt-0.5">https://t.me/example</div>
+        </div>
+        <button onclick="closeModal('modal-ad-details')" class="w-8 h-8 rounded-[6px] hover:bg-tg-subtle text-tg-muted font-bold">✕</button>
       </div>
 
-      <div class="form-group">
-        <label>Исключить каналы (необязательно)</label>
-        <input type="text" id="excludeChannels" placeholder="@spam_channel" />
+      <div class="p-5 space-y-4 max-h-[82vh] overflow-y-auto">
+        <!-- Rejection Reason Alert if Declined -->
+        <div id="det-decline-box" class="hidden p-3 rounded-[7px] bg-tg-redBg border border-red-300 text-[12.5px] text-tg-red">
+          <strong>Moderation Feedback:</strong> <span id="det-decline-reason"></span>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 tabular-nums">
+          <div class="p-3 rounded-[7px] bg-tg-surface border border-tg-border">
+            <div class="text-[11px] text-tg-muted">Views</div>
+            <div id="det-views" class="text-[17px] font-bold text-tg-text mt-0.5">0</div>
+          </div>
+          <div class="p-3 rounded-[7px] bg-tg-surface border border-tg-border">
+            <div class="text-[11px] text-tg-muted">Opened</div>
+            <div id="det-opened" class="text-[17px] font-bold text-tg-text mt-0.5">0</div>
+          </div>
+          <div class="p-3 rounded-[7px] bg-tg-surface border border-tg-border">
+            <div class="text-[11px] text-tg-muted">Clicks / CTR</div>
+            <div id="det-clicks" class="text-[17px] font-bold text-tg-blue mt-0.5">0 (0.00%)</div>
+          </div>
+          <div class="p-3 rounded-[7px] bg-tg-surface border border-tg-border">
+            <div class="text-[11px] text-tg-muted">Spent / Budget</div>
+            <div id="det-budget" class="text-[15px] font-bold text-tg-text mt-0.5">0 / 0</div>
+          </div>
+        </div>
+
+        <!-- Ad Copy & Targeting Summary -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[12.5px]">
+          <div class="p-3 rounded-[7px] border border-tg-border bg-tg-bg space-y-1">
+            <div class="font-semibold text-tg-muted text-[11px] uppercase">Ad Copy</div>
+            <p id="det-text" class="text-tg-text leading-snug"></p>
+          </div>
+          <div class="p-3 rounded-[7px] border border-tg-border bg-tg-bg space-y-1">
+            <div class="font-semibold text-tg-muted text-[11px] uppercase">Locked Targeting</div>
+            <div id="det-targeting" class="text-tg-secondary space-y-0.5"></div>
+          </div>
+        </div>
+
+        <!-- Hourly Impressions Mini Bar Chart -->
+        <div class="p-3.5 rounded-[7px] border border-tg-border bg-tg-surface space-y-2">
+          <div class="flex items-center justify-between text-[12px]">
+            <span class="font-semibold text-tg-text">Hourly Impressions (Last 24h)</span>
+            <span id="det-cpm-label" class="text-tg-muted tabular-nums">CPM: 0.50 TON</span>
+          </div>
+          <svg id="det-hourly-svg" class="w-full h-24 overflow-visible" viewBox="0 0 480 80"></svg>
+        </div>
+
+        <!-- Inline Quick Edit CPM / Add Budget -->
+        <div class="pt-2 border-t border-tg-border flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <button id="det-toggle-btn" onclick="toggleSelectedAdStatus()" class="px-3 py-1.5 rounded-[7px] border border-tg-border bg-tg-bg hover:bg-tg-subtle text-[12.5px] font-semibold text-tg-text">Stop Ad</button>
+            <button onclick="duplicateSelectedAd()" class="px-3 py-1.5 rounded-[7px] border border-tg-border bg-tg-bg hover:bg-tg-subtle text-[12.5px] font-semibold text-tg-blue">Duplicate Ad</button>
+          </div>
+          <button onclick="openAddBudgetModal(selectedDetailAdId)" class="px-3.5 py-1.5 rounded-[7px] bg-tg-blue hover:bg-tg-blueHover text-white text-[12.5px] font-semibold">
+            + Add Budget
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: ADD BUDGET TO EXISTING AD -->
+  <div id="modal-add-ad-budget" class="hidden fixed inset-0 z-50 bg-black/35 flex items-center justify-center p-4" onclick="closeModalOnOverlay(event, 'modal-add-ad-budget')">
+    <div class="bg-tg-bg border border-tg-border rounded-[10px] w-full max-w-md p-5 space-y-4">
+      <div class="flex items-center justify-between border-b border-tg-border pb-3">
+        <h3 class="text-[15.5px] font-bold text-tg-text">Add Budget to Campaign</h3>
+        <button onclick="closeModal('modal-add-ad-budget')" class="text-tg-muted font-bold">✕</button>
+      </div>
+      <div class="space-y-3 text-[13px]">
+        <div>
+          <span class="text-tg-muted">Campaign:</span>
+          <strong id="add-b-ad-name" class="text-tg-text ml-1">Ad Name</strong>
+        </div>
+        <div>
+          <label class="block font-semibold text-tg-text mb-1">Amount to Add (<span class="curr-label">TON</span>)</label>
+          <input id="add-b-amount" type="number" step="1" min="1" value="5" class="tg-field tabular-nums font-semibold" />
+          <div class="text-[11.5px] text-tg-muted mt-1 tabular-nums">Available wallet balance: <span id="add-b-avail">42.50 TON</span></div>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal('modal-add-ad-budget')" class="px-3.5 py-1.5 rounded-[7px] border border-tg-border text-[13px] font-medium">Cancel</button>
+        <button onclick="confirmAddAdBudget()" class="px-4 py-1.5 rounded-[7px] bg-tg-blue hover:bg-tg-blueHover text-white text-[13px] font-semibold">Confirm Transfer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: TOP UP ACCOUNT WALLET (FRAGMENT / TON CONNECT / INVOICE) -->
+  <div id="modal-topup" class="hidden fixed inset-0 z-50 bg-black/35 flex items-center justify-center p-4" onclick="closeModalOnOverlay(event, 'modal-topup')">
+    <div class="bg-tg-bg border border-tg-border rounded-[10px] w-full max-w-md p-5 space-y-4">
+      <div class="flex items-center justify-between border-b border-tg-border pb-3">
+        <h3 class="text-[16px] font-bold text-tg-text">Top Up Advertising Budget</h3>
+        <button onclick="closeModal('modal-topup')" class="text-tg-muted font-bold">✕</button>
       </div>
 
-      <button type="submit" class="btn btn-primary" style="width:100%" id="submitAdBtn">
-        Создать и отправить на модерацию
+      <div class="space-y-3 text-[13px]">
+        <div>
+          <label class="block font-semibold text-tg-text mb-1.5">Payment Method</label>
+          <div class="grid grid-cols-2 gap-2" id="topup-method-group">
+            <button type="button" onclick="selectTopupMethod('Fragment / TON Wallet')" data-tm="Fragment / TON Wallet" class="tm-btn p-2.5 rounded-[7px] border-2 border-tg-blue bg-tg-blueTint text-tg-blue font-semibold text-left text-[12.5px]">
+              Fragment / TON Wallet
+            </button>
+            <button type="button" onclick="selectTopupMethod('Agency Wire Invoice')" data-tm="Agency Wire Invoice" class="tm-btn p-2.5 rounded-[7px] border border-tg-border bg-tg-surface text-tg-text font-semibold text-left text-[12.5px]">
+              Agency Wire Invoice
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-tg-text mb-1">Deposit Amount (<span class="curr-label">TON</span>)</label>
+          <input id="topup-deposit-amount" type="number" min="1" step="5" value="25" class="tg-field text-[15px] font-bold tabular-nums" />
+          <div class="grid grid-cols-4 gap-1.5 mt-2 tabular-nums">
+            <button type="button" onclick="document.getElementById('topup-deposit-amount').value=10" class="py-1 rounded border border-tg-border bg-tg-surface hover:bg-tg-subtle text-[12px] font-semibold">+10</button>
+            <button type="button" onclick="document.getElementById('topup-deposit-amount').value=25" class="py-1 rounded border border-tg-border bg-tg-surface hover:bg-tg-subtle text-[12px] font-semibold">+25</button>
+            <button type="button" onclick="document.getElementById('topup-deposit-amount').value=50" class="py-1 rounded border border-tg-border bg-tg-surface hover:bg-tg-subtle text-[12px] font-semibold">+50</button>
+            <button type="button" onclick="document.getElementById('topup-deposit-amount').value=100" class="py-1 rounded border border-tg-border bg-tg-surface hover:bg-tg-subtle text-[12px] font-semibold">+100</button>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-[7px] bg-tg-surface border border-tg-border text-[12px] text-tg-secondary space-y-1">
+          <div class="flex justify-between">
+            <span>Destination Wallet:</span>
+            <span class="font-mono text-tg-text">UQBx8...9kLp (Verified)</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Platform Fee:</span>
+            <span class="font-semibold text-tg-green">0.00%</span>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" onclick="executeTopupDeposit()" class="w-full py-2.5 rounded-[7px] bg-tg-blue hover:bg-tg-blueHover text-white font-semibold text-[13.5px] transition-colors">
+        Credit Account Immediately
       </button>
-    </form>
-  </section>
-</main>
-
-<!-- Модальное окно пополнения -->
-<dialog id="depositModal">
-  <h3 style="margin-bottom:10px;font-size:16px;">Пополнение баланса</h3>
-  <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">
-    Переведите нужную сумму на карту и отправьте заявку. Зачисление происходит после проверки.
-  </p>
-  <div style="background:var(--bg);padding:10px 12px;border-radius:10px;margin-bottom:12px;font-size:13px;">
-    <div>Карта: <strong class="tabular" id="cardNumberText">—</strong></div>
-    <div>Получатель: <strong id="cardHolderText">—</strong></div>
+    </div>
   </div>
-  <div class="form-group">
-    <label>Сумма пополнения (сум, мин. 10 000)</label>
-    <input type="number" id="depositAmount" min="10000" step="5000" value="50000" />
+
+  <!-- MODAL 4: CREATE NEW ORGANIZATION -->
+  <div id="modal-new-org" class="hidden fixed inset-0 z-50 bg-black/35 flex items-center justify-center p-4" onclick="closeModalOnOverlay(event, 'modal-new-org')">
+    <div class="bg-tg-bg border border-tg-border rounded-[10px] w-full max-w-md p-5 space-y-4">
+      <div class="flex items-center justify-between border-b border-tg-border pb-3">
+        <h3 class="text-[16px] font-bold text-tg-text">Create New Organization</h3>
+        <button onclick="closeModal('modal-new-org')" class="text-tg-muted font-bold">✕</button>
+      </div>
+      <div class="space-y-3 text-[13px]">
+        <div>
+          <label class="block font-semibold text-tg-text mb-1">Organization / Agency Name</label>
+          <input id="new-org-name-input" type="text" class="tg-field" placeholder="e.g., Horizon Digital Media" />
+        </div>
+        <div>
+          <label class="block font-semibold text-tg-text mb-1">Linked Telegram Channel (Optional)</label>
+          <input id="new-org-channel-input" type="text" class="tg-field" placeholder="@agency_official" />
+        </div>
+      </div>
+      <div class="flex justify-end gap-2">
+        <button onclick="closeModal('modal-new-org')" class="px-3.5 py-1.5 rounded-[7px] border border-tg-border text-[13px]">Cancel</button>
+        <button onclick="createNewOrganization()" class="px-4 py-1.5 rounded-[7px] bg-tg-blue text-white text-[13px] font-semibold">Create Workspace</button>
+      </div>
+    </div>
   </div>
-  <div style="display:flex;gap:8px;justify-content:flex-end;">
-    <button type="button" class="btn btn-outline" onclick="document.getElementById('depositModal').close()">Отмена</button>
-    <button type="button" class="btn btn-primary" onclick="submitDeposit()">Я оплатил</button>
+
+  <!-- MODAL 5: ACCOUNT SETTINGS -->
+  <div id="modal-account-settings" class="hidden fixed inset-0 z-50 bg-black/35 flex items-center justify-center p-4" onclick="closeModalOnOverlay(event, 'modal-account-settings')">
+    <div class="bg-tg-bg border border-tg-border rounded-[10px] w-full max-w-md p-5 space-y-4">
+      <div class="flex items-center justify-between border-b border-tg-border pb-3">
+        <h3 class="text-[16px] font-bold text-tg-text">Account Settings</h3>
+        <button onclick="closeModal('modal-account-settings')" class="text-tg-muted font-bold">✕</button>
+      </div>
+      <div class="divide-y divide-tg-border text-[13px]">
+        <div class="py-2.5 flex justify-between">
+          <span class="text-tg-muted">Telegram Account:</span>
+          <span class="font-semibold">@alex_k (ID: 48291044)</span>
+        </div>
+        <div class="py-2.5 flex justify-between">
+          <span class="text-tg-muted">2FA Verification:</span>
+          <span class="font-semibold text-tg-green">Enabled</span>
+        </div>
+        <div class="py-2.5 flex justify-between">
+          <span class="text-tg-muted">Moderation Notifications:</span>
+          <span class="font-semibold text-tg-blue">Active via @AdsBot</span>
+        </div>
+      </div>
+      <div class="flex justify-between pt-2">
+        <button onclick="resetDemoData(); closeModal('modal-account-settings');" class="px-3 py-1.5 rounded-[7px] border border-red-200 bg-tg-redBg text-tg-red text-[12.5px] font-semibold">Reset Demo Data</button>
+        <button onclick="closeModal('modal-account-settings')" class="px-4 py-1.5 rounded-[7px] bg-tg-blue text-white text-[13px] font-semibold">Done</button>
+      </div>
+    </div>
   </div>
-</dialog>
 
-<div class="toast" id="toast"></div>
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 pointer-events-none opacity-0 transition-opacity duration-200">
+    <div id="toast-text" class="bg-zinc-900 text-white text-[13px] font-medium px-4 py-2.5 rounded-[8px] shadow-md">
+      Action completed
+    </div>
+  </div>
 
-<script>
-  const tg = window.Telegram?.WebApp;
-  if (tg) {
-    tg.ready();
-    tg.expand();
-  }
+  <!-- ==================== COMPLETE CLIENT-SIDE APPLICATION ENGINE ==================== -->
+  <script>
+    const STORAGE_KEY = 'official_telegram_ads_clone_v2';
 
-  const state = {
-    accountType: 'ton',
-    dailyFreq: 1,
-    uploadedMediaToken: null,
-    config: {
-      uzs_per_ton: 75000,
-      uzs_per_eur: 14500,
-      min_budget_uzs: 23000,
-      min_cpm_uzs: 2466,
-      card_number: '',
-      card_holder: ''
-    }
-  };
-
-  function showToast(msg) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.style.display = 'block';
-    clearTimeout(window._toastTimer);
-    window._toastTimer = setTimeout(() => { el.style.display = 'none'; }, 3500);
-  }
-
-  async function apiFetch(url, options = {}) {
-    const headers = options.headers || {};
-    headers['X-Telegram-Init-Data'] = tg?.initData || '';
-    if (!(options.body instanceof FormData)) {
-      headers['Content-Type'] = 'application/json';
-    }
-    const resp = await fetch(url, { ...options, headers });
-    const data = await resp.json().catch(() => ({}));
-    if (!resp.ok) {
-      throw new Error(data.detail || `Ошибка HTTP ${resp.status}`);
-    }
-    return data;
-  }
-
-  function formatMoney(num) {
-    return Math.round(Number(num || 0)).toLocaleString('ru-RU') + ' сум';
-  }
-
-  async function loadBootstrap() {
-    try {
-      const data = await apiFetch('/api/v1/bootstrap');
-      state.config = data.config;
-
-      document.getElementById('userBadge').textContent = `ID: ${data.user.user_id}`;
-      document.getElementById('balanceValue').textContent = formatMoney(data.user.balance_uzs);
-      document.getElementById('rateBadge').textContent =
-        `1 TON = ${Number(data.config.uzs_per_ton).toLocaleString('ru-RU')} сум`;
-      document.getElementById('cardNumberText').textContent = data.config.card_number;
-      document.getElementById('cardHolderText').textContent = data.config.card_holder;
-
-      renderAds(data.ads);
-      renderTransactions(data.transactions);
-    } catch (err) {
-      showToast(err.message);
-    }
-  }
-
-  const STATUS_LABELS = {
-    pending_queue: 'В очереди',
-    in_review: 'На модерации',
-    active: 'Активна',
-    paused: 'На паузе',
-    declined: 'Отклонена',
-    error: 'Ошибка'
-  };
-
-  function renderAds(ads) {
-    document.getElementById('adsCount').textContent = `${ads.length} шт.`;
-    const tbody = document.getElementById('adsTableBody');
-    if (!ads.length) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px;">У вас пока нет рекламных объявлений</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = ads.map(ad => {
-      const ctr = ad.views > 0 ? ((ad.clicks / ad.views) * 100).toFixed(2) + '%' : '0.00%';
-      const canToggle = ad.status === 'active' || ad.status === 'paused';
-      const nextActive = ad.status === 'paused';
-      return `
-        <tr>
-          <td>
-            <div style="font-weight:600;">${escapeHtml(ad.title)}</div>
-            <div style="font-size:11px;color:var(--muted);">#${ad.id} · ${escapeHtml(ad.promote_url)}</div>
-          </td>
-          <td><span class="badge st-${ad.status}">${STATUS_LABELS[ad.status] || ad.status}</span></td>
-          <td class="tabular">${ad.views.toLocaleString('ru-RU')}</td>
-          <td class="tabular">${ad.clicks.toLocaleString('ru-RU')}</td>
-          <td class="tabular">${ctr}</td>
-          <td class="tabular">${Math.round(ad.spent_uzs).toLocaleString('ru-RU')} / ${Math.round(ad.budget_uzs).toLocaleString('ru-RU')} сум</td>
-          <td>
-            ${canToggle ? `<button class="btn btn-outline btn-sm" onclick="toggleAd(${ad.id}, ${nextActive})">${nextActive ? '▶ Запустить' : '⏸ Пауза'}</button>` : ''}
-            ${ad.remote_ad_id ? `<button class="btn btn-outline btn-sm" onclick="topupAd(${ad.id})">+ Бюджет</button>` : ''}
-          </td>
-        </tr>
-      `;
-    }).join('');
-  }
-
-  function renderTransactions(txs) {
-    const tbody = document.getElementById('txTableBody');
-    if (!txs.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);">Операций пока нет</td></tr>';
-      return;
-    }
-    tbody.innerHTML = txs.map(t => `
-      <tr>
-        <td class="tabular" style="color:var(--muted);">${t.created_at.slice(0, 16)}</td>
-        <td>${escapeHtml(t.description)}</td>
-        <td class="tabular" style="font-weight:600;color:${t.amount_uzs >= 0 ? 'var(--green)' : 'var(--text)'};">
-          ${t.amount_uzs >= 0 ? '+' : ''}${Math.round(t.amount_uzs).toLocaleString('ru-RU')} сум
-        </td>
-        <td><span class="badge ${t.status === 'completed' ? 'st-active' : t.status === 'pending' ? 'st-in_review' : 'st-declined'}">${t.status}</span></td>
-      </tr>
-    `).join('');
-  }
-
-  function switchTab(tab) {
-    document.getElementById('viewAds').classList.toggle('hidden', tab !== 'ads');
-    document.getElementById('viewCreate').classList.toggle('hidden', tab !== 'create');
-    document.getElementById('tabAdsBtn').classList.toggle('active', tab === 'ads');
-    document.getElementById('tabCreateBtn').classList.toggle('active', tab === 'create');
-  }
-
-  function setAccountType(type) {
-    state.accountType = type;
-    document.getElementById('accTon').classList.toggle('active', type === 'ton');
-    document.getElementById('accEur').classList.toggle('active', type === 'eur');
-  }
-
-  function setFreq(val, el) {
-    state.dailyFreq = val;
-    document.querySelectorAll('#freqGroup .seg-item').forEach(x => x.classList.remove('active'));
-    el.classList.add('active');
-  }
-
-  function syncPreview() {
-    const title = document.getElementById('adTitle').value.trim();
-    const text = document.getElementById('adText').value;
-    const url = document.getElementById('adUrl').value.trim();
-
-    document.getElementById('charCounter').textContent = `${text.length} / 160`;
-    document.getElementById('prevTitle').textContent = title || 'Название канала или бота';
-    document.getElementById('prevText').textContent = text || 'Здесь появится текст вашего рекламного объявления (до 160 символов).';
-    document.getElementById('prevUrl').textContent = url.includes('bot') ? 'Запустить бота' : 'Открыть канал';
-  }
-
-  function recalcReach() {
-    const cpm = Number(document.getElementById('adCpm').value) || 1;
-    const budget = Number(document.getElementById('adBudget').value) || 0;
-    const views = Math.floor((budget / cpm) * 1000);
-    document.getElementById('reachEstimate').textContent = `≈ ${views.toLocaleString('ru-RU')} просмотров`;
-  }
-
-  async function handleMediaSelect(input) {
-    const file = input.files?.[0];
-    if (!file) return;
-
-    const prevImg = document.getElementById('prevImg');
-    if (file.type.startsWith('image/')) {
-      prevImg.src = URL.createObjectURL(file);
-      prevImg.style.display = 'block';
-    } else {
-      prevImg.style.display = 'none';
-    }
-
-    const statusEl = document.getElementById('mediaUploadStatus');
-    statusEl.textContent = 'Загрузка файла на сервер...';
-
-    try {
-      const fd = new FormData();
-      fd.append('file', file);
-      const res = await apiFetch('/api/v1/media/upload', { method: 'POST', body: fd });
-      state.uploadedMediaToken = res.media_token;
-      statusEl.textContent = `Файл загружен (${file.name})`;
-    } catch (err) {
-      statusEl.textContent = `Ошибка загрузки: ${err.message}`;
-      state.uploadedMediaToken = null;
-    }
-  }
-
-  async function submitAd(e) {
-    e.preventDefault();
-    const btn = document.getElementById('submitAdBtn');
-    btn.disabled = true;
-
-    const parseList = (str) => str.split(',').map(s => s.trim()).filter(Boolean);
-
-    const payload = {
-      account_type: state.accountType,
-      title: document.getElementById('adTitle').value.trim(),
-      text: document.getElementById('adText').value.trim(),
-      promote_url: document.getElementById('adUrl').value.trim(),
-      cpm_uzs: Number(document.getElementById('adCpm').value),
-      budget_uzs: Number(document.getElementById('adBudget').value),
-      daily_views_per_user: state.dailyFreq,
-      target_type: document.getElementById('targetType').value,
-      target_channels: parseList(document.getElementById('targetChannels').value),
-      exclude_channels: parseList(document.getElementById('excludeChannels').value),
-      media_token: state.uploadedMediaToken
+    const TRANSLATIONS = {
+      en: {
+        org_workspaces: 'Workspaces',
+        org_create_btn: 'Create New Organization',
+        notif_header: 'Moderation & Billing Alerts',
+        notif_mark_read: 'Mark all read',
+        menu_settings: 'Account Settings',
+        menu_billing: 'Billing & TON Wallet',
+        nav_ads: 'Ads',
+        nav_budget: 'Budget',
+        nav_statistics: 'Statistics',
+        nav_guidelines: 'Info & Guidelines',
+        available_balance: 'Available Balance:',
+        btn_create_new_ad: 'Create a New Ad',
+      },
+      ru: {
+        org_workspaces: 'Организации',
+        org_create_btn: 'Создать организацию',
+        notif_header: 'Уведомления и модерация',
+        notif_mark_read: 'Прочитать все',
+        menu_settings: 'Настройки аккаунта',
+        menu_billing: 'Бюджет и кошелёк TON',
+        nav_ads: 'Объявления',
+        nav_budget: 'Бюджет',
+        nav_statistics: 'Статистика',
+        nav_guidelines: 'Правила и инфо',
+        available_balance: 'Доступный баланс:',
+        btn_create_new_ad: 'Создать объявление',
+      }
     };
 
-    try {
-      await apiFetch('/api/v1/ads/create', {
-        method: 'POST',
-        body: JSON.stringify(payload)
+    const TARGET_LANGUAGES = ['Russian', 'Uzbek', 'English', 'Kazakh', 'Turkish', 'Arabic', 'Spanish', 'German'];
+    const TARGET_TOPICS = [
+      'Crypto & Web3', 'News & Media', 'Tech & IT', 'Business & Finance',
+      'Education', 'Entertainment', 'Gaming', 'Lifestyle', 'Travel', 'Auto'
+    ];
+
+    const INITIAL_STATE = {
+      lang: 'en',
+      currency: 'TON', // 'TON' or 'EUR'
+      activeOrgId: 'org-1',
+      organizations: [
+        { id: 'org-1', name: 'Personal Account', role: 'Owner' },
+        { id: 'org-2', name: 'Ad Agency Workspace', role: 'Admin' }
+      ],
+      balances: {
+        TON: 42.50,
+        EUR: 180.00
+      },
+      notifications: [
+        {
+          id: 'n1',
+          title: 'Ad "TON DeFi Wallet" approved',
+          body: 'Your campaign passed moderation and is now actively delivering impressions.',
+          time: '14m ago',
+          unread: true
+        },
+        {
+          id: 'n2',
+          title: 'Ad "Flash Sale VIP" declined',
+          body: 'Reason: Text contains prohibited uppercase formatting. Edit and resubmit.',
+          time: '2h ago',
+          unread: true
+        }
+      ],
+      ads: [
+        {
+          id: 'AD-9041',
+          orgId: 'org-1',
+          currency: 'TON',
+          title: 'TON DeFi Wallet Launch',
+          url: 'https://t.me/ton_defi_wallet',
+          text: 'Swap tokens with zero gas fees directly inside Telegram. Connect your TON wallet in one tap.',
+          status: 'Active',
+          views: 64200,
+          opened: 8140,
+          clicks: 1490,
+          cpm: 0.55,
+          spent: 35.31,
+          budget: 50.00,
+          hasMedia: true,
+          targetType: 'Channels',
+          targeting: {
+            languages: ['English', 'Russian'],
+            topics: ['Crypto & Web3', 'Tech & IT'],
+            channels: ['@toncoin', '@durov'],
+            excludeTopics: ['Gaming'],
+            excludeChannels: []
+          },
+          hourly: [1800, 2100, 1950, 2400, 2900, 3200, 3100, 2850, 3400, 3800, 3600, 3100]
+        },
+        {
+          id: 'AD-9039',
+          orgId: 'org-1',
+          currency: 'TON',
+          title: 'Tashkent IT Summit 2026',
+          url: 'https://t.me/uztech_summit_bot',
+          text: 'Register free for Central Asia’s largest AI and software engineering conference in Tashkent.',
+          status: 'Active',
+          views: 48900,
+          opened: 6120,
+          clicks: 1084,
+          cpm: 0.42,
+          spent: 20.54,
+          budget: 30.00,
+          hasMedia: false,
+          targetType: 'Bots',
+          targeting: {
+            languages: ['Uzbek', 'Russian'],
+            bots: ['@uztech_bot', '@tashkent_events_bot']
+          },
+          hourly: [1200, 1400, 1800, 2200, 2500, 2400, 2100, 2300, 2600, 2900, 2700, 2400]
+        },
+        {
+          id: 'AD-9036',
+          orgId: 'org-1',
+          currency: 'TON',
+          title: 'AI Code Assistant Pro',
+          url: 'https://t.me/aicode_assistant',
+          text: 'Ship production Python and TypeScript 3x faster with context-aware code reviews inside your IDE.',
+          status: 'In Review',
+          views: 0,
+          opened: 0,
+          clicks: 0,
+          cpm: 0.60,
+          spent: 0.00,
+          budget: 15.00,
+          hasMedia: true,
+          targetType: 'Search',
+          targeting: {
+            languages: ['English'],
+            queries: ['python bot', 'ai coding', 'telegram api']
+          },
+          hourly: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          id: 'AD-9031',
+          orgId: 'org-1',
+          currency: 'TON',
+          title: 'Global Macro Digest',
+          url: 'https://t.me/macro_digest_daily',
+          text: 'Daily 3-minute briefing on central bank rates, commodities, and emerging market currencies.',
+          status: 'Stopped',
+          views: 35820,
+          opened: 4150,
+          clicks: 620,
+          cpm: 0.44,
+          spent: 15.63,
+          budget: 20.00,
+          hasMedia: false,
+          targetType: 'Channels',
+          targeting: {
+            languages: ['English', 'Russian'],
+            topics: ['Business & Finance', 'News & Media'],
+            channels: ['@bloomberg_markets'],
+            excludeTopics: [],
+            excludeChannels: []
+          },
+          hourly: [900, 1100, 1300, 1250, 1400, 1500, 1350, 1200, 1100, 950, 800, 750]
+        },
+        {
+          id: 'AD-9028',
+          orgId: 'org-1',
+          currency: 'TON',
+          title: 'Flash Sale VIP Signals',
+          url: 'https://t.me/vip_flash_signals',
+          text: 'JOIN NOW FOR GUARANTEED 500% DAILY RETURNS ON CRYPTO FUTURES!!',
+          status: 'Declined',
+          declineReason: 'Text contains prohibited uppercase formatting and unverified financial return guarantees.',
+          views: 0,
+          opened: 0,
+          clicks: 0,
+          cpm: 0.35,
+          spent: 0.00,
+          budget: 10.00,
+          hasMedia: false,
+          targetType: 'Channels',
+          targeting: {
+            languages: ['English'],
+            topics: ['Crypto & Web3'],
+            channels: [],
+            excludeTopics: [],
+            excludeChannels: []
+          },
+          hourly: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          id: 'AD-8810',
+          orgId: 'org-1',
+          currency: 'EUR',
+          title: 'European Fintech Summit',
+          url: 'https://t.me/eufintech2026',
+          text: 'Connect with 400+ European payment leaders and banking executives in Frankfurt this autumn.',
+          status: 'Active',
+          views: 28400,
+          opened: 3420,
+          clicks: 615,
+          cpm: 2.40,
+          spent: 68.16,
+          budget: 120.00,
+          hasMedia: true,
+          targetType: 'Channels',
+          targeting: {
+            languages: ['English', 'German'],
+            topics: ['Business & Finance', 'Tech & IT'],
+            channels: [],
+            excludeTopics: [],
+            excludeChannels: []
+          },
+          hourly: [800, 950, 1100, 1300, 1450, 1400, 1250, 1150, 1050, 980, 900, 850]
+        }
+      ],
+      ledger: [
+        { date: '2026-11-16 18:42', type: 'Ad Spend', ref: 'Daily delivery settlement (AD-9041)', amount: -4.85, currency: 'TON', status: 'Completed' },
+        { date: '2026-11-15 11:20', type: 'Top-up', ref: 'Fragment / TON Wallet (UQBx8...9kLp)', amount: 50.00, currency: 'TON', status: 'Confirmed' },
+        { date: '2026-11-14 09:15', type: 'Refund', ref: 'Declined campaign budget release (AD-9028)', amount: 10.00, currency: 'TON', status: 'Credited' },
+        { date: '2026-11-12 16:05', type: 'Ad Spend', ref: 'Daily delivery settlement (AD-9039)', amount: -6.20, currency: 'TON', status: 'Completed' },
+        { date: '2026-11-10 14:00', type: 'Top-up', ref: 'Agency Wire Invoice #INV-2026-884', amount: 250.00, currency: 'EUR', status: 'Confirmed' }
+      ]
+    };
+
+    let appState = loadAppState();
+    let statusFilter = 'all';
+    let sortState = { key: 'views', dir: 'desc' };
+    let selectedDetailAdId = null;
+    let addBudgetTargetAdId = null;
+    let statsRangeDays = 7;
+
+    // Builder transient state
+    let builderState = {
+      dailyUserViews: 2,
+      targetType: 'Channels',
+      languages: ['English', 'Russian'],
+      topics: ['Tech & IT'],
+      channels: ['@durov'],
+      excludeTopics: [],
+      excludeChannels: [],
+      bots: ['@botfather'],
+      excludeBots: [],
+      searchQueries: ['telegram ads', 'crypto wallet'],
+      countries: ['Uzbekistan', 'United Arab Emirates', 'Germany'],
+      deviceOS: 'All',
+      interests: ['Technology', 'Finance'],
+      mediaUrl: null,
+      mediaKind: null, // 'image' | 'video'
+      topupMethod: 'Fragment / TON Wallet'
+    };
+
+    function loadAppState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+      } catch (e) {
+        console.warn('Storage load fallback', e);
+      }
+      return JSON.parse(JSON.stringify(INITIAL_STATE));
+    }
+
+    function saveAppState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.warn('Storage save error', e);
+      }
+    }
+
+    function resetDemoData() {
+      localStorage.removeItem(STORAGE_KEY);
+      appState = JSON.parse(JSON.stringify(INITIAL_STATE));
+      saveAppState();
+      refreshEntireUI();
+      showToast('Demo workspace restored to default state');
+    }
+
+    // ==================== INITIALIZATION ====================
+    window.addEventListener('DOMContentLoaded', () => {
+      refreshEntireUI();
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.relative')) {
+          closeAllDropdowns();
+        }
       });
-      showToast('Объявление создано и поставлено в очередь отправки!');
-      document.getElementById('createAdForm').reset();
-      state.uploadedMediaToken = null;
-      document.getElementById('prevImg').style.display = 'none';
-      syncPreview();
-      recalcReach();
-      switchTab('ads');
-      await loadBootstrap();
-    } catch (err) {
-      showToast(err.message);
-    } finally {
-      btn.disabled = false;
-    }
-  }
+    });
 
-  async function toggleAd(orderId, active) {
-    try {
-      await apiFetch(`/api/v1/ads/${orderId}/toggle`, {
-        method: 'POST',
-        body: JSON.stringify({ active })
+    function refreshEntireUI() {
+      renderOrgsDropdown();
+      setCurrency(appState.currency, false);
+      setLang(appState.lang, false);
+      renderNotifications();
+      renderAdsTable();
+      renderBudgetView();
+      renderStatisticsView();
+      renderDynamicTargetingFields();
+      syncAdPreview();
+    }
+
+    // ==================== NAVIGATION & TABS ====================
+    function switchMainTab(tabName) {
+      const views = ['ads', 'create-ad', 'budget', 'statistics', 'guidelines'];
+      views.forEach(v => document.getElementById(`view-${v}`).classList.add('hidden'));
+      document.getElementById(`view-${tabName}`).classList.remove('hidden');
+
+      const navTabs = ['ads', 'budget', 'statistics', 'guidelines'];
+      navTabs.forEach(t => {
+        const el = document.getElementById(`tab-link-${t}`);
+        if (!el) return;
+        const active = (t === tabName) || (tabName === 'create-ad' && t === 'ads');
+        el.className = active
+          ? 'py-2.5 text-[13.5px] font-semibold border-b-2 border-tg-blue text-tg-blue whitespace-nowrap transition-colors'
+          : 'py-2.5 text-[13.5px] font-medium border-b-2 border-transparent text-tg-secondary hover:text-tg-text whitespace-nowrap transition-colors';
       });
-      showToast(active ? 'Реклама запущена' : 'Реклама остановлена');
-      await loadBootstrap();
-    } catch (err) {
-      showToast(err.message);
-    }
-  }
 
-  async function topupAd(orderId) {
-    const raw = prompt('Введите сумму пополнения бюджета в сумах (минимум 5000):', '10000');
-    if (!raw) return;
-    const amount = Number(raw);
-    if (!amount || amount < 5000) {
-      showToast('Минимальная сумма пополнения — 5 000 сум');
-      return;
+      if (tabName === 'ads') renderAdsTable();
+      if (tabName === 'budget') renderBudgetView();
+      if (tabName === 'statistics') renderStatisticsView();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    try {
-      await apiFetch(`/api/v1/ads/${orderId}/topup`, {
-        method: 'POST',
-        body: JSON.stringify({ amount_uzs: amount })
+
+    function openCreateAdView() {
+      const curr = appState.currency;
+      const minCpm = curr === 'TON' ? 0.10 : 2.00;
+      const defCpm = curr === 'TON' ? 0.50 : 2.50;
+      const defBudget = curr === 'TON' ? 10.00 : 50.00;
+
+      document.getElementById('form-ad-cpm').min = minCpm;
+      document.getElementById('form-ad-cpm').value = defCpm.toFixed(2);
+      document.getElementById('form-ad-budget').value = defBudget.toFixed(2);
+      document.getElementById('min-cpm-hint').textContent = `${minCpm.toFixed(2)} ${curr}`;
+      document.getElementById('create-currency-pill').textContent = `Billing: ${curr}`;
+      document.querySelectorAll('.curr-label').forEach(el => el.textContent = curr);
+
+      recalcCampaignEstimates();
+      switchMainTab('create-ad');
+    }
+
+    // ==================== ORGANIZATIONS, CURRENCY, LANGUAGE ====================
+    function renderOrgsDropdown() {
+      const current = appState.organizations.find(o => o.id === appState.activeOrgId) || appState.organizations[0];
+      document.getElementById('current-org-name').textContent = current.name;
+
+      document.getElementById('org-list-container').innerHTML = appState.organizations.map(org => `
+        <button onclick="selectOrganization('${org.id}')" class="w-full text-left px-3 py-2 hover:bg-tg-subtle flex items-center justify-between text-[13px]">
+          <div>
+            <div class="font-medium text-tg-text">${escapeHtml(org.name)}</div>
+            <div class="text-[11px] text-tg-muted">${org.role}</div>
+          </div>
+          ${org.id === appState.activeOrgId ? '<span class="text-tg-blue font-bold">✓</span>' : ''}
+        </button>
+      `).join('');
+    }
+
+    function selectOrganization(orgId) {
+      appState.activeOrgId = orgId;
+      saveAppState();
+      renderOrgsDropdown();
+      renderAdsTable();
+      closeAllDropdowns();
+      showToast('Switched active workspace');
+    }
+
+    function createNewOrganization() {
+      const name = document.getElementById('new-org-name-input').value.trim();
+      if (!name) {
+        showToast('Please enter an organization name');
+        return;
+      }
+      const newOrg = { id: 'org-' + Date.now(), name, role: 'Owner' };
+      appState.organizations.push(newOrg);
+      appState.activeOrgId = newOrg.id;
+      saveAppState();
+      document.getElementById('new-org-name-input').value = '';
+      closeModal('modal-new-org');
+      renderOrgsDropdown();
+      renderAdsTable();
+      showToast(`Workspace "${name}" created`);
+    }
+
+    function setCurrency(curr, persist = true) {
+      appState.currency = curr;
+      if (persist) saveAppState();
+
+      document.getElementById('curr-btn-TON').className = curr === 'TON'
+        ? 'px-2 py-1 rounded-[5px] bg-tg-bg text-tg-blue shadow-2xs transition-colors'
+        : 'px-2 py-1 rounded-[5px] text-tg-muted hover:text-tg-text transition-colors';
+      document.getElementById('curr-btn-EUR').className = curr === 'EUR'
+        ? 'px-2 py-1 rounded-[5px] bg-tg-bg text-tg-blue shadow-2xs transition-colors'
+        : 'px-2 py-1 rounded-[5px] text-tg-muted hover:text-tg-text transition-colors';
+
+      const bal = appState.balances[curr].toFixed(2);
+      document.getElementById('subnav-balance').textContent = `${bal} ${curr}`;
+      document.getElementById('menu-balance-badge').textContent = `${bal} ${curr}`;
+      document.querySelectorAll('.curr-label').forEach(el => el.textContent = curr);
+
+      renderAdsTable();
+      renderBudgetView();
+      renderStatisticsView();
+      recalcCampaignEstimates();
+    }
+
+    function setLang(lang, persist = true) {
+      appState.lang = lang;
+      if (persist) saveAppState();
+
+      document.getElementById('lang-btn-en').className = lang === 'en'
+        ? 'px-2 py-1 rounded-[5px] bg-tg-bg text-tg-text transition-colors'
+        : 'px-2 py-1 rounded-[5px] text-tg-muted hover:text-tg-text transition-colors';
+      document.getElementById('lang-btn-ru').className = lang === 'ru'
+        ? 'px-2 py-1 rounded-[5px] bg-tg-bg text-tg-text transition-colors'
+        : 'px-2 py-1 rounded-[5px] text-tg-muted hover:text-tg-text transition-colors';
+
+      const dict = TRANSLATIONS[lang] || TRANSLATIONS.en;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const k = el.getAttribute('data-i18n');
+        if (dict[k]) el.textContent = dict[k];
       });
-      showToast('Бюджет объявления успешно пополнен');
-      await loadBootstrap();
-    } catch (err) {
-      showToast(err.message);
     }
-  }
 
-  function openDepositModal() {
-    document.getElementById('depositModal').showModal();
-  }
+    // ==================== NOTIFICATIONS ====================
+    function renderNotifications() {
+      const unread = appState.notifications.filter(n => n.unread).length;
+      const dot = document.getElementById('notif-dot');
+      dot.textContent = unread;
+      dot.classList.toggle('hidden', unread === 0);
 
-  async function submitDeposit() {
-    const amount = Number(document.getElementById('depositAmount').value);
-    if (!amount || amount < 10000) {
-      showToast('Минимальная сумма — 10 000 сум');
-      return;
+      document.getElementById('notif-items-list').innerHTML = appState.notifications.map(n => `
+        <div class="p-3 ${n.unread ? 'bg-tg-blueTint/40' : 'bg-tg-bg'}">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[12.5px] font-semibold text-tg-text">${escapeHtml(n.title)}</span>
+            <span class="text-[11px] text-tg-muted shrink-0">${n.time}</span>
+          </div>
+          <p class="text-[12px] text-tg-secondary mt-0.5 leading-snug">${escapeHtml(n.body)}</p>
+        </div>
+      `).join('');
     }
-    try {
-      await apiFetch('/api/v1/deposits/request', {
-        method: 'POST',
-        body: JSON.stringify({ amount_uzs: amount })
+
+    function markNotificationsRead() {
+      appState.notifications.forEach(n => n.unread = false);
+      saveAppState();
+      renderNotifications();
+    }
+
+    // ==================== ADS TABLE RENDERING & ACTIONS ====================
+    function setStatusFilter(st) {
+      statusFilter = st;
+      document.querySelectorAll('.status-pill').forEach(btn => {
+        const active = btn.getAttribute('data-status') === st;
+        btn.className = active
+          ? 'status-pill px-3 py-1 rounded-[6px] text-[12.5px] font-semibold bg-tg-blueTint text-tg-blue'
+          : 'status-pill px-3 py-1 rounded-[6px] text-[12.5px] font-medium text-tg-secondary hover:bg-tg-subtle';
       });
-      document.getElementById('depositModal').close();
-      showToast('Заявка отправлена администратору на проверку');
-      await loadBootstrap();
-    } catch (err) {
-      showToast(err.message);
+      renderAdsTable();
     }
-  }
 
-  function escapeHtml(str) {
-    return String(str || '').replace(/[&<>"']/g, m => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[m]));
-  }
+    function sortAdsBy(key) {
+      if (sortState.key === key) {
+        sortState.dir = sortState.dir === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortState.key = key;
+        sortState.dir = 'desc';
+      }
+      renderAdsTable();
+    }
 
-  recalcReach();
-  loadBootstrap();
-</script>
+    function getStatusPillHTML(status) {
+      switch (status) {
+        case 'Active':
+          return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-[5px] text-[11.5px] font-semibold bg-tg-greenBg text-tg-green"><span class="w-1.5 h-1.5 rounded-full bg-tg-green"></span>Active</span>`;
+        case 'In Review':
+          return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-[5px] text-[11.5px] font-semibold bg-tg-amberBg text-tg-amber"><span class="w-1.5 h-1.5 rounded-full bg-tg-amber"></span>In Review</span>`;
+        case 'Stopped':
+          return `<span class="inline-flex items-center px-2 py-0.5 rounded-[5px] text-[11.5px] font-semibold bg-zinc-200 text-zinc-700">Stopped</span>`;
+        case 'Declined':
+          return `<span class="inline-flex items-center px-2 py-0.5 rounded-[5px] text-[11.5px] font-semibold bg-tg-redBg text-tg-red">Declined ⓘ</span>`;
+        default:
+          return `<span class="inline-flex items-center px-2 py-0.5 rounded-[5px] text-[11.5px] font-semibold bg-tg-blueTint text-tg-blue">On Hold</span>`;
+      }
+    }
+
+    function renderAdsTable() {
+      const query = (document.getElementById('ads-search-input').value || '').toLowerCase().trim();
+      const dateMult = { today: 0.18, '7d': 1, '30d': 2.6, all: 3.4 }[document.getElementById('ads-date-filter').value] || 1;
+
+      const orgAds = appState.ads.filter(a => a.orgId === appState.activeOrgId && a.currency === appState.currency);
+      document.getElementById('tab-ads-count').textContent = orgAds.length;
+
+      let filtered = orgAds.filter(a => {
+        if (statusFilter !== 'all' && a.status !== statusFilter) return false;
+        if (query && !a.title.toLowerCase().includes(query) && !a.url.toLowerCase().includes(query)) return false;
+        return true;
+      });
+
+      filtered.sort((a, b) => {
+        const valA = a[sortState.key];
+        const valB = b[sortState.key];
+        if (typeof valA === 'string') {
+          return sortState.dir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        }
+        return sortState.dir === 'asc' ? valA - valB : valB - valA;
+      });
+
+      const tbody = document.getElementById('ads-table-body');
+      const emptyEl = document.getElementById('ads-empty-state');
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        emptyEl.classList.remove('hidden');
+        document.getElementById('ads-footer-count').textContent = 'Showing 0 ads';
+        document.getElementById('footer-total-views').textContent = '0';
+        document.getElementById('footer-total-clicks').textContent = '0';
+        document.getElementById('footer-total-spent').textContent = `0.00 ${appState.currency}`;
+        return;
+      }
+
+      emptyEl.classList.add('hidden');
+
+      let sumViews = 0;
+      let sumClicks = 0;
+      let sumSpent = 0;
+
+      tbody.innerHTML = filtered.map(ad => {
+        const views = Math.round(ad.views * dateMult);
+        const opened = Math.round(ad.opened * dateMult);
+        const clicks = Math.round(ad.clicks * dateMult);
+        const spent = Math.min(ad.budget, ad.spent * dateMult);
+        const ctr = views > 0 ? ((clicks / views) * 100).toFixed(2) : '0.00';
+        const remBudget = Math.max(0, ad.budget - ad.spent);
+        const pctUsed = ad.budget > 0 ? Math.min(100, Math.round((ad.spent / ad.budget) * 100)) : 0;
+
+        sumViews += views;
+        sumClicks += clicks;
+        sumSpent += spent;
+
+        const cleanUrl = ad.url.replace(/^https?:\/\//, '');
+        const canToggle = ad.status === 'Active' || ad.status === 'Stopped';
+
+        return `
+          <tr onclick="openAdDetailsModal('${ad.id}')" class="hover:bg-tg-surface cursor-pointer transition-colors group">
+            <td class="py-3 px-3.5 max-w-[260px]">
+              <div class="flex items-center gap-1.5">
+                <span class="font-semibold text-tg-text group-hover:text-tg-blue truncate">${escapeHtml(ad.title)}</span>
+                ${ad.hasMedia ? '<span class="px-1.5 py-0.2 rounded bg-tg-subtle border border-tg-border text-[10px] font-medium text-tg-muted shrink-0">Media</span>' : ''}
+              </div>
+              <div class="text-[11.5px] text-tg-blue truncate mt-0.5">${escapeHtml(cleanUrl)}</div>
+            </td>
+            <td class="py-3 px-3 whitespace-nowrap">${getStatusPillHTML(ad.status)}</td>
+            <td class="py-3 px-3 text-right font-medium tabular-nums">${views.toLocaleString()}</td>
+            <td class="py-3 px-3 text-right text-tg-secondary tabular-nums">${opened.toLocaleString()}</td>
+            <td class="py-3 px-3 text-right font-medium tabular-nums">${clicks.toLocaleString()}</td>
+            <td class="py-3 px-3 text-right text-tg-secondary tabular-nums">${ctr}%</td>
+            <td class="py-3 px-3 text-right font-medium tabular-nums whitespace-nowrap">${ad.cpm.toFixed(2)} ${ad.currency}</td>
+            <td class="py-3 px-3 text-right font-medium tabular-nums whitespace-nowrap">${spent.toFixed(2)} ${ad.currency}</td>
+            <td class="py-3 px-3 text-right tabular-nums whitespace-nowrap">
+              <div class="text-[12.5px] font-medium text-tg-text">${remBudget.toFixed(2)} / ${ad.budget.toFixed(2)}</div>
+              <div class="w-24 ml-auto h-1.5 bg-tg-subtle rounded-full overflow-hidden mt-1">
+                <div class="h-full bg-tg-blue progress-fill" style="width: ${pctUsed}%"></div>
+              </div>
+            </td>
+            <td class="py-3 px-3.5 text-right whitespace-nowrap" onclick="event.stopPropagation()">
+              <div class="inline-flex items-center gap-1">
+                ${canToggle ? `
+                  <button onclick="quickToggleAd('${ad.id}')" class="px-2 py-1 rounded-[5px] border border-tg-border bg-tg-bg hover:bg-tg-subtle text-[11.5px] font-medium text-tg-text" title="${ad.status === 'Active' ? 'Stop Ad' : 'Resume Ad'}">
+                    ${ad.status === 'Active' ? 'Pause' : 'Start'}
+                  </button>
+                ` : ''}
+                <button onclick="openAddBudgetModal('${ad.id}')" class="px-2 py-1 rounded-[5px] border border-tg-border bg-tg-bg hover:bg-tg-subtle text-[11.5px] font-semibold text-tg-blue" title="Add Budget">
+                  + Budget
+                </button>
+                <button onclick="openAdDetailsModal('${ad.id}')" class="px-2 py-1 rounded-[5px] border border-tg-border bg-tg-bg hover:bg-tg-subtle text-[11.5px] font-medium text-tg-secondary">
+                  Stats
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('ads-footer-count').textContent = `Showing ${filtered.length} ad${filtered.length === 1 ? '' : 's'}`;
+      document.getElementById('footer-total-views').textContent = sumViews.toLocaleString();
+      document.getElementById('footer-total-clicks').textContent = sumClicks.toLocaleString();
+      document.getElementById('footer-total-spent').textContent = `${sumSpent.toFixed(2)} ${appState.currency}`;
+    }
+
+    function quickToggleAd(adId) {
+      const ad = appState.ads.find(a => a.id === adId);
+      if (!ad) return;
+      ad.status = ad.status === 'Active' ? 'Stopped' : 'Active';
+      saveAppState();
+      renderAdsTable();
+      showToast(`Ad "${ad.title}" is now ${ad.status}`);
+    }
+
+    function exportAdsCsv() {
+      const rows = [
+        ['Ad ID', 'Title', 'URL', 'Status', 'Views', 'Opened', 'Clicks', 'CTR (%)', 'CPM', 'Spent', 'Total Budget', 'Currency']
+      ];
+      appState.ads
+        .filter(a => a.orgId === appState.activeOrgId && a.currency === appState.currency)
+        .forEach(a => {
+          const ctr = a.views > 0 ? ((a.clicks / a.views) * 100).toFixed(2) : '0.00';
+          rows.push([a.id, `"${a.title.replace(/"/g, '""')}"`, a.url, a.status, a.views, a.opened, a.clicks, ctr, a.cpm, a.spent, a.budget, a.currency]);
+        });
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + rows.map(r => r.join(',')).join('\n');
+      const link = document.createElement('a');
+      link.setAttribute('href', encodeURI(csvContent));
+      link.setAttribute('download', `telegram_ads_${appState.currency.toLowerCase()}_export.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('Exported CSV report');
+    }
+
+    // ==================== AD DETAILS MODAL ====================
+    function openAdDetailsModal(adId) {
+      const ad = appState.ads.find(a => a.id === adId);
+      if (!ad) return;
+      selectedDetailAdId = adId;
+
+      document.getElementById('det-title').textContent = ad.title;
+      document.getElementById('det-status-badge').innerHTML = getStatusPillHTML(ad.status);
+      document.getElementById('det-url').textContent = ad.url;
+
+      const declineBox = document.getElementById('det-decline-box');
+      if (ad.status === 'Declined' && ad.declineReason) {
+        declineBox.classList.remove('hidden');
+        document.getElementById('det-decline-reason').textContent = ad.declineReason;
+      } else {
+        declineBox.classList.add('hidden');
+      }
+
+      const ctr = ad.views > 0 ? ((ad.clicks / ad.views) * 100).toFixed(2) : '0.00';
+      document.getElementById('det-views').textContent = ad.views.toLocaleString();
+      document.getElementById('det-opened').textContent = ad.opened.toLocaleString();
+      document.getElementById('det-clicks').textContent = `${ad.clicks.toLocaleString()} (${ctr}%)`;
+      document.getElementById('det-budget').textContent = `${ad.spent.toFixed(2)} / ${ad.budget.toFixed(2)} ${ad.currency}`;
+      document.getElementById('det-text').textContent = ad.text;
+      document.getElementById('det-cpm-label').textContent = `CPM: ${ad.cpm.toFixed(2)} ${ad.currency}`;
+
+      // Render locked targeting summary
+      const t = ad.targeting || {};
+      const lines = [`<div><strong>Placement:</strong> ${ad.targetType}</div>`];
+      if (t.languages && t.languages.length) lines.push(`<div><strong>Languages:</strong> ${t.languages.join(', ')}</div>`);
+      if (t.topics && t.topics.length) lines.push(`<div><strong>Topics:</strong> ${t.topics.join(', ')}</div>`);
+      if (t.channels && t.channels.length) lines.push(`<div><strong>Channels:</strong> ${t.channels.join(', ')}</div>`);
+      if (t.bots && t.bots.length) lines.push(`<div><strong>Bots:</strong> ${t.bots.join(', ')}</div>`);
+      if (t.queries && t.queries.length) lines.push(`<div><strong>Search Queries:</strong> ${t.queries.join(', ')}</div>`);
+      document.getElementById('det-targeting').innerHTML = lines.join('');
+
+      // Toggle button label
+      const toggleBtn = document.getElementById('det-toggle-btn');
+      if (ad.status === 'Active') {
+        toggleBtn.textContent = 'Stop Ad';
+        toggleBtn.classList.remove('hidden');
+      } else if (ad.status === 'Stopped') {
+        toggleBtn.textContent = 'Resume Ad';
+        toggleBtn.classList.remove('hidden');
+      } else {
+        toggleBtn.classList.add('hidden');
+      }
+
+      // Draw Hourly SVG Mini Bars
+      const hourly = ad.hourly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      const maxH = Math.max(10, ...hourly);
+      const svg = document.getElementById('det-hourly-svg');
+      svg.innerHTML = hourly.map((val, idx) => {
+        const h = Math.round((val / maxH) * 58);
+        const x = idx * 39 + 8;
+        const y = 66 - h;
+        return `
+          <g>
+            <rect x="${x}" y="${y}" width="24" height="${Math.max(2, h)}" rx="3" fill="${val > 0 ? '#2481CC' : '#E4E4E7'}" />
+            <text x="${x + 12}" y="78" text-anchor="middle" font-size="9" fill="#71717A">${idx * 2}h</text>
+          </g>
+        `;
+      }).join('');
+
+      openModal('modal-ad-details');
+    }
+
+    function toggleSelectedAdStatus() {
+      if (!selectedDetailAdId) return;
+      quickToggleAd(selectedDetailAdId);
+      openAdDetailsModal(selectedDetailAdId);
+    }
+
+    function duplicateSelectedAd() {
+      const ad = appState.ads.find(a => a.id === selectedDetailAdId);
+      if (!ad) return;
+      closeModal('modal-ad-details');
+      openCreateAdView();
+      document.getElementById('form-ad-title').value = `${ad.title} (Copy)`;
+      document.getElementById('form-ad-text').value = ad.text;
+      document.getElementById('form-ad-url').value = ad.url;
+      document.getElementById('form-ad-cpm').value = ad.cpm.toFixed(2);
+      document.getElementById('form-ad-budget').value = ad.budget.toFixed(2);
+      syncAdPreview();
+      recalcCampaignEstimates();
+      showToast('Ad parameters copied to editor');
+    }
+
+    function openAddBudgetModal(adId) {
+      const ad = appState.ads.find(a => a.id === adId);
+      if (!ad) return;
+      addBudgetTargetAdId = adId;
+      document.getElementById('add-b-ad-name').textContent = ad.title;
+      document.getElementById('add-b-avail').textContent = `${appState.balances[appState.currency].toFixed(2)} ${appState.currency}`;
+      openModal('modal-add-ad-budget');
+    }
+
+    function confirmAddAdBudget() {
+      const ad = appState.ads.find(a => a.id === addBudgetTargetAdId);
+      if (!ad) return;
+      const amt = parseFloat(document.getElementById('add-b-amount').value) || 0;
+      if (amt <= 0) {
+        showToast('Enter a valid positive amount');
+        return;
+      }
+      if (appState.balances[appState.currency] < amt) {
+        showToast('Insufficient wallet balance');
+        return;
+      }
+      appState.balances[appState.currency] -= amt;
+      ad.budget += amt;
+      appState.ledger.unshift({
+        date: getUtcNowString(),
+        type: 'Ad Spend',
+        ref: `Budget top-up for ${ad.id} (${ad.title})`,
+        amount: -amt,
+        currency: appState.currency,
+        status: 'Allocated'
+      });
+      saveAppState();
+      setCurrency(appState.currency, false);
+      closeModal('modal-add-ad-budget');
+      if (!document.getElementById('modal-ad-details').classList.contains('hidden')) {
+        openAdDetailsModal(ad.id);
+      }
+      showToast(`Added ${amt.toFixed(2)} ${appState.currency} to campaign budget`);
+    }
+
+    // ==================== CREATE NEW AD BUILDER & LIVE PREVIEW ====================
+    function syncAdPreview() {
+      const title = document.getElementById('form-ad-title').value;
+      const text = document.getElementById('form-ad-text').value;
+      const rawUrl = document.getElementById('form-ad-url').value.trim();
+
+      document.getElementById('counter-title').textContent = `${title.length} / 64`;
+      const textCounter = document.getElementById('counter-text');
+      textCounter.textContent = `${text.length} / 160`;
+      textCounter.className = text.length >= 150
+        ? 'text-[11.5px] font-semibold text-tg-amber tabular-nums'
+        : 'text-[11.5px] font-semibold text-tg-muted tabular-nums';
+
+      document.getElementById('prev-channel-title').textContent = title.trim() || 'Your Channel or Bot';
+      document.getElementById('prev-ad-body').textContent = text.trim() || 'Your ad copy will appear here in real time. Keep it clear, informative, and within 160 characters.';
+
+      // URL Type detection & CTA label
+      const urlErr = document.getElementById('form-url-error');
+      const urlTypeEl = document.getElementById('url-detected-type');
+      const ctaBtn = document.getElementById('prev-cta-button');
+
+      if (!rawUrl) {
+        urlErr.classList.add('hidden');
+        urlTypeEl.textContent = '';
+        ctaBtn.textContent = 'VIEW CHANNEL';
+        return;
+      }
+
+      const normalized = rawUrl.startsWith('@') ? `https://t.me/${rawUrl.slice(1)}` : rawUrl;
+      const valid = /^(https?:\/\/)?(t\.me|telegram\.me)\/[a-zA-Z0-9_]{3,}(\/\d+)?(\?.*)?$/.test(normalized);
+
+      if (valid) {
+        urlErr.classList.add('hidden');
+        if (normalized.toLowerCase().includes('bot')) {
+          urlTypeEl.textContent = 'Target: Telegram Bot';
+          ctaBtn.textContent = 'OPEN BOT';
+        } else if (/\/\d+/.test(normalized)) {
+          urlTypeEl.textContent = 'Target: Channel Post';
+          ctaBtn.textContent = 'VIEW POST';
+        } else {
+          urlTypeEl.textContent = 'Target: Public Channel';
+          ctaBtn.textContent = 'VIEW CHANNEL';
+        }
+      } else {
+        urlErr.classList.remove('hidden');
+        urlTypeEl.textContent = '';
+      }
+    }
+
+    function normalizePromotedUrl() {
+      const inp = document.getElementById('form-ad-url');
+      let v = inp.value.trim();
+      if (v.startsWith('@') && v.length > 3) {
+        inp.value = 'https://t.me/' + v.slice(1);
+        syncAdPreview();
+      } else if (/^(t\.me|telegram\.me)\//i.test(v)) {
+        inp.value = 'https://' + v;
+        syncAdPreview();
+      }
+    }
+
+    function appendTextSnippet(snippet) {
+      const ta = document.getElementById('form-ad-text');
+      if (ta.value.length + snippet.length <= 160) {
+        ta.value += snippet;
+        syncAdPreview();
+      }
+    }
+
+    function toggleMediaDropzone() {
+      const checked = document.getElementById('form-show-media').checked;
+      document.getElementById('media-dropzone-container').classList.toggle('hidden', !checked);
+      const wrap = document.getElementById('prev-media-wrapper');
+      if (!checked) {
+        wrap.classList.add('hidden');
+      } else if (builderState.mediaUrl) {
+        wrap.classList.remove('hidden');
+      }
+    }
+
+    function handleMediaDrop(e) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('border-tg-blue', 'bg-tg-blueTint');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        processUploadedMediaFile(e.dataTransfer.files[0]);
+      }
+    }
+
+    function handleMediaFileSelect(e) {
+      if (e.target.files && e.target.files[0]) {
+        processUploadedMediaFile(e.target.files[0]);
+      }
+    }
+
+    function processUploadedMediaFile(file) {
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('File exceeds 5 MB maximum limit');
+        return;
+      }
+      if (builderState.mediaUrl) URL.revokeObjectURL(builderState.mediaUrl);
+      const objectUrl = URL.createObjectURL(file);
+      builderState.mediaUrl = objectUrl;
+      builderState.mediaKind = file.type.startsWith('video/') ? 'video' : 'image';
+
+      document.getElementById('media-attached-name').textContent = `${file.name} (${(file.size / 1024).toFixed(0)} KB)`;
+      document.getElementById('media-attached-bar').classList.remove('hidden');
+
+      const wrap = document.getElementById('prev-media-wrapper');
+      const img = document.getElementById('prev-img');
+      const vid = document.getElementById('prev-vid');
+      wrap.classList.remove('hidden');
+
+      if (builderState.mediaKind === 'video') {
+        img.classList.add('hidden');
+        vid.src = objectUrl;
+        vid.classList.remove('hidden');
+      } else {
+        vid.classList.add('hidden');
+        img.src = objectUrl;
+        img.classList.remove('hidden');
+      }
+    }
+
+    function removeAttachedMedia() {
+      if (builderState.mediaUrl) URL.revokeObjectURL(builderState.mediaUrl);
+      builderState.mediaUrl = null;
+      builderState.mediaKind = null;
+      document.getElementById('form-media-file').value = '';
+      document.getElementById('media-attached-bar').classList.add('hidden');
+      document.getElementById('prev-media-wrapper').classList.add('hidden');
+    }
+
+    function boostBid(factor) {
+      const inp = document.getElementById('form-ad-cpm');
+      const currVal = parseFloat(inp.value) || 0.50;
+      inp.value = (currVal * factor).toFixed(2);
+      recalcCampaignEstimates();
+    }
+
+    function fillMaxBudget() {
+      const avail = appState.balances[appState.currency];
+      document.getElementById('form-ad-budget').value = avail.toFixed(2);
+      recalcCampaignEstimates();
+    }
+
+    function toggleDailyLimitRow() {
+      document.getElementById('daily-limit-row').classList.toggle('hidden');
+    }
+
+    function toggleScheduleBox() {
+      document.getElementById('schedule-config-box').classList.toggle('hidden');
+    }
+
+    function setDailyUserViews(val) {
+      builderState.dailyUserViews = val;
+      document.querySelectorAll('.vlimit-btn').forEach(btn => {
+        const active = Number(btn.getAttribute('data-v')) === val;
+        btn.className = active
+          ? 'vlimit-btn py-1.5 rounded-[7px] border border-tg-blue bg-tg-blue text-white text-[13px] font-semibold tabular-nums'
+          : 'vlimit-btn py-1.5 rounded-[7px] border border-tg-border bg-tg-bg text-tg-text text-[13px] font-semibold tabular-nums';
+      });
+    }
+
+    function recalcCampaignEstimates() {
+      const curr = appState.currency;
+      const minCpm = curr === 'TON' ? 0.10 : 2.00;
+      const cpm = Math.max(0.01, parseFloat(document.getElementById('form-ad-cpm').value) || minCpm);
+      const budget = Math.max(0, parseFloat(document.getElementById('form-ad-budget').value) || 0);
+      const avail = appState.balances[curr];
+
+      // Auction win probability indicator
+      const ratio = cpm / minCpm;
+      const probEl = document.getElementById('auction-prob-badge');
+      if (ratio < 1.8) {
+        probEl.textContent = 'Low';
+        probEl.className = 'px-2 py-0.5 rounded-[5px] text-[11px] font-semibold bg-tg-amberBg text-tg-amber';
+      } else if (ratio < 5.0) {
+        probEl.textContent = 'Optimal';
+        probEl.className = 'px-2 py-0.5 rounded-[5px] text-[11px] font-semibold bg-tg-greenBg text-tg-green';
+      } else {
+        probEl.textContent = 'High';
+        probEl.className = 'px-2 py-0.5 rounded-[5px] text-[11px] font-semibold bg-tg-blueTint text-tg-blue';
+      }
+
+      const estViews = Math.floor((budget / cpm) * 1000);
+      const estClicks = Math.round(estViews * 0.018);
+      const rem = avail - budget;
+
+      document.getElementById('form-avail-balance').textContent = `${avail.toFixed(2)} ${curr}`;
+      document.getElementById('form-inline-est-views').textContent = `${estViews.toLocaleString()} views`;
+      document.getElementById('sum-est-views').textContent = estViews.toLocaleString();
+      document.getElementById('sum-est-clicks').textContent = estClicks.toLocaleString();
+
+      const remEl = document.getElementById('sum-rem-balance');
+      remEl.textContent = `${rem.toFixed(2)} ${curr}`;
+      remEl.className = rem >= 0 ? 'font-bold text-tg-green' : 'font-bold text-tg-red';
+    }
+
+    // ==================== TARGETING ENGINE (CHANNELS / BOTS / SEARCH / USERS) ====================
+    function setTargetType(type) {
+      builderState.targetType = type;
+      document.querySelectorAll('.tt-btn').forEach(btn => {
+        const active = btn.getAttribute('data-tt') === type;
+        btn.className = active
+          ? 'tt-btn px-3 py-1 rounded-[5px] bg-tg-bg text-tg-blue shadow-2xs'
+          : 'tt-btn px-3 py-1 rounded-[5px] text-tg-secondary hover:text-tg-text';
+      });
+      document.getElementById('sum-target-type').textContent = type;
+      renderDynamicTargetingFields();
+    }
+
+    function renderDynamicTargetingFields() {
+      const container = document.getElementById('dynamic-targeting-fields');
+      const tt = builderState.targetType;
+
+      if (tt === 'Channels') {
+        container.innerHTML = `
+          <div>
+            <label class="block text-[12.5px] font-semibold text-tg-text mb-1.5">Target Languages</label>
+            <div class="flex flex-wrap gap-1.5">
+              ${TARGET_LANGUAGES.map(lang => {
+                const on = builderState.languages.includes(lang);
+                return `<button type="button" onclick="toggleChipArray('languages', '${lang}')" class="px-2.5 py-1 rounded-[6px] text-[12px] font-medium border transition-colors ${on ? 'bg-tg-blueTint border-tg-blue text-tg-blue font-semibold' : 'bg-tg-surface border-tg-border text-tg-secondary hover:bg-tg-subtle'}">${lang} ${on ? '✓' : '+'}</button>`;
+              }).join('')}
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[12.5px] font-semibold text-tg-text mb-1.5">Target Topics</label>
+            <div class="flex flex-wrap gap-1.5">
+              ${TARGET_TOPICS.map(top => {
+                const on = builderState.topics.includes(top);
+                return `<button type="button" onclick="toggleChipArray('topics', '${top}')" class="px-2.5 py-1 rounded-[6px] text-[12px] font-medium border transition-colors ${on ? 'bg-tg-blueTint border-tg-blue text-tg-blue font-semibold' : 'bg-tg-surface border-tg-border text-tg-secondary hover:bg-tg-subtle'}">${top} ${on ? '✓' : '+'}</button>`;
+              }).join('')}
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[12.5px] font-semibold text-tg-text mb-1">Target Channels <span class="text-tg-muted font-normal">(Specific @channel or t.me/link)</span></label>
+            <div class="flex gap-2">
+              <input id="inp-add-channel" type="text" onkeydown="if(event.key==='Enter'){event.preventDefault();addTargetChip('channels','inp-add-channel','@');}" class="tg-field text-[13px]" placeholder="@channel_username or t.me/channel" />
+              <button type="button" onclick="addTargetChip('channels','inp-add-channel','@')" class="px-3 rounded-[7px] border border-tg-border bg-tg-surface hover:bg-tg-subtle text-[13px] font-semibold">Add</button>
+            </div>
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              ${builderState.channels.map((ch, idx) => `
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-tg-blueTint text-tg-blue text-[12px] font-semibold">
+                  <span>${escapeHtml(ch)}</span>
+                  <span class="text-[10px] bg-tg-blue text-white rounded-full w-3.5 h-3.5 inline-flex items-center justify-center">✓</span>
+                  <button type="button" onclick="removeTargetChip('channels', ${idx})" class="hover:text-tg-text ml-0.5">×</button>
+                </span>
+              `).join('')}
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[12.5px] font-semibold text-tg-text mb-1.5">Exclude Topics</label>
+            <div class="flex flex-wrap gap-1.5">
+              ${TARGET_TOPICS.slice(0, 6).map(top => {
+                const on = builderState.excludeTopics.includes(top);
+                return `<button type="button" onclick="toggleChipArray('excludeTopics', '${top}')" class="px-2.5 py-1 rounded-[6px] text-[12px] font-medium border transition-colors ${on ? 'bg-tg-redBg border-red-300 text-tg-red font-semibold' : 'bg-tg-surface border-tg-border text-tg-muted hover:bg-tg-subtle'}">${top} ${on ? '✕' : '−'}</button>`;
+              }).join('')}
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[12.5px] font-semibold text-tg-text mb-1">Exclude Channels</label>
+            <div class="flex gap-2">
+              <input id="inp-ex-channel" type="text" onkeydown="if(event.key==='Enter'){event.preventDefault();addTargetChip('excludeChannels','inp-ex-channel','@');}" class="tg-field text-[13px]" placeholder="@channel_to_exclude" />
+              <button type="button" onclick="addTargetChip('excludeChannels','inp-ex-channel','@')" class="px-3 rounded-[7px] border border-tg-border bg-tg-surface hover:bg-tg-subtle text-[13px] font-semibold">Add</button>
+            </div>
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              ${builderState.excludeChannels.map((ch, idx) => `
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-tg-redBg text-tg-red text-[12px] font-medium">
+                  <span>${escapeHtml(ch)}</span>
+                  <button type="button" onclick="removeTargetChip('excludeChannels', ${idx})" class="font-bold">×</button>
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else if (tt === 'Bots') {
+        container.innerHTML = `
+          <div>
+            <label class="block text-[12.5px] font-semibold text-tg-text mb-1">Target Bots <span class="text-tg-muted font-normal">(e.g., @wallet, @gamebot)</span></label>
+            <div class="flex gap-2">
+              <input id="inp-add-bot" type="text" onkeydown="if(event.key==='Enter'){event.preventDefault();addTargetChip('bots','inp-add-bot','@');}" class="tg-field text-[13px]" placeholder="@bot_username" />
+              <button type="button" onclick="addTargetChip('bots','inp-add-bot','@')" class="px-3 rounded-[7px] border border-tg-border bg-tg-surface hover:bg-tg-subtle text-[13px] font-semibold">Add</button>
+            </div>
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              ${builderState.bots.map((b, idx) => `
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-tg-blueTint text-tg-blue text-[12px] font-semibold">
+                  <span>${escapeHtml(b)}</span>
+                  <button type="button" onclick="removeTargetChip('bots', ${idx})">×</button>
+                </span>
+              `).join('')}
+            </div>
+          </div>
+          <div>
+            <label class="block text-[12.5px] font-semibold text-tg-text mb-1.5">Bot User Languages</label>
+            <div class="flex flex-wrap gap-1.5">
+              ${TARGET_LANGUAGES.map(lang => {
+                const on = builderState.languages.includes(lang);
+                return `<button type="button" onclick="toggleChipArray('languages', '${lang}')" class="px-2.5 py-1 rounded-[6px] text-[12px] font-medium border ${on ? 'bg-tg-blueTint border-tg-blue text-tg-blue font-semibold' : 'bg-tg-surface border-tg-border text-tg-secondary'}">${lang}</button>`;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      } else if (tt === 'Search') {
+        container.innerHTML = `
+          <div>
+            <label class="block text-[12.5px] font-semibold text-tg-text mb-1">Target Search Queries <span class="text-tg-muted font-normal">(Global Telegram Search keywords)</span></label>
+            <div class="flex gap-2">
+              <input id="inp-add-query" type="text" onkeydown="if(event.key==='Enter'){event.preventDefault();addTargetChip('searchQueries','inp-add-query','');}" class="tg-field text-[13px]" placeholder="e.g., crypto news, vpn, jobs" />
+              <button type="button" onclick="addTargetChip('searchQueries','inp-add-query','')" class="px-3 rounded-[7px] border border-tg-border bg-tg-surface hover:bg-tg-subtle text-[13px] font-semibold">Add</button>
+            </div>
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              ${builderState.searchQueries.map((q, idx) => {
+                const vol = (q.length * 4.2 + 12).toFixed(1);
+                return `
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-tg-blueTint text-tg-blue text-[12px] font-semibold">
+                    <span>"${escapeHtml(q)}"</span>
+                    <span class="text-[10.5px] font-normal text-tg-secondary tabular-nums">~${vol}K/day</span>
+                    <button type="button" onclick="removeTargetChip('searchQueries', ${idx})">×</button>
+                  </span>
+                `;
+              }).join('')}
+            </div>
+          </div>
+          <div>
+            <label class="block text-[12.5px] font-semibold text-tg-text mb-1.5">Search Interface Languages</label>
+            <div class="flex flex-wrap gap-1.5">
+              ${TARGET_LANGUAGES.slice(0, 6).map(lang => {
+                const on = builderState.languages.includes(lang);
+                return `<button type="button" onclick="toggleChipArray('languages', '${lang}')" class="px-2.5 py-1 rounded-[6px] text-[12px] font-medium border ${on ? 'bg-tg-blueTint border-tg-blue text-tg-blue font-semibold' : 'bg-tg-surface border-tg-border text-tg-secondary'}">${lang}</button>`;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        // Users Placement
+        const OS_LIST = ['All', 'iOS', 'Android', 'Desktop'];
+        container.innerHTML = `
+          <div>
+            <label class="block text-[12.5px] font-semibold text-tg-text mb-1.5">Device OS</label>
+            <div class="grid grid-cols-4 gap-2">
+              ${OS_LIST.map(os => `
+                <button type="button" onclick="builderState.deviceOS='${os}';renderDynamicTargetingFields();" class="py-1.5 rounded-[7px] border text-[12.5px] font-semibold ${builderState.deviceOS === os ? 'border-tg-blue bg-tg-blueTint text-tg-blue' : 'border-tg-border bg-tg-bg text-tg-secondary'}">${os}</button>
+              `).join('')}
+            </div>
+          </div>
+          <div>
+            <label class="block text-[12.5px] font-semibold text-tg-text mb-1.5">User Languages</label>
+            <div class="flex flex-wrap gap-1.5">
+              ${TARGET_LANGUAGES.map(lang => {
+                const on = builderState.languages.includes(lang);
+                return `<button type="button" onclick="toggleChipArray('languages', '${lang}')" class="px-2.5 py-1 rounded-[6px] text-[12px] font-medium border ${on ? 'bg-tg-blueTint border-tg-blue text-tg-blue font-semibold' : 'bg-tg-surface border-tg-border text-tg-secondary'}">${lang}</button>`;
+              }).join('')}
+            </div>
+          </div>
+          <div>
+            <label class="block text-[12.5px] font-semibold text-tg-text mb-1">Countries / Regions</label>
+            <div class="flex gap-2">
+              <input id="inp-add-country" type="text" onkeydown="if(event.key==='Enter'){event.preventDefault();addTargetChip('countries','inp-add-country','');}" class="tg-field text-[13px]" placeholder="Add country (e.g., Kazakhstan)" />
+              <button type="button" onclick="addTargetChip('countries','inp-add-country','')" class="px-3 rounded-[7px] border border-tg-border bg-tg-surface text-[13px] font-semibold">Add</button>
+            </div>
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              ${builderState.countries.map((c, idx) => `
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-tg-subtle border border-tg-border text-tg-text text-[12px] font-medium">
+                  <span>${escapeHtml(c)}</span>
+                  <button type="button" onclick="removeTargetChip('countries', ${idx})">×</button>
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function toggleChipArray(key, val) {
+      const arr = builderState[key];
+      const idx = arr.indexOf(val);
+      if (idx > -1) arr.splice(idx, 1);
+      else arr.push(val);
+      renderDynamicTargetingFields();
+    }
+
+    function addTargetChip(key, inputId, prefix) {
+      const inp = document.getElementById(inputId);
+      let v = inp.value.trim().replace(/^https?:\/\/(t\.me|telegram\.me)\//i, '');
+      if (!v) return;
+      if (prefix && !v.startsWith(prefix)) v = prefix + v;
+      if (!builderState[key].includes(v)) {
+        builderState[key].push(v);
+      }
+      inp.value = '';
+      renderDynamicTargetingFields();
+    }
+
+    function removeTargetChip(key, idx) {
+      builderState[key].splice(idx, 1);
+      renderDynamicTargetingFields();
+    }
+
+    function clearAdDraft() {
+      document.getElementById('form-ad-title').value = '';
+      document.getElementById('form-ad-text').value = '';
+      document.getElementById('form-ad-url').value = '';
+      document.getElementById('form-accept-terms').checked = false;
+      removeAttachedMedia();
+      syncAdPreview();
+      showToast('Draft cleared');
+    }
+
+    // ==================== SUBMIT NEW AD & 6-SECOND MODERATION LIFECYCLE ====================
+    function submitCampaignForm() {
+      const title = document.getElementById('form-ad-title').value.trim();
+      const text = document.getElementById('form-ad-text').value.trim();
+      let url = document.getElementById('form-ad-url').value.trim();
+      const cpm = parseFloat(document.getElementById('form-ad-cpm').value) || 0;
+      const budget = parseFloat(document.getElementById('form-ad-budget').value) || 0;
+      const accepted = document.getElementById('form-accept-terms').checked;
+      const curr = appState.currency;
+      const minCpm = curr === 'TON' ? 0.10 : 2.00;
+
+      if (!title) {
+        showToast('Please enter an Ad Title');
+        document.getElementById('form-ad-title').focus();
+        return;
+      }
+      if (!text) {
+        showToast('Please enter Ad Text');
+        document.getElementById('form-ad-text').focus();
+        return;
+      }
+      if (url.startsWith('@')) url = 'https://t.me/' + url.slice(1);
+      if (!/^(https?:\/\/)?(t\.me|telegram\.me)\/[a-zA-Z0-9_]{3,}/.test(url)) {
+        showToast('Please enter a valid Telegram URL (t.me/...)');
+        document.getElementById('form-ad-url').focus();
+        return;
+      }
+      if (!url.startsWith('http')) url = 'https://' + url;
+
+      if (cpm < minCpm) {
+        showToast(`Minimum CPM is ${minCpm.toFixed(2)} ${curr}`);
+        return;
+      }
+      if (budget < 1) {
+        showToast(`Minimum initial budget is 1.00 ${curr}`);
+        return;
+      }
+      if (appState.balances[curr] < budget) {
+        showToast('Insufficient wallet balance. Please top up.');
+        openModal('modal-topup');
+        return;
+      }
+      if (!accepted) {
+        showToast('Please accept the Telegram Ad Platform Terms of Service');
+        return;
+      }
+
+      const desiredPostReviewStatus = document.querySelector('input[name="initial_status"]:checked').value;
+      const newAdId = 'AD-' + Math.floor(9050 + Math.random() * 900);
+
+      // Deduct budget & record ledger entry
+      appState.balances[curr] -= budget;
+      appState.ledger.unshift({
+        date: getUtcNowString(),
+        type: 'Ad Spend',
+        ref: `Initial budget lock for ${newAdId} (${title})`,
+        amount: -budget,
+        currency: curr,
+        status: 'Reserved'
+      });
+
+      const newAd = {
+        id: newAdId,
+        orgId: appState.activeOrgId,
+        currency: curr,
+        title,
+        url,
+        text,
+        status: 'In Review',
+        views: 0,
+        opened: 0,
+        clicks: 0,
+        cpm,
+        spent: 0.00,
+        budget,
+        hasMedia: Boolean(builderState.mediaUrl),
+        targetType: builderState.targetType,
+        targeting: {
+          languages: [...builderState.languages],
+          topics: [...builderState.topics],
+          channels: [...builderState.channels],
+          bots: [...builderState.bots],
+          queries: [...builderState.searchQueries]
+        },
+        hourly: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      };
+
+      appState.ads.unshift(newAd);
+      appState.notifications.unshift({
+        id: 'n-' + Date.now(),
+        title: `Ad "${title}" submitted for review`,
+        body: `Campaign ${newAdId} is queued for Telegram moderation.`,
+        time: 'Just now',
+        unread: true
+      });
+
+      saveAppState();
+      clearAdDraft();
+      setCurrency(curr, false);
+      renderNotifications();
+      switchMainTab('ads');
+      showToast(`Ad ${newAdId} submitted for moderation!`);
+
+      // 6-Second Simulated Moderation & Initial Delivery Start
+      setTimeout(() => {
+        const target = appState.ads.find(a => a.id === newAdId);
+        if (target && target.status === 'In Review') {
+          target.status = desiredPostReviewStatus;
+          if (desiredPostReviewStatus === 'Active') {
+            target.views = 1240;
+            target.opened = 158;
+            target.clicks = 26;
+            target.spent = parseFloat(((1240 / 1000) * target.cpm).toFixed(2));
+            target.hourly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 210, 440, 590];
+          }
+          appState.notifications.unshift({
+            id: 'n-' + (Date.now() + 1),
+            title: `Ad "${target.title}" approved`,
+            body: `Campaign ${newAdId} passed moderation and is now ${desiredPostReviewStatus}.`,
+            time: 'Just now',
+            unread: true
+          });
+          saveAppState();
+          renderNotifications();
+          renderAdsTable();
+          showToast(`Moderation passed: ${newAdId} is now ${desiredPostReviewStatus}`);
+        }
+      }, 6000);
+    }
+
+    // ==================== BUDGET & BILLING VIEW ====================
+    function renderBudgetView() {
+      const curr = appState.currency;
+      const otherCurr = curr === 'TON' ? 'EUR' : 'TON';
+      document.getElementById('budget-main-balance').textContent = `${appState.balances[curr].toFixed(2)} ${curr}`;
+      document.getElementById('budget-secondary-balance').textContent = `${otherCurr} Wallet: ${appState.balances[otherCurr].toFixed(2)} ${otherCurr}`;
+
+      const orgAds = appState.ads.filter(a => a.orgId === appState.activeOrgId && a.currency === curr);
+      const reserved = orgAds.reduce((acc, a) => acc + Math.max(0, a.budget - a.spent), 0);
+      const lifetime = orgAds.reduce((acc, a) => acc + a.spent, 0);
+
+      document.getElementById('budget-reserved-val').textContent = `${reserved.toFixed(2)} ${curr}`;
+      document.getElementById('budget-lifetime-val').textContent = `${lifetime.toFixed(2)} ${curr}`;
+
+      const ledgerBody = document.getElementById('ledger-table-body');
+      ledgerBody.innerHTML = appState.ledger.map(item => {
+        const isPos = item.amount >= 0;
+        const badgeClass = item.type === 'Top-up'
+          ? 'bg-tg-greenBg text-tg-green'
+          : item.type === 'Refund'
+            ? 'bg-tg-blueTint text-tg-blue'
+            : 'bg-tg-subtle text-tg-secondary';
+        return `
+          <tr class="hover:bg-tg-surface/70">
+            <td class="py-3 px-4 text-tg-secondary whitespace-nowrap">${item.date}</td>
+            <td class="py-3 px-3 whitespace-nowrap">
+              <span class="px-2 py-0.5 rounded-[5px] text-[11.5px] font-semibold ${badgeClass}">${item.type}</span>
+            </td>
+            <td class="py-3 px-3 text-tg-text">${escapeHtml(item.ref)}</td>
+            <td class="py-3 px-3 text-right font-semibold whitespace-nowrap ${isPos ? 'text-tg-green' : 'text-tg-text'}">
+              ${isPos ? '+' : ''}${item.amount.toFixed(2)} ${item.currency}
+            </td>
+            <td class="py-3 px-4 text-right text-tg-muted text-[12px] whitespace-nowrap">${item.status}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function selectTopupMethod(method) {
+      builderState.topupMethod = method;
+      document.querySelectorAll('.tm-btn').forEach(btn => {
+        const active = btn.getAttribute('data-tm') === method;
+        btn.className = active
+          ? 'tm-btn p-2.5 rounded-[7px] border-2 border-tg-blue bg-tg-blueTint text-tg-blue font-semibold text-left text-[12.5px]'
+          : 'tm-btn p-2.5 rounded-[7px] border border-tg-border bg-tg-surface text-tg-text font-semibold text-left text-[12.5px]';
+      });
+    }
+
+    function executeTopupDeposit() {
+      const amt = parseFloat(document.getElementById('topup-deposit-amount').value) || 0;
+      if (amt <= 0) {
+        showToast('Enter a valid deposit amount');
+        return;
+      }
+      const curr = appState.currency;
+      appState.balances[curr] += amt;
+      appState.ledger.unshift({
+        date: getUtcNowString(),
+        type: 'Top-up',
+        ref: `${builderState.topupMethod} deposit`,
+        amount: amt,
+        currency: curr,
+        status: 'Confirmed'
+      });
+      saveAppState();
+      setCurrency(curr, false);
+      closeModal('modal-topup');
+      showToast(`Credited +${amt.toFixed(2)} ${curr} to wallet`);
+    }
+
+    // ==================== STATISTICS & CUSTOM INTERACTIVE SVG CHART ====================
+    function setStatsRange(days) {
+      statsRangeDays = days;
+      [7, 14, 30].forEach(d => {
+        const btn = document.getElementById(`stats-rng-${d}`);
+        btn.className = d === days
+          ? 'px-2 py-0.5 rounded bg-tg-bg text-tg-blue'
+          : 'px-2 py-0.5 rounded text-tg-muted';
+      });
+      renderStatisticsView();
+    }
+
+    function renderStatisticsView() {
+      const curr = appState.currency;
+      const orgAds = appState.ads.filter(a => a.orgId === appState.activeOrgId && a.currency === curr);
+
+      const totViews = orgAds.reduce((s, a) => s + a.views, 0);
+      const totOpened = orgAds.reduce((s, a) => s + a.opened, 0);
+      const totClicks = orgAds.reduce((s, a) => s + a.clicks, 0);
+      const totSpent = orgAds.reduce((s, a) => s + a.spent, 0);
+      const avgCtr = totViews > 0 ? ((totClicks / totViews) * 100).toFixed(2) : '0.00';
+      const avgCpm = totViews > 0 ? ((totSpent / totViews) * 1000).toFixed(2) : '0.00';
+
+      document.getElementById('kpi-views').textContent = totViews.toLocaleString();
+      document.getElementById('kpi-opened').textContent = totOpened.toLocaleString();
+      document.getElementById('kpi-clicks').textContent = totClicks.toLocaleString();
+      document.getElementById('kpi-ctr').textContent = `${avgCtr}%`;
+      document.getElementById('kpi-cpm').textContent = `${avgCpm} ${curr}`;
+      document.getElementById('kpi-spent').textContent = `${totSpent.toFixed(2)} ${curr}`;
+
+      // Breakdown Table
+      document.getElementById('stats-breakdown-body').innerHTML = orgAds.map(ad => {
+        const ctr = ad.views > 0 ? ((ad.clicks / ad.views) * 100).toFixed(2) : '0.00';
+        return `
+          <tr class="hover:bg-tg-surface">
+            <td class="py-2.5 px-4 font-semibold text-tg-text">${escapeHtml(ad.title)}</td>
+            <td class="py-2.5 px-3 text-tg-secondary">${ad.targetType}</td>
+            <td class="py-2.5 px-3 text-right font-medium">${ad.views.toLocaleString()}</td>
+            <td class="py-2.5 px-3 text-right font-medium">${ad.clicks.toLocaleString()}</td>
+            <td class="py-2.5 px-3 text-right text-tg-blue font-semibold">${ctr}%</td>
+            <td class="py-2.5 px-4 text-right font-medium">${ad.spent.toFixed(2)} ${curr}</td>
+          </tr>
+        `;
+      }).join('');
+
+      drawInteractiveAnalyticsChart(statsRangeDays);
+    }
+
+    function drawInteractiveAnalyticsChart(days) {
+      const svg = document.getElementById('analytics-svg-chart');
+      const series = [];
+      for (let i = days - 1; i >= 0; i--) {
+        const d = new Date(Date.now() - i * 86400000);
+        const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        const baseViews = 14000 + Math.round(Math.sin(i * 0.7) * 4500 + ((i * 1337) % 5200));
+        const baseClicks = Math.round(baseViews * (0.019 + ((i % 4) * 0.002)));
+        series.push({ label, views: baseViews, clicks: baseClicks });
+      }
+
+      const maxViews = Math.max(...series.map(s => s.views));
+      const width = 840;
+      const height = 185;
+      const stepX = width / series.length;
+      const barW = Math.max(8, Math.min(28, stepX * 0.56));
+
+      // Grid lines
+      let html = `
+        <line x1="0" y1="20" x2="${width}" y2="20" stroke="#F4F4F5" stroke-width="1" />
+        <line x1="0" y1="75" x2="${width}" y2="75" stroke="#F4F4F5" stroke-width="1" />
+        <line x1="0" y1="130" x2="${width}" y2="130" stroke="#F4F4F5" stroke-width="1" />
+        <line x1="0" y1="${height}" x2="${width}" y2="${height}" stroke="#E4E4E7" stroke-width="1" />
+      `;
+
+      const linePoints = [];
+
+      series.forEach((pt, idx) => {
+        const cx = idx * stepX + stepX / 2;
+        const barH = Math.round((pt.views / maxViews) * 155);
+        const barY = height - barH;
+        const clickY = height - Math.round((pt.clicks / (maxViews * 0.028)) * 145);
+        linePoints.push(`${cx},${Math.max(15, clickY)}`);
+
+        html += `
+          <g class="cursor-pointer"
+             onmouseenter="showChartTooltip('${pt.label}', ${pt.views}, ${pt.clicks})"
+             onmouseleave="hideChartTooltip()">
+            <rect x="${cx - barW / 2}" y="${barY}" width="${barW}" height="${barH}" rx="4" fill="#2481CC" fill-opacity="0.82" />
+            ${days <= 14 || idx % 2 === 0 ? `<text x="${cx}" y="205" text-anchor="middle" font-size="10" fill="#71717A">${pt.label}</text>` : ''}
+          </g>
+        `;
+      });
+
+      html += `<polyline fill="none" stroke="#16A34A" stroke-width="2.2" points="${linePoints.join(' ')}" pointer-events="none" />`;
+      linePoints.forEach(p => {
+        const [x, y] = p.split(',');
+        html += `<circle cx="${x}" cy="${y}" r="3.2" fill="#16A34A" stroke="#FFFFFF" stroke-width="1.2" pointer-events="none" />`;
+      });
+
+      svg.innerHTML = html;
+    }
+
+    function showChartTooltip(dateStr, views, clicks) {
+      const tt = document.getElementById('chart-hover-tooltip');
+      document.getElementById('tt-date').textContent = dateStr;
+      document.getElementById('tt-views').textContent = views.toLocaleString();
+      document.getElementById('tt-clicks').textContent = clicks.toLocaleString();
+      tt.classList.remove('hidden');
+    }
+
+    function hideChartTooltip() {
+      document.getElementById('chart-hover-tooltip').classList.add('hidden');
+    }
+
+    // ==================== UTILITIES & MODALS ====================
+    function toggleDropdown(id) {
+      const target = document.getElementById(id);
+      const isHidden = target.classList.contains('hidden');
+      closeAllDropdowns();
+      if (isHidden) target.classList.remove('hidden');
+    }
+
+    function closeAllDropdowns() {
+      ['org-dropdown-menu', 'notif-popover', 'profile-dropdown-menu'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+    }
+
+    function togglePreviewMenu() {
+      document.getElementById('preview-dots-menu').classList.toggle('hidden');
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function closeModalOnOverlay(e, id) {
+      if (e.target.id === id) closeModal(id);
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById('toast-container');
+      document.getElementById('toast-text').textContent = msg;
+      box.classList.remove('opacity-0');
+      clearTimeout(window._tgToastTimer);
+      window._tgToastTimer = setTimeout(() => {
+        box.classList.add('opacity-0');
+      }, 2600);
+    }
+
+    function getUtcNowString() {
+      return new Date().toISOString().replace('T', ' ').slice(0, 16);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+  </script>
 </body>
 </html>
