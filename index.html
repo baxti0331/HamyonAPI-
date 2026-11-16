@@ -1,289 +1,777 @@
 <!DOCTYPE html>
-<html lang="uz" data-theme="light">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="robots" content="noindex,nofollow">
-<meta name="color-scheme" content="light dark">
-<title>Secure payment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprunki Drinks Animation — 9:16 Video Ready</title>
 <style>
-:root{--bg:#f4f5f2;--card:#fff;--soft:#f3f4f1;--line:#e4e6df;--tx:#171a14;--mut:#6b7164;--g:#8aa968;--gd:#4f6f34;--gbg:#eef3e3;--gline:#d3dfbd;--wbg:#fbf3df;--wline:#efdfb4;--wtx:#7a5a12;--rd:#e5533d;--ok:#2f9e5b;--sh:0 1px 2px rgba(20,24,16,.04),0 8px 24px -12px rgba(20,24,16,.12)}
-html[data-theme=dark]{--bg:#0f120d;--card:#171b13;--soft:#1e2319;--line:#2a3023;--tx:#eef1e8;--mut:#9aa28f;--g:#8aa968;--gd:#a9c985;--gbg:#1c2415;--gline:#34422a;--wbg:#2a2412;--wline:#4a3f1c;--wtx:#e6c872;--sh:0 8px 24px -12px rgba(0,0,0,.6)}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{background:var(--bg)}
-body{font:500 15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,system-ui,sans-serif;color:var(--tx);min-height:100vh;padding-bottom:calc(32px + env(safe-area-inset-bottom))}
-.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
-.wrap{max-width:480px;margin:0 auto;padding:0 16px}
-header{background:var(--card);border-bottom:1px solid var(--line);padding:calc(16px + env(safe-area-inset-top)) 0 14px}
-.brand{display:flex;align-items:center;gap:14px}
-.logo{width:48px;height:48px;border-radius:14px;background:var(--gbg);border:1px solid var(--gline);display:grid;place-items:center;flex:none}
-.logo svg{width:26px;height:26px;stroke:var(--gd)}
-.brand h1{font-size:20px;font-weight:800;letter-spacing:-.01em;overflow-wrap:anywhere}
-.secure{display:flex;align-items:center;gap:6px;color:var(--mut);font-size:14px}
-.secure svg{width:16px;height:16px;stroke:var(--gd)}
-.lock{margin-left:auto;color:var(--mut)}
-.lock svg{width:22px;height:22px}
-.bar{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:12px;padding:3px;background:var(--card)}
-.seg button{border:0;background:transparent;color:var(--mut);font:700 14px inherit;font-family:inherit;padding:8px 14px;border-radius:9px;cursor:pointer}
-.seg button.on{background:var(--soft);color:var(--tx)}
-.seg svg{width:18px;height:18px;vertical-align:-3px;stroke:currentColor}
-.box{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--sh)}
-main{padding-top:18px;display:grid;gap:14px}
-.status{padding:18px;display:flex;gap:16px;align-items:center;background:var(--soft)}
-.tm{flex:none}
-.segs{display:flex;gap:3px;margin-bottom:6px}
-.segs i{width:11px;height:30px;border-radius:4px;background:var(--line);transition:background .3s}
-.segs i.on{background:var(--g)}
-.time{font-size:44px;font-weight:800;letter-spacing:.02em;line-height:1}
-.st{flex:1;min-width:0}
-.st b{display:block;font-size:20px;font-weight:800}
-.st span{color:var(--mut);font-size:14px;display:flex;gap:6px;align-items:center;margin-top:4px}
-.st span svg{width:18px;height:18px;flex:none}
-.rf{flex:none;align-self:flex-start;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--gd);cursor:pointer;display:grid;place-items:center}
-.rf svg{width:20px;height:20px}
-.rf.spin svg{animation:sp .8s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-.guide{width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;border:1px solid var(--gline);background:var(--gbg);color:var(--gd);font:800 16px inherit;font-family:inherit;cursor:pointer;text-align:left}
-.guide .pl{width:40px;height:40px;border-radius:50%;background:var(--g);display:grid;place-items:center;flex:none}
-.guide .pl svg{width:16px;height:16px;fill:#fff;stroke:none}
-.guide .ar{margin-left:auto;display:flex;gap:2px}
-.guide .ar svg{width:16px;height:22px;fill:var(--g)}
-.steps{display:none;padding:6px 18px 14px;margin-top:-6px}
-.steps.open{display:block}
-.steps ol{padding-left:0;list-style:none;counter-item:c;display:grid;gap:10px;margin-top:10px}
-.steps li{display:flex;gap:12px;align-items:flex-start;color:var(--tx);font-size:14.5px}
-.steps li em{font-style:normal;flex:none;width:26px;height:26px;border-radius:8px;background:var(--gbg);border:1px solid var(--gline);color:var(--gd);font-weight:800;display:grid;place-items:center;font-size:13px}
-.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px}
-.lbl{color:var(--mut);font-size:15px}
-.val{font-size:32px;font-weight:800;letter-spacing:.01em;margin-top:14px;overflow-wrap:anywhere}
-.val.sm{font-size:24px}
-.cp{border:1px solid var(--line);background:var(--card);color:var(--tx);border-radius:12px;padding:10px 14px;font:700 15px inherit;font-family:inherit;display:inline-flex;align-items:center;gap:8px;cursor:pointer;flex:none}
-.cp svg{width:18px;height:18px}
-.cp.done{color:var(--ok);border-color:var(--ok)}
-.sec{padding:18px;border-top:1px solid var(--line)}
-.sec:first-child{border-top:0}
-.prov{float:right;font-weight:800;color:var(--mut);letter-spacing:.04em}
-.hold{margin-top:10px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
-.hold small{display:block;color:var(--mut);font-size:14px}
-.hold b{font-size:17px;font-weight:700;overflow-wrap:anywhere}
-.warn{display:flex;gap:12px;align-items:center;padding:14px 16px;border-radius:16px;background:var(--wbg);border:1px solid var(--wline);color:var(--wtx);font-size:15px}
-.warn .ic,.mod .ic{width:30px;height:30px;border-radius:9px;background:var(--rd);display:grid;place-items:center;flex:none}
-.warn .ic svg,.mod .ic svg{width:18px;height:18px;stroke:#fff}
-.hide{display:none!important}
-.res{padding:30px 20px;text-align:center}
-.res .big{width:72px;height:72px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center}
-.res .big svg{width:36px;height:36px;stroke:#fff}
-.res.ok .big{background:var(--ok)}
-.res.bad .big{background:var(--rd)}
-.res h2{font-size:22px;font-weight:800}
-.res p{color:var(--mut);margin-top:6px}
-.btn{display:block;width:100%;text-align:center;text-decoration:none;border:0;background:var(--g);color:#fff;font:800 17px inherit;font-family:inherit;padding:16px;border-radius:16px;cursor:pointer;margin-top:18px}
-.ov{position:fixed;inset:0;background:rgba(10,12,8,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;z-index:20}
-.mod{background:var(--card);border-radius:24px;padding:22px;width:100%;max-width:420px;border:1px solid var(--line)}
-.mod .hd{display:flex;align-items:center;gap:12px}
-.mod .hd .ic{width:40px;height:40px;border-radius:12px}
-.mod h3{font-size:24px;font-weight:800}
-.mod p{color:var(--mut);margin-top:16px}
-.mod .big{font-size:34px;font-weight:800;margin:8px 0 14px}
-.mod .t{color:var(--tx)}
-.mod .warn{margin-top:16px}
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:#171a14;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:30}
-.toast.on{opacity:1;transform:translateX(-50%)}
-.cardtile+.cardtile{border-top:1px dashed var(--line)}
-.skeleton{padding:60px 20px;text-align:center;color:var(--mut)}
+  * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+  body {
+    background: #111318;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
+    overflow: hidden;
+  }
+
+  /* Вертикальный контейнер 9:16 для Shorts / Reels / TikTok */
+  .stage-wrapper {
+    position: relative;
+    width: min(100vw, 430px);
+    height: min(100vh, 764px);
+    aspect-ratio: 9 / 16;
+    background: #55ccf2;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.65);
+  }
+
+  canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Панель управления (скрывается во время записи видео) */
+  .controls {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 8px;
+    z-index: 20;
+    transition: opacity 0.3s;
+  }
+  .controls.hidden { opacity: 0; pointer-events: none; }
+
+  button {
+    background: rgba(15, 23, 42, 0.78);
+    color: #fff;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition: transform 0.15s, background 0.2s;
+  }
+  button:hover { transform: scale(1.05); background: rgba(15, 23, 42, 0.95); }
+  button.active { background: #ef4444; border-color: #fca5a5; }
 </style>
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <div class="brand">
-      <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 10h19M6.5 15h4"/></svg></div>
-      <div>
-        <h1 id="shop">…</h1>
-        <div class="secure"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span data-i="secure"></span></div>
-      </div>
-      <div class="lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div>
-    </div>
-    <div class="bar">
-      <div class="seg" id="langs"><button data-l="uz">UZ</button><button data-l="ru">RU</button><button data-l="en">EN</button></div>
-      <div class="seg" id="themes">
-        <button data-t="light" aria-label="light"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg></button>
-        <button data-t="dark" aria-label="dark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z"/></svg></button>
-      </div>
-    </div>
+
+<div class="stage-wrapper" id="wrapper">
+  <div class="controls" id="controls">
+    <button id="btnAuto" class="active">▶ Авто-сценарий</button>
+    <button id="btnSound">🔇 Звук</button>
+    <button id="btnRecord">⏺ Запись видео</button>
   </div>
-</header>
-
-<div class="wrap">
-<main id="app">
-  <div class="skeleton" id="load">…</div>
-
-  <section id="res" class="box res hide"></section>
-
-  <div id="pay" class="hide" style="display:grid;gap:14px">
-    <section class="box status">
-      <div class="tm"><div class="segs" id="segs"></div><div class="time mono" id="time">--:--</div></div>
-      <div class="st"><b id="stt"></b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><i style="font-style:normal" data-i="left"></i></span></div>
-      <button class="rf" id="rf" aria-label="refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 00-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0014.5 4.5L20 16M20 20v-4h-4"/></svg></button>
-    </section>
-
-    <button class="guide" id="gd" type="button">
-      <span class="pl"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
-      <span data-i="guide"></span>
-      <span class="ar"><svg viewBox="0 0 16 22"><path d="M2 2l12 9-12 9z" opacity=".5"/></svg><svg viewBox="0 0 16 22"><path d="M2 2l12 9-12 9z"/></svg><svg viewBox="0 0 16 22"><path d="M2 2l12 9-12 9z"/></svg><svg viewBox="0 0 16 22"><path d="M2 2l12 9-12 9z" opacity=".5"/></svg></span>
-    </button>
-    <section class="box steps" id="steps"><ol id="stl"></ol></section>
-
-    <section class="box">
-      <div class="sec">
-        <div class="row" style="padding:0"><div class="lbl" data-i="amount"></div><button class="cp" data-copy="amount"></button></div>
-        <div class="val mono" id="amt"></div>
-      </div>
-      <div id="cards"></div>
-    </section>
-
-    <div class="warn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M12 7v6M12 17h.01"/></svg></span><span id="wtx"></span></div>
-  </div>
-</main>
+  <canvas id="game" width="540" height="960"></canvas>
 </div>
-
-<div class="ov hide" id="ov">
-  <div class="mod" role="dialog" aria-modal="true">
-    <div class="hd"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M12 7v6M12 17h.01"/></svg></span><h3 data-i="rule"></h3></div>
-    <p data-i="only"></p>
-    <div class="big mono" id="mamt"></div>
-    <div class="t" data-i="exact"></div>
-    <div class="warn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M12 7v6M12 17h.01"/></svg></span><span data-i="paynet"></span></div>
-    <button class="btn" id="okb" type="button">✓ <span data-i="ok"></span></button>
-  </div>
-</div>
-<div class="toast" id="toast"></div>
 
 <script>
-(function(){
-"use strict";
-var TOKEN=(location.pathname.match(/\/pay\/([a-z0-9]{20})/)||[])[1]||"";
-var D={
-uz:{secure:"Xavfsiz to'lov",pending:"To'lov kutilmoqda",left:"To'lov uchun qolgan vaqt",guide:"Qadamma-qadam yo'riqnoma",amount:"O'tkazma summasi",card:"Karta raqami",holder:"Qabul qiluvchi",copy:"Nusxa",copied:"Nusxalandi",warn:"Aynan {a} UZS o'tkazing — boshqa summa avtomatik tasdiqlanmaydi",rule:"Muhim qoida",only:"Faqat shu summani o'tkazing",exact:"Summani so'mgacha aniq o'tkazing. Boshqa summa avtomatik tasdiqlanmaydi.",paynet:"Paynet orqali to'lamang",ok:"Tushunarli",paid:"To'lov tasdiqlandi",paidsub:"Rahmat! To'lov muvaffaqiyatli qabul qilindi.",expired:"Vaqt tugadi",expiredsub:"To'lov muddati tugagan. Botga qaytib, yangi to'lov yarating.",cancelled:"To'lov bekor qilingan",cancelledsub:"Botga qaytib, yangi to'lov yarating.",notfound:"To'lov topilmadi",notfoundsub:"Havola noto'g'ri yoki eskirgan.",back:"Telegramga qaytish",notyet:"To'lov hali topilmadi. Birozdan keyin qayta urinib ko'ring.",neterr:"Aloqa xatosi",steps:["Bank ilovasini oching (Humo, Uzcard, Payme, Click va h.k.)","«Kartaga o'tkazma» bo'limini tanlang","Karta raqami va aniq summani kiriting","O'tkazmani tasdiqlang — to'lov avtomatik tasdiqlanadi"]},
-ru:{secure:"Безопасная оплата",pending:"Ожидает оплаты",left:"Осталось времени на оплату",guide:"Пошаговая инструкция",amount:"Сумма перевода",card:"Номер карты",holder:"Получатель",copy:"Копировать",copied:"Скопировано",warn:"Переведите ровно {a} UZS — другая сумма не подтвердится автоматически",rule:"Важное правило",only:"Переводите только эту сумму",exact:"Переведите сумму точно до сума. Другая сумма не подтвердится автоматически.",paynet:"Не оплачивайте через Paynet",ok:"Понятно",paid:"Оплата подтверждена",paidsub:"Спасибо! Платёж успешно получен.",expired:"Время истекло",expiredsub:"Срок оплаты истёк. Вернитесь в бота и создайте новый платёж.",cancelled:"Платёж отменён",cancelledsub:"Вернитесь в бота и создайте новый платёж.",notfound:"Платёж не найден",notfoundsub:"Ссылка неверна или устарела.",back:"Вернуться в Telegram",notyet:"Платёж пока не найден. Попробуйте чуть позже.",neterr:"Ошибка связи",steps:["Откройте банковское приложение (Humo, Uzcard, Payme, Click и т.д.)","Выберите перевод на карту","Введите номер карты и точную сумму","Подтвердите перевод — оплата подтвердится автоматически"]},
-en:{secure:"Secure payment",pending:"Awaiting payment",left:"Time left to pay",guide:"Step-by-step guide",amount:"Transfer amount",card:"Card number",holder:"Recipient",copy:"Copy",copied:"Copied",warn:"Transfer exactly {a} UZS — any other amount will not be confirmed automatically",rule:"Important rule",only:"Transfer only this amount",exact:"Send the amount exactly, to the last sum. Any other amount will not be confirmed automatically.",paynet:"Do not pay via Paynet",ok:"Got it",paid:"Payment confirmed",paidsub:"Thank you! Your payment has been received.",expired:"Time is up",expiredsub:"The payment window has expired. Go back to the bot and create a new payment.",cancelled:"Payment cancelled",cancelledsub:"Go back to the bot and create a new payment.",notfound:"Payment not found",notfoundsub:"The link is invalid or outdated.",back:"Back to Telegram",notyet:"Payment not found yet. Please try again in a moment.",neterr:"Network error",steps:["Open your banking app (Humo, Uzcard, Payme, Click, etc.)","Choose a card-to-card transfer","Enter the card number and the exact amount","Confirm — the payment is confirmed automatically"]}
-};
-var $=function(id){return document.getElementById(id)};
-var lang="uz",info=null,fetchedAt=0,busy=false,timer=null,poll=null;
-function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
-function sess(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v)}catch(e){return null}}
-function t(k){return (D[lang]&&D[lang][k])||D.uz[k]||k}
-function fmt(n){return String(Math.round(Number(n)||0)).replace(/\B(?=(\d{3})+(?!\d))/g," ")}
-function card4(c){return String(c||"").replace(/\D/g,"").replace(/(\d{4})(?=\d)/g,"$1 ")}
-function toast(m){var e=$("toast");e.textContent=m;e.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(function(){e.classList.remove("on")},1500)}
-function copy(text,btn){
-  function ok(){if(btn){var o=btn.innerHTML;btn.classList.add("done");btn.textContent="✓ "+t("copied");setTimeout(function(){btn.classList.remove("done");btn.innerHTML=o},1400)}toast(t("copied"))}
-  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(ok,fb)}else fb();
-  function fb(){var a=document.createElement("textarea");a.value=text;a.setAttribute("readonly","");a.style.cssText="position:fixed;opacity:0;top:0";document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(e){}document.body.removeChild(a)}
-}
-var CP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M5 15V6a2 2 0 012-2h9"/></svg>';
-function cpBtn(){var b=document.createElement("button");b.className="cp";b.type="button";b.innerHTML=CP+"<span>"+t("copy")+"</span>";return b}
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+const W = canvas.width;  // 540
+const H = canvas.height; // 960
 
-function applyI18n(){
-  document.documentElement.lang=lang;
-  document.querySelectorAll("[data-i]").forEach(function(n){n.textContent=t(n.dataset.i)});
-  document.querySelectorAll("#langs button").forEach(function(b){b.classList.toggle("on",b.dataset.l===lang)});
-  var l=$("stl");l.textContent="";
-  t("steps").forEach(function(s,i){var li=document.createElement("li"),e=document.createElement("em"),sp=document.createElement("span");e.textContent=i+1;sp.textContent=s;li.appendChild(e);li.appendChild(sp);l.appendChild(li)});
-  if(info)render();
-}
-function setTheme(v){document.documentElement.dataset.theme=v;document.querySelectorAll("#themes button").forEach(function(b){b.classList.toggle("on",b.dataset.t===v)});store("theme",v)}
+// --- АУДИО СИНТЕЗАТОР (звук трубочки + музыкальный бит без внешних файлов) ---
+let audioCtx = null;
+let soundEnabled = false;
 
-function left(){if(!info||info.status!=="pending")return 0;return Math.max(0,Math.round(info.left-(Date.now()-fetchedAt)/1000))}
-function tick(){
-  var s=left(),m=Math.floor(s/60),x=s%60;
-  $("time").textContent=(m<10?"0":"")+m+":"+(x<10?"0":"")+x;
-  var tot=Math.max(1,info?info.total:1),on=Math.ceil(10*s/tot);
-  var sg=$("segs").children;for(var i=0;i<sg.length;i++)sg[i].classList.toggle("on",i<on);
-  if(info&&info.status==="pending"&&s<=0&&!busy)load(false);
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
 }
-function show(name){["load","res","pay"].forEach(function(id){$(id).classList.toggle("hide",id!==name)})}
-function result(kind,title,sub,backUrl){
-  var r=$("res");r.className="box res "+(kind==="ok"?"ok":"bad");r.textContent="";
-  var big=document.createElement("div");big.className="big";
-  big.innerHTML=kind==="ok"?'<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-  var h=document.createElement("h2");h.textContent=title;
-  var p=document.createElement("p");p.textContent=sub;
-  r.appendChild(big);r.appendChild(h);r.appendChild(p);
-  if(info&&info.amount&&kind==="ok"){var a=document.createElement("div");a.className="val mono sm";a.textContent=fmt(info.amount)+" UZS";r.appendChild(a)}
-  if(backUrl){var b=document.createElement("a");b.className="btn";b.href=backUrl;b.textContent=t("back");r.appendChild(b)}
-  show("res");
+
+function playSlurpAndNote(freq, type = 'triangle') {
+  if (!soundEnabled) return;
+  initAudio();
+  const now = audioCtx.currentTime;
+
+  // Звук втягивания через трубочку (шумовой свип)
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, now);
+  osc.frequency.exponentialRampToValueAtTime(freq * 1.35, now + 0.14);
+  gain.gain.setValueAtTime(0.14, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(now);
+  osc.stop(now + 0.23);
 }
-function render(){
-  if(!info)return;
-  $("shop").textContent=info.title||"";
-  document.title=(info.title||"")+" · "+t("secure");
-  var back=info.bot?"https://t.me/"+info.bot:"";
-  if(info.status==="completed")return result("ok",t("paid"),t("paidsub"),back);
-  if(info.status==="expired")return result("bad",t("expired"),t("expiredsub"),back);
-  if(info.status==="cancelled")return result("bad",t("cancelled"),t("cancelledsub"),back);
-  show("pay");
-  $("stt").textContent=t("pending");
-  var a=fmt(info.amount);
-  $("amt").textContent=a+" UZS";$("mamt").textContent=a+" UZS";
-  $("wtx").textContent=t("warn").replace("{a}",a);
-  var c=document.querySelector('[data-copy="amount"]');c.innerHTML=CP+"<span>"+t("copy")+"</span>";c.onclick=function(){copy(String(info.amount),c)};
-  var box=$("cards");box.textContent="";
-  (info.cards||[]).forEach(function(cd){
-    var w=document.createElement("div");w.className="sec cardtile";
-    var top=document.createElement("div");top.className="lbl";
-    var pv=document.createElement("span");pv.className="prov";pv.textContent=cd.provider||"";
-    top.textContent=t("card");top.appendChild(pv);
-    var num=document.createElement("div");num.className="val sm mono";num.textContent=card4(cd.card_number);
-    var cb=cpBtn();cb.style.marginTop="12px";cb.onclick=function(){copy(String(cd.card_number).replace(/\D/g,""),cb)};
-    w.appendChild(top);w.appendChild(num);
-    if(cd.holder){
-      var hd=document.createElement("div");hd.className="hold";
-      var l=document.createElement("div"),s=document.createElement("small"),b=document.createElement("b");
-      s.textContent=t("holder");b.textContent=cd.holder;l.appendChild(s);l.appendChild(b);
-      hd.appendChild(l);hd.appendChild(cb);cb.style.marginTop="0";w.appendChild(hd);
-    }else w.appendChild(cb);
-    box.appendChild(w);
+
+// --- ДАННЫЕ ПЕРСОНАЖЕЙ И НАПИТКОВ ---
+const characters = [
+  {
+    id: 'amy',
+    name: 'Pinky',
+    color: '#f9a8d4',
+    accent: '#ef4444', // бантик
+    eyeColor: '#22c55e',
+    type: 'hedgehog_girl',
+    note: 523.25, // C5
+    wave: 'sine',
+    slotX: 112, slotY: 735,
+    x: 112, y: 735,
+    placedCup: -1,
+    drinkPhase: 0
+  },
+  {
+    id: 'sonic',
+    name: 'Speedy',
+    color: '#1d4ed8',
+    accent: '#fde68a',
+    eyeColor: '#111827',
+    type: 'hedgehog_boy',
+    note: 392.00, // G4
+    wave: 'triangle',
+    slotX: 224, slotY: 735,
+    x: 224, y: 735,
+    placedCup: -1,
+    drinkPhase: 0
+  },
+  {
+    id: 'pumpkin',
+    name: 'Pumpky',
+    color: '#ea580c',
+    accent: '#15803d',
+    eyeColor: '#111827',
+    type: 'pumpkin',
+    note: 261.63, // C4
+    wave: 'sawtooth',
+    slotX: 336, slotY: 735,
+    x: 336, y: 735,
+    placedCup: -1,
+    drinkPhase: 0
+  },
+  {
+    id: 'bunny',
+    name: 'Mochi',
+    color: '#ffffff',
+    accent: '#fbcfe8',
+    eyeColor: '#111827',
+    type: 'bunny',
+    note: 659.25, // E5
+    wave: 'sine',
+    slotX: 448, slotY: 735,
+    x: 448, y: 735,
+    placedCup: -1,
+    drinkPhase: 0
+  }
+];
+
+const cups = [
+  { id: 0, brand: 'Cola',   bg: '#dc2626', lid: '#b91c1c', stripe: '#ffffff', x: 88,  y: 575, occupant: null },
+  { id: 1, brand: 'Pepsi',  bg: '#1d4ed8', lid: '#1e40af', stripe: '#ef4444', x: 208, y: 575, occupant: null },
+  { id: 2, brand: 'Fanta',  bg: '#f97316', lid: '#ea580c', stripe: '#fde047', x: 328, y: 575, occupant: null },
+  { id: 3, brand: 'Coffee', bg: '#e7d5c0', lid: '#451a03', stripe: '#78350f', x: 448, y: 575, occupant: null }
+];
+
+// --- ВИРТУАЛЬНЫЙ КУРСОР (ДЛЯ АВТО-СЦЕНАРИЯ ВИДЕО) ---
+let autoMode = true;
+const cursor = { x: 140, y: 360, clicking: false, draggingChar: null };
+
+// Сценарий действий (как в ролике: по очереди сажаем персонажей в стаканы)
+const scriptSteps = [
+  { time: 0.6,  action: 'move', x: 112, y: 735 },
+  { time: 1.2,  action: 'grab', charIdx: 0 },
+  { time: 2.0,  action: 'move', x: 208, y: 515 },
+  { time: 2.4,  action: 'drop', cupIdx: 1 }, // Розовый в Pepsi
+
+  { time: 3.2,  action: 'move', x: 224, y: 735 },
+  { time: 3.7,  action: 'grab', charIdx: 1 },
+  { time: 4.5,  action: 'move', x: 88,  y: 515 },
+  { time: 4.9,  action: 'drop', cupIdx: 0 }, // Синий в Cola
+
+  { time: 5.8,  action: 'move', x: 336, y: 735 },
+  { time: 6.3,  action: 'grab', charIdx: 2 },
+  { time: 7.1,  action: 'move', x: 328, y: 515 },
+  { time: 7.5,  action: 'drop', cupIdx: 2 }, // Тыква в Fanta
+
+  { time: 8.4,  action: 'move', x: 448, y: 735 },
+  { time: 8.9,  action: 'grab', charIdx: 3 },
+  { time: 9.7,  action: 'move', x: 448, y: 515 },
+  { time: 10.1, action: 'drop', cupIdx: 3 }, // Зайчик в Coffee
+
+  { time: 11.2, action: 'move', x: 270, y: 320 }, // Курсор отходит в сторону, все 4 пьют!
+  { time: 16.0, action: 'reset' }
+];
+
+let scriptStartTime = performance.now();
+let lastStepIndex = -1;
+
+// --- ОТРИСОВКА ФОНА (НЕБО, ОБЛАКО, ЗЕЛЁНЫЙ ХОЛМ) ---
+function drawBackground(t) {
+  // Небо
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, 360);
+  skyGrad.addColorStop(0, '#4bc5f2');
+  skyGrad.addColorStop(1, '#7dd8f8');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, W, 380);
+
+  // Плывущее облако
+  const cloudX = 95 + Math.sin(t * 0.35) * 18;
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(cloudX, 118, 22, 0, Math.PI * 2);
+  ctx.arc(cloudX + 24, 110, 28, 0, Math.PI * 2);
+  ctx.arc(cloudX + 54, 114, 24, 0, Math.PI * 2);
+  ctx.arc(cloudX + 76, 122, 18, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Дальний тёмно-зелёный кустарник / холм с зубчиками травы
+  ctx.fillStyle = '#248f0c';
+  ctx.beginPath();
+  ctx.moveTo(0, 315);
+  for (let x = 0; x <= W; x += 14) {
+    const hill = Math.sin(x * 0.008) * 32 + Math.cos(x * 0.017) * 14;
+    const tuft = (x % 28 === 0) ? -7 : 0;
+    ctx.lineTo(x, 295 - hill + tuft);
+  }
+  ctx.lineTo(W, 560);
+  ctx.lineTo(0, 560);
+  ctx.closePath();
+  ctx.fill();
+
+  // Передняя яркая лужайка
+  const grassGrad = ctx.createLinearGradient(0, 520, 0, H);
+  grassGrad.addColorStop(0, '#45b814');
+  grassGrad.addColorStop(1, '#3da810');
+  ctx.fillStyle = grassGrad;
+  ctx.fillRect(0, 520, W, H - 520);
+
+  // Декоративные овальные пятна на траве
+  ctx.fillStyle = 'rgba(26, 115, 8, 0.35)';
+  ctx.beginPath(); ctx.ellipse(95, 860, 62, 16, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(455, 895, 70, 18, 0, 0, Math.PI * 2); ctx.fill();
+}
+
+// --- ОТРИСОВКА ПЕРСОНАЖЕЙ ---
+function drawCharacter(char, cx, cy, scale = 1, isDrinking = false, t = 0) {
+  ctx.save();
+  ctx.translate(cx, cy);
+
+  // Анимация покачивания в такт музыке, когда пьёт
+  const bounceY = isDrinking ? Math.abs(Math.sin(t * 7 + char.note)) * -9 : 0;
+  const tilt = isDrinking ? Math.sin(t * 5 + char.note) * 0.06 : 0;
+  ctx.translate(0, bounceY);
+  ctx.rotate(tilt);
+  ctx.scale(scale, scale);
+
+  ctx.lineWidth = 2.6;
+  ctx.strokeStyle = '#111827';
+
+  if (char.type === 'hedgehog_girl' || char.type === 'hedgehog_boy') {
+    // Туловище (выглядывает из стакана или кружка)
+    ctx.fillStyle = char.color;
+    ctx.beginPath();
+    ctx.roundRect(-22, 10, 44, 58, 18);
+    ctx.fill();
+    ctx.stroke();
+
+    // Животик
+    ctx.fillStyle = '#fde68a';
+    ctx.beginPath();
+    ctx.ellipse(0, 34, 13, 18, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Иголки сзади
+    ctx.fillStyle = char.color;
+    ctx.beginPath();
+    ctx.moveTo(-32, -8);
+    ctx.lineTo(-48, 8);
+    ctx.lineTo(-34, 16);
+    ctx.lineTo(-44, 32);
+    ctx.lineTo(-24, 28);
+    ctx.moveTo(32, -8);
+    ctx.lineTo(48, 8);
+    ctx.lineTo(34, 16);
+    ctx.lineTo(44, 32);
+    ctx.lineTo(24, 28);
+    ctx.fill();
+    ctx.stroke();
+
+    // Голова
+    ctx.fillStyle = char.color;
+    ctx.beginPath();
+    ctx.arc(0, -14, 34, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Ушки
+    [-22, 22].forEach((ex, idx) => {
+      ctx.beginPath();
+      ctx.moveTo(ex - 8, -36);
+      ctx.lineTo(ex + (idx === 0 ? -6 : 6), -54);
+      ctx.lineTo(ex + 10, -34);
+      ctx.closePath();
+      ctx.fillStyle = char.color;
+      ctx.fill();
+      ctx.stroke();
+    });
+
+    // Бантик для розового персонажа
+    if (char.type === 'hedgehog_girl') {
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.ellipse(16, -42, 8, 5, -0.3, 0, Math.PI * 2);
+      ctx.ellipse(27, -38, 8, 5, 0.3, 0, Math.PI * 2);
+      ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.arc(21, -40, 3.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    }
+
+    // Мордочка (бежевая маска вокруг глаз и рта)
+    ctx.fillStyle = '#fef3c7';
+    ctx.beginPath();
+    ctx.ellipse(-11, -15, 11, 14, -0.15, 0, Math.PI * 2);
+    ctx.ellipse(11, -15, 11, 14, 0.15, 0, Math.PI * 2);
+    ctx.ellipse(0, -1, 18, 10, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Глаза
+    [-10, 10].forEach(eyeX => {
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.ellipse(eyeX, -16, 7.5, 10, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = char.eyeColor;
+      ctx.beginPath(); ctx.arc(eyeX + (isDrinking ? 2 : 0), -15, 4.5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#111827';
+      ctx.beginPath(); ctx.arc(eyeX + (isDrinking ? 2 : 0), -15, 2.5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(eyeX - 1.5, -18, 1.8, 0, Math.PI * 2); ctx.fill();
+    });
+
+    // Носик
+    ctx.fillStyle = '#111827';
+    ctx.beginPath(); ctx.ellipse(0, -5, 4, 2.8, 0, 0, Math.PI * 2); ctx.fill();
+
+    // Рот (вытянут трубочкой если пьёт, или улыбка)
+    ctx.beginPath();
+    if (isDrinking) {
+      ctx.fillStyle = '#fb7185';
+      ctx.arc(6, 3, 4.5, 0, Math.PI * 2);
+      ctx.fill(); ctx.stroke();
+    } else {
+      ctx.arc(0, 1, 7, 0.15 * Math.PI, 0.85 * Math.PI);
+      ctx.stroke();
+    }
+  } else if (char.type === 'pumpkin') {
+    // Тыква
+    ctx.fillStyle = '#15803d';
+    ctx.fillRect(-5, -46, 10, 14);
+    ctx.strokeRect(-5, -46, 10, 14);
+
+    ctx.fillStyle = '#f97316';
+    ctx.beginPath(); ctx.ellipse(0, -4, 38, 33, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(0, -4, 22, 33, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(0, -4, 9, 33, 0, 0, Math.PI * 2); ctx.stroke();
+
+    // Глаза и улыбка
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(-13, -10, 6, Math.PI, 0); ctx.stroke();
+    ctx.beginPath(); ctx.arc(13, -10, 6, Math.PI, 0); ctx.stroke();
+    if (isDrinking) {
+      ctx.fillStyle = '#7c2d12';
+      ctx.beginPath(); ctx.arc(8, 6, 5.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    } else {
+      ctx.beginPath(); ctx.arc(0, 4, 12, 0.1 * Math.PI, 0.9 * Math.PI); ctx.stroke();
+    }
+  } else if (char.type === 'bunny') {
+    // Белый милый зайчик
+    ctx.fillStyle = '#ffffff';
+    // Ушки
+    ctx.beginPath(); ctx.roundRect(-20, -54, 13, 30, 7); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.roundRect(7, -54, 13, 30, 7); ctx.fill(); ctx.stroke();
+    // Голова и тело
+    ctx.beginPath(); ctx.ellipse(0, -4, 34, 30, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+    // Глазки-дуги
+    ctx.beginPath(); ctx.arc(-12, -10, 5.5, Math.PI, 0); ctx.stroke();
+    ctx.beginPath(); ctx.arc(12, -10, 5.5, Math.PI, 0); ctx.stroke();
+    // Щёчки
+    ctx.fillStyle = '#fbcfe8';
+    ctx.beginPath(); ctx.ellipse(-19, -2, 5, 3, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(19, -2, 5, 3, 0, 0, Math.PI * 2); ctx.fill();
+
+    if (isDrinking) {
+      ctx.fillStyle = '#fb7185';
+      ctx.beginPath(); ctx.arc(8, 5, 4.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    } else {
+      ctx.beginPath(); ctx.arc(0, 2, 6, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
+    }
+  }
+
+  ctx.restore();
+}
+
+// --- ОТРИСОВКА СТАКАНА С НАПИТКОМ ---
+function drawCup(cup, t) {
+  ctx.save();
+  ctx.translate(cup.x, cup.y);
+
+  // Тень под стаканом
+  ctx.fillStyle = 'rgba(0,0,0,0.22)';
+  ctx.beginPath(); ctx.ellipse(0, 78, 42, 10, 0, 0, Math.PI * 2); ctx.fill();
+
+  // Если в стакане сидит персонаж — рисуем его перед трубочкой и крышкой
+  if (cup.occupant !== null) {
+    const char = characters[cup.occupant];
+    drawCharacter(char, 0, -68, 0.92, true, t);
+  }
+
+  // Пульсация стакана, когда из него пьют
+  const squeeze = cup.occupant !== null ? 1 + Math.sin(t * 14) * 0.025 : 1;
+  ctx.scale(squeeze, 2 - squeeze);
+
+  ctx.lineWidth = 2.8;
+  ctx.strokeStyle = '#111827';
+
+  // Трубочка (наклоняется ко рту персонажа, если он сидит в стакане!)
+  ctx.save();
+  ctx.translate(16, -65);
+  ctx.rotate(cup.occupant !== null ? -0.35 : 0);
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.moveTo(-4, 15);
+  ctx.lineTo(-4, -46);
+  ctx.lineTo(-24, -56);
+  ctx.lineTo(-21, -63);
+  ctx.lineTo(4, -51);
+  ctx.lineTo(4, 15);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Капелька / пузырёк напитка, бегущий вверх по трубочке!
+  if (cup.occupant !== null) {
+    const bubbleY = 10 - ((t * 95) % 58);
+    ctx.fillStyle = cup.bg;
+    ctx.beginPath();
+    ctx.arc(0, bubbleY, 2.8, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // Корпус стакана
+  ctx.fillStyle = cup.bg;
+  ctx.beginPath();
+  ctx.moveTo(-44, -46);
+  ctx.lineTo(44, -46);
+  ctx.lineTo(33, 72);
+  ctx.quadraticCurveTo(0, 80, -33, 72);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Декор брендов на стакане
+  if (cup.brand === 'Cola') {
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(-39, -15);
+    ctx.bezierCurveTo(-10, -30, 10, 15, 38, -5);
+    ctx.stroke();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'italic bold 17px Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Coca-Cola', 0, 16);
+  } else if (cup.brand === 'Pepsi') {
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.arc(0, 8, 20, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ef4444';
+    ctx.beginPath(); ctx.arc(0, 8, 18, Math.PI, 0); ctx.fill();
+    ctx.fillStyle = '#1d4ed8';
+    ctx.beginPath(); ctx.arc(0, 8, 18, 0, Math.PI); ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 14px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('pepsi', 0, 42);
+  } else if (cup.brand === 'Fanta') {
+    ctx.fillStyle = '#1d4ed8';
+    ctx.beginPath(); ctx.ellipse(0, 12, 28, 20, -0.15, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 18px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Fanta', 0, 18);
+  } else if (cup.brand === 'Coffee') {
+    // Манжет для кофе
+    ctx.fillStyle = '#854d0e';
+    ctx.beginPath();
+    ctx.moveTo(-39, -6); ctx.lineTo(39, -6);
+    ctx.lineTo(36, 36); ctx.lineTo(-36, 36);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    // Кофейное зёрнышко
+    ctx.fillStyle = '#451a03';
+    ctx.beginPath(); ctx.ellipse(0, 15, 9, 13, 0.3, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // Крышка стакана
+  ctx.strokeStyle = '#111827';
+  ctx.lineWidth = 2.8;
+  ctx.fillStyle = cup.lid;
+  ctx.beginPath();
+  ctx.roundRect(-49, -58, 98, 14, 7);
+  ctx.fill(); ctx.stroke();
+
+  ctx.beginPath();
+  ctx.roundRect(-41, -68, 82, 12, 6);
+  ctx.fill(); ctx.stroke();
+
+  ctx.restore();
+}
+
+// --- ОТРИСОВКА КРУЖКОВ-СЛОТОВ ВНИЗУ ---
+function drawBottomSlots(t) {
+  characters.forEach((char, idx) => {
+    // Белый кружок-иконка
+    ctx.save();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#111827';
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(char.slotX, char.slotY, 44, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Клип по кругу для портрета в слоте
+    ctx.beginPath();
+    ctx.arc(char.slotX, char.slotY, 42, 0, Math.PI * 2);
+    ctx.clip();
+
+    // Если персонаж ещё в слоте (или слегка затемнён, если уже пьёт)
+    if (char.placedCup !== -1 && cursor.draggingChar !== idx) {
+      ctx.globalAlpha = 0.38;
+    }
+    drawCharacter(char, char.slotX, char.slotY + 14, 0.85, false, t);
+    ctx.restore();
   });
-  if(!sess("rule_"+TOKEN)){$("ov").classList.remove("hide")}
-  tick();
-}
-function api(path,opt){
-  return fetch(path,Object.assign({cache:"no-store",credentials:"omit"},opt||{})).then(function(r){return r.json().catch(function(){return{ok:false}}).then(function(j){j._http=r.status;return j})});
-}
-function load(manual){
-  if(!TOKEN){info=null;show("res");result("bad",t("notfound"),t("notfoundsub"));return Promise.resolve()}
-  busy=true;if(manual)$("rf").classList.add("spin");
-  var req=manual?api("/api/pay/"+TOKEN+"/check",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"}):api("/api/pay/"+TOKEN);
-  return req.then(function(j){
-    if(j._http===404||j.ok===false&&j._http===404){info=null;result("bad",t("notfound"),t("notfoundsub"));stop();return}
-    if(j._http===429){if(manual)toast(t("neterr"));return}
-    if(!j.ok)return;
-    var prev=info&&info.status;info=j;fetchedAt=Date.now();render();
-    if(info.status!=="pending")stop();
-    else if(manual&&!j.confirmed)toast(t("notyet"));
-  }).catch(function(){if(manual)toast(t("neterr"))}).then(function(){busy=false;$("rf").classList.remove("spin")});
-}
-function stop(){clearInterval(timer);clearInterval(poll);timer=poll=null}
-function start(){
-  var s=$("segs");for(var i=0;i<10;i++)s.appendChild(document.createElement("i"));
-  timer=setInterval(function(){if(info)tick()},1000);
-  poll=setInterval(function(){if(!busy&&!document.hidden)load(false)},4000);
-  document.addEventListener("visibilitychange",function(){if(!document.hidden&&!busy)load(false)});
 }
 
-document.querySelectorAll("#langs button").forEach(function(b){b.onclick=function(){lang=b.dataset.l;store("lang",lang);applyI18n()}});
-document.querySelectorAll("#themes button").forEach(function(b){b.onclick=function(){setTheme(b.dataset.t)}});
-$("gd").onclick=function(){$("steps").classList.toggle("open")};
-$("rf").onclick=function(){if(!busy)load(true)};
-$("okb").onclick=function(){sess("rule_"+TOKEN,"1");$("ov").classList.add("hide")};
+// --- ОТРИСОВКА БЕЛОГО КУРСОРА ---
+function drawCursor() {
+  ctx.save();
+  ctx.translate(cursor.x, cursor.y);
+  if (cursor.clicking) ctx.scale(0.88, 0.88);
 
-var sl=store("lang"),nav=(navigator.language||"uz").slice(0,2).toLowerCase();
-lang=D[sl]?sl:(D[nav]?nav:"uz");
-var th=store("theme");setTheme(th==="dark"||th==="light"?th:(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
-applyI18n();start();load(false);
-})();
+  ctx.fillStyle = '#ffffff';
+  ctx.strokeStyle = '#111827';
+  ctx.lineWidth = 2.8;
+  ctx.lineJoin = 'round';
+
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(0, 34);
+  ctx.lineTo(9, 26);
+  ctx.lineTo(16, 40);
+  ctx.lineTo(22, 37);
+  ctx.lineTo(15, 23);
+  ctx.lineTo(26, 23);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+}
+
+// --- ОБНОВЛЕНИЕ АВТО-СЦЕНАРИЯ ---
+let targetX = cursor.x, targetY = cursor.y;
+let beatTimer = 0;
+
+function updateAutoScript(now) {
+  if (!autoMode) return;
+  const elapsed = (now - scriptStartTime) / 1000;
+
+  for (let i = 0; i < scriptSteps.length; i++) {
+    if (elapsed >= scriptSteps[i].time && lastStepIndex < i) {
+      lastStepIndex = i;
+      const step = scriptSteps[i];
+
+      if (step.action === 'move') {
+        targetX = step.x;
+        targetY = step.y;
+      } else if (step.action === 'grab') {
+        cursor.clicking = true;
+        cursor.draggingChar = step.charIdx;
+        const c = characters[step.charIdx];
+        if (c.placedCup !== -1) {
+          cups[c.placedCup].occupant = null;
+          c.placedCup = -1;
+        }
+      } else if (step.action === 'drop') {
+        cursor.clicking = false;
+        if (cursor.draggingChar !== null) {
+          const charIdx = cursor.draggingChar;
+          const cup = cups[step.cupIdx];
+          cup.occupant = charIdx;
+          characters[charIdx].placedCup = step.cupIdx;
+          playSlurpAndNote(characters[charIdx].note, characters[charIdx].wave);
+          cursor.draggingChar = null;
+        }
+      } else if (step.action === 'reset') {
+        characters.forEach(c => { c.placedCup = -1; c.x = c.slotX; c.y = c.slotY; });
+        cups.forEach(cup => { cup.occupant = null; });
+        scriptStartTime = now;
+        lastStepIndex = -1;
+      }
+    }
+  }
+
+  // Плавное движение курсора
+  cursor.x += (targetX - cursor.x) * 0.12;
+  cursor.y += (targetY - cursor.y) * 0.12;
+
+  if (cursor.draggingChar !== null) {
+    characters[cursor.draggingChar].x = cursor.x;
+    characters[cursor.draggingChar].y = cursor.y;
+  }
+}
+
+// --- ГЛАВНЫЙ ЦИКЛ РЕНДЕРА ---
+function loop(now) {
+  const t = now / 1000;
+  updateAutoScript(now);
+
+  // Периодический звук/такт от персонажей, которые сейчас пьют
+  if (now - beatTimer > 650) {
+    beatTimer = now;
+    cups.forEach(cup => {
+      if (cup.occupant !== null) {
+        const ch = characters[cup.occupant];
+        playSlurpAndNote(ch.note, ch.wave);
+      }
+    });
+  }
+
+  ctx.clearRect(0, 0, W, H);
+  drawBackground(t);
+  drawBottomSlots(t);
+
+  // Рисуем все 4 стакана (и сидящих в них персонажей)
+  cups.forEach(cup => drawCup(cup, t));
+
+  // Если персонаж сейчас перетаскивается курсором — рисуем его поверх
+  if (cursor.draggingChar !== null) {
+    const ch = characters[cursor.draggingChar];
+    drawCharacter(ch, ch.x, ch.y, 1.02, false, t);
+  }
+
+  drawCursor();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+// --- РУЧНОЕ УПРАВЛЕНИЕ (МЫШЬ ИЛИ ТАЧ) ---
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  return {
+    x: (clientX - rect.left) * (W / rect.width),
+    y: (clientY - rect.top) * (H / rect.height)
+  };
+}
+
+canvas.addEventListener('pointerdown', e => {
+  autoMode = false;
+  document.getElementById('btnAuto').classList.remove('active');
+  const pos = getPos(e);
+  cursor.x = pos.x; cursor.y = pos.y; cursor.clicking = true;
+
+  // Проверка нажатия на нижний кружок
+  characters.forEach((ch, idx) => {
+    if (Math.hypot(pos.x - ch.slotX, pos.y - ch.slotY) < 46) {
+      if (ch.placedCup !== -1) { cups[ch.placedCup].occupant = null; ch.placedCup = -1; }
+      cursor.draggingChar = idx;
+      ch.x = pos.x; ch.y = pos.y;
+    }
+  });
+  // Или клик по стакану, чтобы вынуть персонажа
+  cups.forEach(cup => {
+    if (cup.occupant !== null && Math.hypot(pos.x - cup.x, pos.y - (cup.y - 40)) < 55) {
+      characters[cup.occupant].placedCup = -1;
+      cup.occupant = null;
+    }
+  });
+});
+
+canvas.addEventListener('pointermove', e => {
+  const pos = getPos(e);
+  cursor.x = pos.x; cursor.y = pos.y;
+  if (cursor.draggingChar !== null) {
+    characters[cursor.draggingChar].x = pos.x;
+    characters[cursor.draggingChar].y = pos.y;
+  }
+});
+
+canvas.addEventListener('pointerup', () => {
+  cursor.clicking = false;
+  if (cursor.draggingChar !== null) {
+    const ch = characters[cursor.draggingChar];
+    // Проверяем, отпустили ли над одним из стаканов
+    cups.forEach((cup, cupIdx) => {
+      if (Math.hypot(ch.x - cup.x, ch.y - (cup.y - 35)) < 65) {
+        if (cup.occupant !== null) characters[cup.occupant].placedCup = -1;
+        cup.occupant = cursor.draggingChar;
+        ch.placedCup = cupIdx;
+        playSlurpAndNote(ch.note, ch.wave);
+      }
+    });
+    cursor.draggingChar = null;
+  }
+});
+
+// --- КНОПКИ УПРАВЛЕНИЯ И ЗАПИСИ ВИДЕО ---
+document.getElementById('btnAuto').onclick = function() {
+  autoMode = !autoMode;
+  this.classList.toggle('active', autoMode);
+  if (autoMode) {
+    scriptStartTime = performance.now();
+    lastStepIndex = -1;
+  }
+};
+
+document.getElementById('btnSound').onclick = function() {
+  soundEnabled = !soundEnabled;
+  if (soundEnabled) initAudio();
+  this.textContent = soundEnabled ? '🔊 Звук ВКЛ' : '🔇 Звук';
+};
+
+let recorder = null, chunks = [];
+document.getElementById('btnRecord').onclick = function() {
+  const controls = document.getElementById('controls');
+  if (!recorder || recorder.state === 'inactive') {
+    const stream = canvas.captureStream(60); // 60 FPS прямо с Canvas!
+    recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+    chunks = [];
+    recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type: 'video/webm' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'drinks_characters_9x16.webm';
+      a.click();
+      controls.classList.remove('hidden');
+      this.textContent = '⏺ Запись видео';
+    };
+    // Перезапускаем сценарий с 0-й секунды и скрываем кнопки
+    scriptStartTime = performance.now();
+    lastStepIndex = -1;
+    autoMode = true;
+    recorder.start();
+    this.textContent = '⏹ Стоп';
+    setTimeout(() => controls.classList.add('hidden'), 600);
+    // Автоматическая остановка записи через 15.5 секунд (полный цикл)
+    setTimeout(() => { if (recorder.state === 'recording') recorder.stop(); }, 15500);
+  } else {
+    recorder.stop();
+  }
+};
 </script>
 </body>
 </html>
