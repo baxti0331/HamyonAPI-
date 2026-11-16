@@ -1,2346 +1,289 @@
 <!DOCTYPE html>
-<html lang="uz" class="dark">
+<html lang="uz" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Star Kerak Bot — PayStars Commerce Network</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        ps: {
-                            darkBg: '#080D14',
-                            darkSurface: '#0F1726',
-                            darkElevated: '#162238',
-                            lightBg: '#F2F4F8',
-                            lightSurface: '#FFFFFF',
-                            lightElevated: '#E8ECF2',
-                            blue: '#1E96FC',
-                            blueHover: '#1582E0',
-                            amber: '#F5B014',
-                            coral: '#EF4444'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'Segoe UI', 'Roboto', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'SF Mono', 'Menlo', 'monospace']
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Inter Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Anime.js v3.2.1 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <!-- FontAwesome 6.5 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root {
-            --bg-primary: #080D14;
-            --bg-surface: #0F1726;
-            --bg-elevated: #162238;
-            --bg-glass: rgba(15, 23, 38, 0.84);
-            --border-hairline: rgba(255, 255, 255, 0.08);
-            --border-strong: rgba(255, 255, 255, 0.14);
-            --text-primary: #F8FAFC;
-            --text-secondary: #8B9BB4;
-            --text-muted: #5C6B82;
-            --accent: #1E96FC;
-            --accent-soft: rgba(30, 150, 252, 0.14);
-        }
-
-        html:not(.dark) {
-            --bg-primary: #F2F4F8;
-            --bg-surface: #FFFFFF;
-            --bg-elevated: #EDF1F7;
-            --bg-glass: rgba(255, 255, 255, 0.88);
-            --border-hairline: rgba(15, 23, 42, 0.08);
-            --border-strong: rgba(15, 23, 42, 0.15);
-            --text-primary: #0F172A;
-            --text-secondary: #475569;
-            --text-muted: #94A3B8;
-            --accent: #0088CC;
-            --accent-soft: rgba(0, 136, 204, 0.12);
-        }
-
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            transition: background-color 0.28s ease, color 0.28s ease;
-            overflow-x: hidden;
-            user-select: none;
-        }
-
-        .tabular-nums {
-            font-variant-numeric: tabular-nums;
-        }
-
-        .surface-card {
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border-hairline);
-            transition: background-color 0.25s ease, border-color 0.2s ease, transform 0.18s ease;
-        }
-
-        .elevated-card {
-            background-color: var(--bg-elevated);
-            border: 1px solid var(--border-hairline);
-        }
-
-        .glass-chrome {
-            background-color: var(--bg-glass);
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
-            border-color: var(--border-hairline);
-        }
-
-        .sheet-surface {
-            background-color: var(--bg-surface);
-            border-top: 1px solid var(--border-strong);
-            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.45);
-        }
-
-        .text-main { color: var(--text-primary); }
-        .text-sub { color: var(--text-secondary); }
-        .text-dim { color: var(--text-muted); }
-        .border-hairline { border-color: var(--border-hairline); }
-
-        /* Hide scrollbars cleanly */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* Tactile spring button utility */
-        .tactile {
-            transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.14s ease;
-        }
-        .tactile:active {
-            transform: scale(0.96);
-        }
-
-        /* Subtle patterned gift backdrop */
-        .gift-pattern-leaf {
-            background-image: radial-gradient(rgba(255,255,255,0.06) 1.5px, transparent 1.5px);
-            background-size: 16px 16px;
-        }
-        html:not(.dark) .gift-pattern-leaf {
-            background-image: radial-gradient(rgba(15,23,42,0.06) 1.5px, transparent 1.5px);
-        }
-
-        /* Roulette center pointer */
-        .roulette-pointer {
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 11px solid #1E96FC;
-            filter: drop-shadow(0 2px 6px rgba(30, 150, 252, 0.6));
-        }
-
-        /* Active segmented pill */
-        .seg-pill {
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="light dark">
+<title>Secure payment</title>
+<style>
+:root{--bg:#f4f5f2;--card:#fff;--soft:#f3f4f1;--line:#e4e6df;--tx:#171a14;--mut:#6b7164;--g:#8aa968;--gd:#4f6f34;--gbg:#eef3e3;--gline:#d3dfbd;--wbg:#fbf3df;--wline:#efdfb4;--wtx:#7a5a12;--rd:#e5533d;--ok:#2f9e5b;--sh:0 1px 2px rgba(20,24,16,.04),0 8px 24px -12px rgba(20,24,16,.12)}
+html[data-theme=dark]{--bg:#0f120d;--card:#171b13;--soft:#1e2319;--line:#2a3023;--tx:#eef1e8;--mut:#9aa28f;--g:#8aa968;--gd:#a9c985;--gbg:#1c2415;--gline:#34422a;--wbg:#2a2412;--wline:#4a3f1c;--wtx:#e6c872;--sh:0 8px 24px -12px rgba(0,0,0,.6)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{font:500 15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,system-ui,sans-serif;color:var(--tx);min-height:100vh;padding-bottom:calc(32px + env(safe-area-inset-bottom))}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:480px;margin:0 auto;padding:0 16px}
+header{background:var(--card);border-bottom:1px solid var(--line);padding:calc(16px + env(safe-area-inset-top)) 0 14px}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{width:48px;height:48px;border-radius:14px;background:var(--gbg);border:1px solid var(--gline);display:grid;place-items:center;flex:none}
+.logo svg{width:26px;height:26px;stroke:var(--gd)}
+.brand h1{font-size:20px;font-weight:800;letter-spacing:-.01em;overflow-wrap:anywhere}
+.secure{display:flex;align-items:center;gap:6px;color:var(--mut);font-size:14px}
+.secure svg{width:16px;height:16px;stroke:var(--gd)}
+.lock{margin-left:auto;color:var(--mut)}
+.lock svg{width:22px;height:22px}
+.bar{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:12px;padding:3px;background:var(--card)}
+.seg button{border:0;background:transparent;color:var(--mut);font:700 14px inherit;font-family:inherit;padding:8px 14px;border-radius:9px;cursor:pointer}
+.seg button.on{background:var(--soft);color:var(--tx)}
+.seg svg{width:18px;height:18px;vertical-align:-3px;stroke:currentColor}
+.box{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--sh)}
+main{padding-top:18px;display:grid;gap:14px}
+.status{padding:18px;display:flex;gap:16px;align-items:center;background:var(--soft)}
+.tm{flex:none}
+.segs{display:flex;gap:3px;margin-bottom:6px}
+.segs i{width:11px;height:30px;border-radius:4px;background:var(--line);transition:background .3s}
+.segs i.on{background:var(--g)}
+.time{font-size:44px;font-weight:800;letter-spacing:.02em;line-height:1}
+.st{flex:1;min-width:0}
+.st b{display:block;font-size:20px;font-weight:800}
+.st span{color:var(--mut);font-size:14px;display:flex;gap:6px;align-items:center;margin-top:4px}
+.st span svg{width:18px;height:18px;flex:none}
+.rf{flex:none;align-self:flex-start;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--gd);cursor:pointer;display:grid;place-items:center}
+.rf svg{width:20px;height:20px}
+.rf.spin svg{animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.guide{width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;border:1px solid var(--gline);background:var(--gbg);color:var(--gd);font:800 16px inherit;font-family:inherit;cursor:pointer;text-align:left}
+.guide .pl{width:40px;height:40px;border-radius:50%;background:var(--g);display:grid;place-items:center;flex:none}
+.guide .pl svg{width:16px;height:16px;fill:#fff;stroke:none}
+.guide .ar{margin-left:auto;display:flex;gap:2px}
+.guide .ar svg{width:16px;height:22px;fill:var(--g)}
+.steps{display:none;padding:6px 18px 14px;margin-top:-6px}
+.steps.open{display:block}
+.steps ol{padding-left:0;list-style:none;counter-item:c;display:grid;gap:10px;margin-top:10px}
+.steps li{display:flex;gap:12px;align-items:flex-start;color:var(--tx);font-size:14.5px}
+.steps li em{font-style:normal;flex:none;width:26px;height:26px;border-radius:8px;background:var(--gbg);border:1px solid var(--gline);color:var(--gd);font-weight:800;display:grid;place-items:center;font-size:13px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px}
+.lbl{color:var(--mut);font-size:15px}
+.val{font-size:32px;font-weight:800;letter-spacing:.01em;margin-top:14px;overflow-wrap:anywhere}
+.val.sm{font-size:24px}
+.cp{border:1px solid var(--line);background:var(--card);color:var(--tx);border-radius:12px;padding:10px 14px;font:700 15px inherit;font-family:inherit;display:inline-flex;align-items:center;gap:8px;cursor:pointer;flex:none}
+.cp svg{width:18px;height:18px}
+.cp.done{color:var(--ok);border-color:var(--ok)}
+.sec{padding:18px;border-top:1px solid var(--line)}
+.sec:first-child{border-top:0}
+.prov{float:right;font-weight:800;color:var(--mut);letter-spacing:.04em}
+.hold{margin-top:10px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.hold small{display:block;color:var(--mut);font-size:14px}
+.hold b{font-size:17px;font-weight:700;overflow-wrap:anywhere}
+.warn{display:flex;gap:12px;align-items:center;padding:14px 16px;border-radius:16px;background:var(--wbg);border:1px solid var(--wline);color:var(--wtx);font-size:15px}
+.warn .ic,.mod .ic{width:30px;height:30px;border-radius:9px;background:var(--rd);display:grid;place-items:center;flex:none}
+.warn .ic svg,.mod .ic svg{width:18px;height:18px;stroke:#fff}
+.hide{display:none!important}
+.res{padding:30px 20px;text-align:center}
+.res .big{width:72px;height:72px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center}
+.res .big svg{width:36px;height:36px;stroke:#fff}
+.res.ok .big{background:var(--ok)}
+.res.bad .big{background:var(--rd)}
+.res h2{font-size:22px;font-weight:800}
+.res p{color:var(--mut);margin-top:6px}
+.btn{display:block;width:100%;text-align:center;text-decoration:none;border:0;background:var(--g);color:#fff;font:800 17px inherit;font-family:inherit;padding:16px;border-radius:16px;cursor:pointer;margin-top:18px}
+.ov{position:fixed;inset:0;background:rgba(10,12,8,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;z-index:20}
+.mod{background:var(--card);border-radius:24px;padding:22px;width:100%;max-width:420px;border:1px solid var(--line)}
+.mod .hd{display:flex;align-items:center;gap:12px}
+.mod .hd .ic{width:40px;height:40px;border-radius:12px}
+.mod h3{font-size:24px;font-weight:800}
+.mod p{color:var(--mut);margin-top:16px}
+.mod .big{font-size:34px;font-weight:800;margin:8px 0 14px}
+.mod .t{color:var(--tx)}
+.mod .warn{margin-top:16px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:#171a14;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:30}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.cardtile+.cardtile{border-top:1px dashed var(--line)}
+.skeleton{padding:60px 20px;text-align:center;color:var(--mut)}
+</style>
 </head>
-<body class="min-h-screen flex flex-col justify-between pb-24">
-
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed top-16 left-1/2 -translate-x-1/2 z-[90] px-4 py-2.5 rounded-2xl glass-chrome border border-sky-500/30 shadow-2xl flex items-center gap-2.5 opacity-0 pointer-events-none -translate-y-4">
-        <span id="toast-icon" class="w-5 h-5 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-xs">
-            <i class="fa-solid fa-check"></i>
-        </span>
-        <span id="toast-msg" class="text-xs font-semibold text-main whitespace-nowrap">Bajarildi</span>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 10h19M6.5 15h4"/></svg></div>
+      <div>
+        <h1 id="shop">…</h1>
+        <div class="secure"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span data-i="secure"></span></div>
+      </div>
+      <div class="lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div>
     </div>
+    <div class="bar">
+      <div class="seg" id="langs"><button data-l="uz">UZ</button><button data-l="ru">RU</button><button data-l="en">EN</button></div>
+      <div class="seg" id="themes">
+        <button data-t="light" aria-label="light"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg></button>
+        <button data-t="dark" aria-label="dark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z"/></svg></button>
+      </div>
+    </div>
+  </div>
+</header>
 
-    <!-- Telegram Mini App Chrome + PayStars Header -->
-    <header class="sticky top-0 z-40 glass-chrome border-b">
-        <!-- Telegram WebApp Top Bar -->
-        <div class="max-w-md mx-auto px-3.5 pt-2.5 pb-1.5 flex items-center justify-between">
-            <button onclick="showToast('Mini-ilova faol')" class="w-8 h-8 rounded-full elevated-card flex items-center justify-center text-sub hover:text-main tactile" aria-label="Close">
-                <i class="fa-solid fa-xmark text-xs"></i>
-            </button>
-            <div class="text-center leading-tight">
-                <div class="text-[13px] font-bold text-main tracking-tight">Star Kerak Bot</div>
-                <div class="text-[10px] font-medium text-dim" data-i18n="miniApp">мини-приложение</div>
-            </div>
-            <button onclick="openSettingsModal()" class="w-8 h-8 rounded-full elevated-card flex items-center justify-center text-sub hover:text-main tactile" aria-label="Menu">
-                <i class="fa-solid fa-ellipsis text-xs"></i>
-            </button>
-        </div>
+<div class="wrap">
+<main id="app">
+  <div class="skeleton" id="load">…</div>
 
-        <!-- PAYSTARS Brand + Interactive Balance Pill -->
-        <div class="max-w-md mx-auto px-4 py-2.5 flex items-center justify-between">
-            <!-- Brand Wordmark & Falcon/Wing Emblem -->
-            <div onclick="switchTab('stars')" class="flex items-center gap-2 cursor-pointer tactile">
-                <div class="flex flex-col">
-                    <div class="flex items-center gap-1.5">
-                        <span class="font-black text-[17px] tracking-tight italic text-main leading-none">PAYSTARS</span>
-                        <!-- Custom SVG Wing/Star Emblem matching screenshot -->
-                        <svg class="w-5 h-5 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19.5 3.5C15.2 3.8 11.4 6.1 9.6 9.8C12.3 8.6 15.4 8.5 18.2 9.4C15.5 11.2 12.1 11.9 8.8 11.5C7.9 13.7 7.6 16.1 8.1 18.5C10.5 16.1 13.8 14.8 17.2 14.9C14.1 16.7 11.7 19.3 10.3 22.5C14.8 20.6 18.6 16.9 20.2 12.2C21.1 9.4 20.9 6.3 19.5 3.5Z"/>
-                        </svg>
-                    </div>
-                    <span class="text-[7.5px] font-bold tracking-[0.18em] text-dim uppercase mt-0.5">STAR COMMERCE NETWORK</span>
-                </div>
-            </div>
+  <section id="res" class="box res hide"></section>
 
-            <!-- Live Balance Pill with - and + buttons -->
-            <div class="flex items-center elevated-card rounded-full pl-3.5 pr-1.5 py-1 gap-2 shadow-sm">
-                <span id="header-balance" class="font-bold text-[13px] text-main tabular-nums tracking-tight">0 so'm</span>
-                <button onclick="openWithdrawModal()" class="w-6 h-6 rounded-full bg-sky-500/20 hover:bg-sky-500/30 text-sky-400 flex items-center justify-center text-[11px] font-bold tactile" title="Balansdan yechish / o'tkazish">
-                    <i class="fa-solid fa-minus"></i>
-                </button>
-                <button onclick="openTopupModal()" class="w-6 h-6 rounded-full bg-ps-blue hover:bg-ps-blueHover text-white flex items-center justify-center text-[11px] font-bold shadow-sm shadow-sky-500/30 tactile" title="Balansni to'ldirish">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </div>
-        </div>
-    </header>
+  <div id="pay" class="hide" style="display:grid;gap:14px">
+    <section class="box status">
+      <div class="tm"><div class="segs" id="segs"></div><div class="time mono" id="time">--:--</div></div>
+      <div class="st"><b id="stt"></b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><i style="font-style:normal" data-i="left"></i></span></div>
+      <button class="rf" id="rf" aria-label="refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 00-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0014.5 4.5L20 16M20 20v-4h-4"/></svg></button>
+    </section>
 
-    <!-- Main Viewport Container -->
-    <main class="flex-1 max-w-md w-full mx-auto px-4 pt-3 pb-6">
-
-        <!-- ==================== 1. STARS TAB ==================== -->
-        <section id="tab-stars" class="space-y-3.5 tab-view">
-            <!-- Dual Hero Action Cards -->
-            <div class="grid grid-cols-2 gap-3 stagger-item">
-                <button onclick="openStarsModal()" class="surface-card rounded-2xl p-4 flex flex-col items-center justify-center gap-2.5 hover:border-sky-500/40 tactile group">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500 flex items-center justify-center text-white text-xl shadow-md shadow-orange-500/20 group-hover:scale-105 transition-transform">
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <span class="font-bold text-[13px] text-main" data-i18n="buyStars">Stars olish</span>
-                </button>
-
-                <button onclick="openPremiumModal()" class="surface-card rounded-2xl p-4 flex flex-col items-center justify-center gap-2.5 hover:border-purple-500/40 tactile group">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-400 via-indigo-500 to-purple-600 flex items-center justify-center text-white text-xl shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <span class="font-bold text-[13px] text-main" data-i18n="buyPremium">Premium olish</span>
-                </button>
-            </div>
-
-            <!-- Promo Action Banners -->
-            <div class="space-y-2.5 stagger-item">
-                <div class="surface-card rounded-2xl p-3.5 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-500/25 flex items-center justify-center text-cyan-400 text-base shrink-0">
-                            <i class="fa-solid fa-percent"></i>
-                        </div>
-                        <div>
-                            <div class="font-bold text-[13px] text-main">Maxsus chegirmalar</div>
-                            <div class="text-[11px] text-sub">Cheklangan joylar mavjud!</div>
-                        </div>
-                    </div>
-                    <button onclick="openDiscountsModal()" class="bg-ps-blue hover:bg-ps-blueHover text-white text-xs font-semibold px-3.5 py-2 rounded-xl tactile shrink-0">
-                        Tariflar
-                    </button>
-                </div>
-
-                <div class="surface-card rounded-2xl p-3.5 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-500/25 flex items-center justify-center text-sky-400 text-base shrink-0">
-                            <i class="fa-solid fa-share-nodes"></i>
-                        </div>
-                        <div>
-                            <div class="font-bold text-[13px] text-main">Referral orqali daromad</div>
-                            <div class="text-[11px] text-sub">Savdosidan doimiy ulush</div>
-                        </div>
-                    </div>
-                    <button onclick="openReferralModal()" class="bg-ps-blue hover:bg-ps-blueHover text-white text-xs font-semibold px-3.5 py-2 rounded-xl tactile shrink-0">
-                        Ulashish
-                    </button>
-                </div>
-            </div>
-
-            <!-- Savdo Barabani (Interactive Trade Roulette) -->
-            <div class="surface-card rounded-2xl p-4 space-y-3 stagger-item">
-                <div class="flex items-start justify-between gap-2">
-                    <div>
-                        <h3 class="font-bold text-[15px] text-main">Savdo barabani</h3>
-                        <p class="text-[11px] text-sub mt-0.5 leading-snug">Maqsad to'lganda aylantiring va gift yuting</p>
-                    </div>
-                    <div class="flex items-center gap-1.5 shrink-0">
-                        <button onclick="openRouletteRulesModal()" class="w-8 h-8 rounded-full elevated-card flex items-center justify-center text-amber-400 hover:text-amber-300 tactile" title="Qoidalar">
-                            <i class="fa-solid fa-eye text-xs"></i>
-                        </button>
-                        <div class="elevated-card px-2.5 py-1.5 rounded-full flex items-center gap-1.5">
-                            <i class="fa-solid fa-ticket text-rose-400 text-xs"></i>
-                            <span id="roulette-tickets" class="font-bold text-xs text-main tabular-nums">0</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Roulette Viewport -->
-                <div class="relative rounded-xl bg-[#070B12] border border-hairline py-3 overflow-hidden">
-                    <!-- Top Center Pointer -->
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 z-20 roulette-pointer"></div>
-                    <!-- Side Vignettes -->
-                    <div class="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-[#070B12] to-transparent z-10 pointer-events-none"></div>
-                    <div class="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-[#070B12] to-transparent z-10 pointer-events-none"></div>
-
-                    <!-- Moving Track -->
-                    <div id="roulette-track" class="flex items-center gap-2.5 px-4 will-change-transform">
-                        <!-- Populated dynamically by JS for infinite-feel smooth spin -->
-                    </div>
-                </div>
-
-                <!-- Progress Bar -->
-                <div class="space-y-1.5">
-                    <div class="w-full h-1.5 rounded-full elevated-card overflow-hidden">
-                        <div id="roulette-progress-bar" class="h-full bg-ps-blue rounded-full transition-all duration-500" style="width: 0%"></div>
-                    </div>
-                    <div class="flex items-center justify-between text-[11px] font-semibold tabular-nums">
-                        <span id="roulette-current-val" class="text-sub">0 so'm</span>
-                        <span class="text-sub">500 000 so'm</span>
-                    </div>
-                </div>
-
-                <!-- Spin / Action Button -->
-                <button id="roulette-spin-btn" onclick="handleRouletteAction()" class="w-full py-3 rounded-xl elevated-card text-dim font-bold text-xs tracking-wide transition-all tactile">
-                    Maqsad to'lishini kuting
-                </button>
-            </div>
-
-            <!-- Savdo Statistikasi (Leaderboard) -->
-            <div class="surface-card rounded-2xl p-4 space-y-3 stagger-item">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-sky-500/15 flex items-center justify-center shrink-0">
-                        <!-- Donut chart icon matching screenshot -->
-                        <svg class="w-6 h-6" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="8" fill="none" stroke="#1E96FC" stroke-width="4.5" stroke-dasharray="32 50" stroke-dashoffset="0"/>
-                            <circle cx="12" cy="12" r="8" fill="none" stroke="#F97316" stroke-width="4.5" stroke-dasharray="12 50" stroke-dashoffset="-32"/>
-                            <circle cx="12" cy="12" r="8" fill="none" stroke="#FACC15" stroke-width="4.5" stroke-dasharray="6 50" stroke-dashoffset="-44"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-[15px] text-main">Savdo statistikasi</h3>
-                        <p class="text-[11px] text-sub">Kunlik, haftalik va oylik reyting</p>
-                    </div>
-                </div>
-
-                <!-- Segmented Switcher -->
-                <div class="relative grid grid-cols-3 elevated-card p-1 rounded-xl text-xs font-semibold" id="lb-segmented">
-                    <div id="lb-pill" class="absolute top-1 bottom-1 left-1 w-[calc(33.333%-2.6px)] bg-ps-blue rounded-lg seg-pill shadow-sm"></div>
-                    <button onclick="switchLeaderboard(0, 'bugun')" class="relative z-10 py-1.5 text-white transition-colors lb-btn">Bugun</button>
-                    <button onclick="switchLeaderboard(1, 'hafta')" class="relative z-10 py-1.5 text-sub transition-colors lb-btn">Bu hafta</button>
-                    <button onclick="switchLeaderboard(2, 'oy')" class="relative z-10 py-1.5 text-sub transition-colors lb-btn">Bu oy</button>
-                </div>
-
-                <!-- Leaderboard Rows -->
-                <div id="leaderboard-list" class="space-y-2">
-                    <!-- Populated via JS -->
-                </div>
-            </div>
-        </section>
-
-        <!-- ==================== 2. GIFTLAR TAB ==================== -->
-        <section id="tab-giftlar" class="space-y-3.5 tab-view hidden">
-            <!-- Filter, Sort & Refresh Bar -->
-            <div class="flex items-center gap-2">
-                <div class="relative flex-1">
-                    <select id="gift-filter" onchange="renderGiftsGrid()" class="w-full appearance-none surface-card rounded-xl pl-3 pr-7 py-2.5 text-xs font-semibold text-main focus:outline-none focus:border-sky-500">
-                        <option value="all">Barcha giftlar</option>
-                        <option value="rare">Noyob giftlar</option>
-                        <option value="standard">Standart giftlar</option>
-                    </select>
-                    <i class="fa-solid fa-caret-down text-[10px] text-sub absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                </div>
-
-                <div class="relative flex-1">
-                    <select id="gift-sort" onchange="renderGiftsGrid()" class="w-full appearance-none surface-card rounded-xl pl-3 pr-7 py-2.5 text-xs font-semibold text-main focus:outline-none focus:border-sky-500">
-                        <option value="newest">Yangilari birinchi</option>
-                        <option value="price-asc">Arzonlari birinchi</option>
-                        <option value="price-desc">Qimmatlari birinchi</option>
-                    </select>
-                    <i class="fa-solid fa-caret-down text-[10px] text-sub absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                </div>
-
-                <button onclick="refreshGifts(this)" class="w-10 h-10 rounded-xl surface-card flex items-center justify-center text-sub hover:text-main tactile shrink-0" title="Yangilash">
-                    <i class="fa-solid fa-rotate text-xs"></i>
-                </button>
-            </div>
-
-            <!-- Horizontal Category Strip -->
-            <div class="flex items-center gap-2.5 overflow-x-auto pb-1 no-scrollbar">
-                <button onclick="openStarsModal()" class="flex-shrink-0 flex flex-col items-center gap-1 w-16 tactile">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-lg shadow-sm">
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <span class="text-[10px] font-semibold text-amber-400">Stars</span>
-                </button>
-
-                <button onclick="openPremiumModal()" class="flex-shrink-0 flex flex-col items-center gap-1 w-16 tactile">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-400 to-purple-600 flex items-center justify-center text-white text-lg shadow-sm">
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <span class="text-[10px] font-semibold text-indigo-400">Premium</span>
-                </button>
-
-                <button onclick="quickBuyBaseGift('Teddy Bear', 15)" class="flex-shrink-0 flex flex-col items-center gap-1 w-16 tactile">
-                    <div class="w-12 h-12 rounded-2xl surface-card flex items-center justify-center text-2xl">🧸</div>
-                    <span class="text-[10px] font-medium text-sub truncate w-full text-center"><span class="text-amber-400 font-bold">15</span> Teddy</span>
-                </button>
-
-                <button onclick="quickBuyBaseGift('Heart Gift', 15)" class="flex-shrink-0 flex flex-col items-center gap-1 w-16 tactile">
-                    <div class="w-12 h-12 rounded-2xl surface-card flex items-center justify-center text-2xl">💝</div>
-                    <span class="text-[10px] font-medium text-sub truncate w-full text-center"><span class="text-amber-400 font-bold">15</span> Heart</span>
-                </button>
-
-                <button onclick="quickBuyBaseGift('Gift Box', 25)" class="flex-shrink-0 flex flex-col items-center gap-1 w-16 tactile">
-                    <div class="w-12 h-12 rounded-2xl surface-card flex items-center justify-center text-2xl">🎁</div>
-                    <span class="text-[10px] font-medium text-sub truncate w-full text-center"><span class="text-amber-400 font-bold">25</span> Box</span>
-                </button>
-
-                <button onclick="quickBuyBaseGift('Rose', 25)" class="flex-shrink-0 flex flex-col items-center gap-1 w-16 tactile">
-                    <div class="w-12 h-12 rounded-2xl surface-card flex items-center justify-center text-2xl">🌹</div>
-                    <span class="text-[10px] font-medium text-sub truncate w-full text-center"><span class="text-amber-400 font-bold">25</span> Rose</span>
-                </button>
-            </div>
-
-            <!-- 2-Column NFT / Collectible Gifts Grid -->
-            <div id="gifts-grid" class="grid grid-cols-2 gap-3">
-                <!-- Populated dynamically via JS -->
-            </div>
-        </section>
-
-        <!-- ==================== 3. GIVEAWAY TAB ==================== -->
-        <section id="tab-giveaway" class="space-y-4 tab-view hidden">
-            <!-- Horizontal Pill Tabs -->
-            <div class="surface-card p-1.5 rounded-2xl flex items-center justify-between gap-1 overflow-x-auto no-scrollbar">
-                <button onclick="switchGiveawayTab('reklama', this)" class="px-3.5 py-2 rounded-xl bg-ps-blue text-white font-semibold text-xs whitespace-nowrap transition-all gw-tab">Reklama</button>
-                <button onclick="switchGiveawayTab('ishtirok', this)" class="px-3.5 py-2 rounded-xl text-sub hover:text-main font-semibold text-xs whitespace-nowrap transition-all gw-tab">Ishtirok</button>
-                <button onclick="switchGiveawayTab('giveaways', this)" class="px-3.5 py-2 rounded-xl text-sub hover:text-main font-semibold text-xs whitespace-nowrap transition-all gw-tab">Giveawaylarim</button>
-                <button onclick="switchGiveawayTab('chatlar', this)" class="px-3.5 py-2 rounded-xl text-sub hover:text-main font-semibold text-xs whitespace-nowrap transition-all gw-tab">Chatlar</button>
-            </div>
-
-            <!-- Giveaway Content Area -->
-            <div id="giveaway-body">
-                <!-- Rendered by JS -->
-            </div>
-        </section>
-
-        <!-- ==================== 4. TARIX TAB ==================== -->
-        <section id="tab-tarikh" class="space-y-3.5 tab-view hidden">
-            <!-- Segmented Switcher -->
-            <div class="relative grid grid-cols-3 surface-card p-1 rounded-2xl text-xs font-semibold">
-                <div id="tx-pill" class="absolute top-1 bottom-1 left-1 w-[calc(33.333%-2.6px)] bg-ps-blue rounded-xl seg-pill shadow-sm"></div>
-                <button onclick="switchTarikhTab(0, 'stars')" class="relative z-10 py-2.5 text-white transition-colors tx-btn">Stars</button>
-                <button onclick="switchTarikhTab(1, 'giftlar')" class="relative z-10 py-2.5 text-sub transition-colors tx-btn">Giftlar</button>
-                <button onclick="switchTarikhTab(2, 'transferlar')" class="relative z-10 py-2.5 text-sub transition-colors tx-btn">Transferlar</button>
-            </div>
-
-            <!-- Section Counter -->
-            <div class="flex items-center justify-between px-1">
-                <h3 class="font-bold text-base text-main">Tarix <span id="tx-count" class="text-sub font-semibold text-sm tabular-nums">(1)</span></h3>
-                <span class="text-[11px] text-dim">Batafsil ko'rish uchun bosing</span>
-            </div>
-
-            <!-- Transactions List -->
-            <div id="tx-list" class="space-y-2.5">
-                <!-- Populated dynamically via JS -->
-            </div>
-        </section>
-
-        <!-- ==================== 5. PROFIL TAB ==================== -->
-        <section id="tab-profil" class="space-y-3.5 tab-view">
-            <!-- User Identity Card -->
-            <div class="surface-card rounded-2xl p-4 flex items-center justify-between stagger-item">
-                <div class="flex items-center gap-3.5">
-                    <div class="relative">
-                        <div class="w-14 h-14 rounded-full bg-gradient-to-b from-sky-300 via-sky-500 to-blue-600 shadow-inner flex items-center justify-center text-white font-black text-xl">
-                            Z
-                        </div>
-                        <span class="absolute bottom-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-[#0F1726]"></span>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="font-bold text-main text-base">.</span>
-                            <span class="w-5 h-5 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center text-[10px]">
-                                <i class="fa-solid fa-crown"></i>
-                            </span>
-                        </div>
-                        <div class="text-xs font-semibold text-sky-400 mt-0.5">@zakon_ceo1</div>
-                        <button onclick="copyToClipboard('7794270699')" class="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg elevated-card text-[11px] font-mono font-semibold text-sub hover:text-main tactile">
-                            <span>ID: 7794270699</span>
-                            <i class="fa-regular fa-copy text-[10px]"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <button onclick="openSettingsModal()" class="w-10 h-10 rounded-xl elevated-card flex items-center justify-center text-sub hover:text-main tactile" aria-label="Settings">
-                    <i class="fa-solid fa-gear text-base"></i>
-                </button>
-            </div>
-
-            <!-- 3-Column Metrics Strip -->
-            <div class="grid grid-cols-3 gap-2.5 stagger-item">
-                <div class="surface-card rounded-2xl p-3">
-                    <div class="flex items-center gap-1.5 text-[11px] text-sub font-medium">
-                        <i class="fa-solid fa-bag-shopping text-[10px]"></i>
-                        <span>Umumiy savdo</span>
-                    </div>
-                    <div id="stat-total-volume" class="font-extrabold text-[14px] text-main mt-1.5 tabular-nums">0 so'm</div>
-                </div>
-
-                <div class="surface-card rounded-2xl p-3">
-                    <div class="flex items-center gap-1.5 text-[11px] text-sub font-medium">
-                        <i class="fa-solid fa-chart-simple text-[10px]"></i>
-                        <span>Savdolar</span>
-                    </div>
-                    <div id="stat-total-count" class="font-extrabold text-[14px] text-main mt-1.5 tabular-nums">0</div>
-                </div>
-
-                <div class="surface-card rounded-2xl p-3">
-                    <div class="flex items-center gap-1.5 text-[11px] text-sub font-medium">
-                        <i class="fa-regular fa-circle-check text-[10px]"></i>
-                        <span>Muvaffaqiyat</span>
-                    </div>
-                    <div id="stat-success-rate" class="font-extrabold text-[14px] text-main mt-1.5 tabular-nums">0.0%</div>
-                </div>
-            </div>
-
-            <!-- Imkoniyatlar Menu Group -->
-            <div class="space-y-2 stagger-item">
-                <h3 class="text-[13px] font-bold text-main px-0.5">Imkoniyatlar</h3>
-                <div class="surface-card rounded-2xl overflow-hidden divide-y divide-[var(--border-hairline)]">
-                    <!-- 15 kunlik savdo seriyasi -->
-                    <button onclick="openStreakModal()" class="w-full p-3.5 flex items-center justify-between hover:bg-white/[0.02] text-left tactile">
-                        <div class="flex items-center gap-3">
-                            <div class="relative w-10 h-10 rounded-xl elevated-card flex items-center justify-center text-lg shrink-0">
-                                🎁
-                                <span id="streak-badge-count" class="absolute -bottom-1 -right-1 bg-ps-blue text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full">15</span>
-                            </div>
-                            <div>
-                                <div class="font-bold text-[13px] text-main">15 kunlik savdo seriyasi</div>
-                                <div class="text-[11px] text-sub">Bugungi shartni bajaring va mukofotni oling</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-dim"></i>
-                    </button>
-
-                    <!-- Maxsus chegirmalar -->
-                    <button onclick="openDiscountsModal()" class="w-full p-3.5 flex items-center justify-between hover:bg-white/[0.02] text-left tactile">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl elevated-card flex items-center justify-center text-cyan-400 text-base shrink-0">
-                                <i class="fa-solid fa-certificate"></i>
-                            </div>
-                            <div>
-                                <div class="font-bold text-[13px] text-main">Maxsus chegirmalar</div>
-                                <div class="text-[11px] text-sub">Tariflar va mavjud chegirmalar</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-dim"></i>
-                    </button>
-
-                    <!-- Mening giftlarim -->
-                    <button onclick="openMyGiftsModal()" class="w-full p-3.5 flex items-center justify-between hover:bg-white/[0.02] text-left tactile">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl elevated-card flex items-center justify-center text-lg shrink-0">
-                                🎀
-                            </div>
-                            <div>
-                                <div class="font-bold text-[13px] text-main">Mening giftlarim</div>
-                                <div id="profile-gifts-subtitle" class="text-[11px] text-sub">0 ta aktiv gift</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-dim"></i>
-                    </button>
-
-                    <!-- Referal va bonuslar -->
-                    <button onclick="openReferralModal()" class="w-full p-3.5 flex items-center justify-between hover:bg-white/[0.02] text-left tactile">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl elevated-card flex items-center justify-center text-sky-400 text-base shrink-0">
-                                <i class="fa-solid fa-share-nodes"></i>
-                            </div>
-                            <div>
-                                <div class="font-bold text-[13px] text-main">Referal va bonuslar</div>
-                                <div class="text-[11px] text-sub">0 ta do'st • ulashish va bonuslar</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-dim"></i>
-                    </button>
-
-                    <!-- MultiStarKerak Bot -->
-                    <button onclick="openMultiBotModal()" class="w-full p-3.5 flex items-center justify-between hover:bg-white/[0.02] text-left tactile">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl elevated-card flex items-center justify-center text-lg shrink-0">
-                                🤖
-                            </div>
-                            <div>
-                                <div class="font-bold text-[13px] text-main">MultiStarKerak Bot</div>
-                                <div class="text-[11px] text-sub">O'z botingizni ochib biznes boshlang</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-dim"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Biz haqimizda Menu Group -->
-            <div class="space-y-2 stagger-item">
-                <h3 class="text-[13px] font-bold text-main px-0.5">Biz haqimizda</h3>
-                <div class="surface-card rounded-2xl overflow-hidden divide-y divide-[var(--border-hairline)]">
-                    <button onclick="openWhatWeCanModal()" class="w-full p-3.5 flex items-center justify-between hover:bg-white/[0.02] text-left tactile">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl elevated-card flex items-center justify-center shrink-0">
-                                <svg class="w-5 h-5" viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="8" fill="none" stroke="#1E96FC" stroke-width="4.5" stroke-dasharray="32 50"/>
-                                    <circle cx="12" cy="12" r="8" fill="none" stroke="#F97316" stroke-width="4.5" stroke-dasharray="12 50" stroke-dashoffset="-32"/>
-                                    <circle cx="12" cy="12" r="8" fill="none" stroke="#FACC15" stroke-width="4.5" stroke-dasharray="6 50" stroke-dashoffset="-44"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <div class="font-bold text-[13px] text-main">Nimalar qila olamiz?</div>
-                                <div class="text-[11px] text-sub">Bot va PayStars imkoniyatlari</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-dim"></i>
-                    </button>
-
-                    <button onclick="openAboutModal()" class="w-full p-3.5 flex items-center justify-between hover:bg-white/[0.02] text-left tactile">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl elevated-card flex items-center justify-center text-amber-400 text-xs font-black italic shrink-0">
-                                PS
-                            </div>
-                            <div>
-                                <div class="font-bold text-[13px] text-main">Biz haqimizda</div>
-                                <div class="text-[11px] text-sub">PayStars • Star Commerce Network</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-dim"></i>
-                    </button>
-
-                    <button onclick="openHelpModal()" class="w-full p-3.5 flex items-center justify-between hover:bg-white/[0.02] text-left tactile">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-ps-blue flex items-center justify-center text-white text-base shrink-0">
-                                <i class="fa-brands fa-telegram"></i>
-                            </div>
-                            <div>
-                                <div class="font-bold text-[13px] text-main">Yordam markazi</div>
-                                <div class="text-[11px] text-sub">Savollar, xavfsizlik va qo'llab-quvvatlash</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-dim"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Footer Version -->
-            <div class="text-center pt-1 pb-3">
-                <span class="text-[11px] font-medium text-dim">StarKerak Bot • v2.2.0</span>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Floating Quick-Support Chat Button -->
-    <button onclick="openHelpModal()" class="fixed bottom-24 right-4 z-30 w-11 h-11 rounded-full bg-ps-blue hover:bg-ps-blueHover text-white shadow-lg shadow-sky-500/30 flex items-center justify-center tactile" aria-label="Quick Support">
-        <i class="fa-regular fa-message text-sm"></i>
+    <button class="guide" id="gd" type="button">
+      <span class="pl"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+      <span data-i="guide"></span>
+      <span class="ar"><svg viewBox="0 0 16 22"><path d="M2 2l12 9-12 9z" opacity=".5"/></svg><svg viewBox="0 0 16 22"><path d="M2 2l12 9-12 9z"/></svg><svg viewBox="0 0 16 22"><path d="M2 2l12 9-12 9z"/></svg><svg viewBox="0 0 16 22"><path d="M2 2l12 9-12 9z" opacity=".5"/></svg></span>
     </button>
-
-    <!-- Bottom Navigation Bar (5 Tabs matching screenshot active pill style) -->
-    <nav class="fixed bottom-0 left-0 right-0 z-40 glass-chrome border-t">
-        <div class="max-w-md mx-auto px-2 py-2 grid grid-cols-5 gap-1">
-            <button onclick="switchTab('stars')" class="nav-btn flex flex-col items-center justify-center py-2 rounded-2xl text-sub hover:text-main transition-all tactile" data-tab="stars">
-                <i class="fa-regular fa-star text-base mb-0.5"></i>
-                <span class="text-[10px] font-semibold">Stars</span>
-            </button>
-
-            <button onclick="switchTab('giftlar')" class="nav-btn flex flex-col items-center justify-center py-2 rounded-2xl text-sub hover:text-main transition-all tactile" data-tab="giftlar">
-                <i class="fa-solid fa-gift text-base mb-0.5"></i>
-                <span class="text-[10px] font-semibold">Giftlar</span>
-            </button>
-
-            <button onclick="switchTab('giveaway')" class="nav-btn flex flex-col items-center justify-center py-2 rounded-2xl text-sub hover:text-main transition-all tactile" data-tab="giveaway">
-                <i class="fa-solid fa-box-open text-base mb-0.5"></i>
-                <span class="text-[10px] font-semibold">Giveaway</span>
-            </button>
-
-            <button onclick="switchTab('tarikh')" class="nav-btn flex flex-col items-center justify-center py-2 rounded-2xl text-sub hover:text-main transition-all tactile" data-tab="tarikh">
-                <i class="fa-regular fa-clock text-base mb-0.5"></i>
-                <span class="text-[10px] font-semibold">Tarix</span>
-            </button>
-
-            <button onclick="switchTab('profil')" class="nav-btn flex flex-col items-center justify-center py-2 rounded-2xl bg-ps-blue text-white shadow-md shadow-sky-500/25 transition-all tactile" data-tab="profil">
-                <span class="w-4 h-4 rounded-full bg-gradient-to-b from-white/90 to-sky-200 mb-0.5 inline-block"></span>
-                <span class="text-[10px] font-semibold">Profil</span>
-            </button>
-        </div>
-    </nav>
-
-    <!-- ==================== MODALS & BOTTOM SHEETS ==================== -->
-
-    <!-- 1. STARS / PREMIUM PURCHASE SHEET -->
-    <div id="purchase-modal" onclick="backdropClose(event, 'purchase-modal', 'purchase-sheet')" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-end justify-center opacity-0 pointer-events-none transition-opacity duration-200">
-        <div id="purchase-sheet" class="sheet-surface w-full max-w-md rounded-t-3xl p-5 space-y-4 transform translate-y-full max-h-[92vh] overflow-y-auto">
-            <div class="flex items-center justify-between">
-                <h3 id="purchase-modal-title" class="font-bold text-lg text-main">Stars sotib olish</h3>
-                <button onclick="closeSheet('purchase-modal', 'purchase-sheet')" class="w-8 h-8 rounded-full elevated-card flex items-center justify-center text-sub hover:text-main tactile">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-
-            <!-- Username Input with O'zimga button -->
-            <div class="relative flex items-center">
-                <input type="text" id="username-input" placeholder="Username" class="w-full elevated-card rounded-xl pl-3.5 pr-24 py-3 text-sm font-medium text-main placeholder-[var(--text-muted)] focus:outline-none focus:border-sky-500">
-                <button onclick="fillMyUsername()" class="absolute right-2 bg-ps-blue hover:bg-ps-blueHover text-white text-xs font-bold px-3 py-1.5 rounded-lg tactile">
-                    O'zimga
-                </button>
-            </div>
-
-            <!-- Stars Quantity Input OR Premium Duration Dropdown -->
-            <div id="stars-qty-block" class="space-y-2.5">
-                <input type="number" id="qty-input" value="50" min="50" max="100000" oninput="updatePurchaseCalc()" class="w-full elevated-card rounded-xl px-3.5 py-3 text-sm font-bold text-main tabular-nums focus:outline-none focus:border-sky-500">
-                <div class="grid grid-cols-5 gap-1.5">
-                    <button onclick="setStarQty(50)" class="py-2 rounded-xl elevated-card text-xs font-bold text-main hover:border-sky-500 tactile tabular-nums">50</button>
-                    <button onclick="setStarQty(100)" class="py-2 rounded-xl elevated-card text-xs font-bold text-main hover:border-sky-500 tactile tabular-nums">100</button>
-                    <button onclick="setStarQty(200)" class="py-2 rounded-xl elevated-card text-xs font-bold text-main hover:border-sky-500 tactile tabular-nums">200</button>
-                    <button onclick="setStarQty(500)" class="py-2 rounded-xl elevated-card text-xs font-bold text-main hover:border-sky-500 tactile tabular-nums">500</button>
-                    <button onclick="setStarQty(1000)" class="py-2 rounded-xl elevated-card text-xs font-bold text-main hover:border-sky-500 tactile tabular-nums">1000</button>
-                </div>
-            </div>
-
-            <div id="premium-duration-block" class="hidden relative">
-                <button type="button" onclick="togglePremiumDropdown()" class="w-full elevated-card border-sky-500/60 rounded-xl px-3.5 py-3 flex items-center justify-between text-sm font-bold text-main tactile">
-                    <span id="premium-selected-label">3 oy</span>
-                    <i class="fa-solid fa-up-down text-xs text-sub"></i>
-                </button>
-                <!-- Floating Glass Popover Menu matching Screenshot 8 -->
-                <div id="premium-popover" class="hidden mt-1.5 rounded-2xl bg-slate-200/95 dark:bg-slate-200/95 text-slate-900 shadow-2xl border border-white/40 divide-y divide-slate-300/80 overflow-hidden">
-                    <button type="button" onclick="selectPremiumPlan(3, 160000, '3 oy')" class="w-full px-4 py-3 flex items-center gap-3 text-left font-semibold text-sm hover:bg-black/5">
-                        <i id="check-3" class="fa-solid fa-check text-xs text-slate-900"></i>
-                        <span>3 oy</span>
-                    </button>
-                    <button type="button" onclick="selectPremiumPlan(6, 290000, '6 oy')" class="w-full px-4 py-3 flex items-center gap-3 text-left font-semibold text-sm hover:bg-black/5">
-                        <i id="check-6" class="fa-solid fa-check text-xs opacity-0"></i>
-                        <span>6 oy</span>
-                    </button>
-                    <button type="button" onclick="selectPremiumPlan(12, 520000, '12 oy')" class="w-full px-4 py-3 flex items-center gap-3 text-left font-semibold text-sm hover:bg-black/5">
-                        <i id="check-12" class="fa-solid fa-check text-xs opacity-0"></i>
-                        <span>12 oy</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 5 Payment Methods Grid (Karta, Balans, Payme, Uzum, Click) -->
-            <div class="grid grid-cols-5 gap-1.5">
-                <button onclick="selectPayMethod('Karta', this)" class="pay-btn flex flex-col items-center justify-center py-2.5 px-1 rounded-xl elevated-card border-sky-500 bg-sky-500/15 text-main tactile">
-                    <i class="fa-solid fa-credit-card text-sky-400 text-sm mb-1"></i>
-                    <span class="text-[10px] font-bold">Karta</span>
-                </button>
-                <button onclick="selectPayMethod('Balans', this)" class="pay-btn flex flex-col items-center justify-center py-2.5 px-1 rounded-xl elevated-card text-sub tactile">
-                    <i class="fa-solid fa-sack-dollar text-amber-400 text-sm mb-1"></i>
-                    <span class="text-[10px] font-bold">Balans</span>
-                </button>
-                <button onclick="selectPayMethod('Payme', this)" class="pay-btn flex flex-col items-center justify-center py-2.5 px-1 rounded-xl elevated-card text-sub tactile">
-                    <span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-400 text-[9px] font-black mb-1">Payme</span>
-                    <span class="text-[10px] font-bold">Payme</span>
-                </button>
-                <button onclick="selectPayMethod('Uzum', this)" class="pay-btn flex flex-col items-center justify-center py-2.5 px-1 rounded-xl elevated-card text-sub tactile">
-                    <span class="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-400 text-[9px] font-black mb-1">uzum</span>
-                    <span class="text-[10px] font-bold">Uzum</span>
-                </button>
-                <button onclick="selectPayMethod('Click', this)" class="pay-btn flex flex-col items-center justify-center py-2.5 px-1 rounded-xl elevated-card text-sub tactile">
-                    <span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[9px] font-black mb-1">click</span>
-                    <span class="text-[10px] font-bold">Click</span>
-                </button>
-            </div>
-
-            <!-- Summary Row -->
-            <div class="elevated-card rounded-xl p-3.5 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span id="selected-pay-name" class="text-xs font-bold text-main">Karta</span>
-                    <span class="px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-400 text-[10px] font-bold">Komissiyasiz</span>
-                </div>
-                <span id="purchase-total-price" class="font-extrabold text-sm text-main tabular-nums">≈ 10 750 so'm</span>
-            </div>
-
-            <!-- Submit Button -->
-            <button id="purchase-submit-btn" onclick="submitPurchase()" class="w-full py-3.5 rounded-xl bg-ps-blue hover:bg-ps-blueHover text-white font-bold text-sm shadow-lg shadow-sky-500/25 tactile">
-                Sotib olish
-            </button>
-        </div>
-    </div>
-
-    <!-- 2. BALANCE TOP-UP INPUT SHEET -->
-    <div id="topup-input-modal" onclick="backdropClose(event, 'topup-input-modal', 'topup-input-sheet')" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-end justify-center opacity-0 pointer-events-none transition-opacity duration-200">
-        <div id="topup-input-sheet" class="sheet-surface w-full max-w-md rounded-t-3xl p-5 space-y-4 transform translate-y-full">
-            <div class="flex items-center justify-between">
-                <h3 class="font-bold text-lg text-main">Balansni to'ldirish</h3>
-                <button onclick="closeSheet('topup-input-modal', 'topup-input-sheet')" class="w-8 h-8 rounded-full elevated-card flex items-center justify-center text-sub hover:text-main tactile">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-            <div class="space-y-2.5">
-                <label class="text-xs font-semibold text-sub">To'ldirish summasi (so'm)</label>
-                <input type="number" id="topup-amount-input" value="10000" min="5000" step="1000" class="w-full elevated-card rounded-xl px-4 py-3 text-base font-extrabold text-main tabular-nums focus:outline-none focus:border-sky-500">
-                <div class="grid grid-cols-4 gap-2">
-                    <button onclick="document.getElementById('topup-amount-input').value=10000" class="py-2 rounded-xl elevated-card text-xs font-bold text-main tactile tabular-nums">10 000</button>
-                    <button onclick="document.getElementById('topup-amount-input').value=25000" class="py-2 rounded-xl elevated-card text-xs font-bold text-main tactile tabular-nums">25 000</button>
-                    <button onclick="document.getElementById('topup-amount-input').value=50000" class="py-2 rounded-xl elevated-card text-xs font-bold text-main tactile tabular-nums">50 000</button>
-                    <button onclick="document.getElementById('topup-amount-input').value=100000" class="py-2 rounded-xl elevated-card text-xs font-bold text-main tactile tabular-nums">100 000</button>
-                </div>
-            </div>
-            <button onclick="generateTopupInvoice()" class="w-full py-3.5 rounded-xl bg-ps-blue hover:bg-ps-blueHover text-white font-bold text-sm shadow-lg shadow-sky-500/25 tactile">
-                Davom etish
-            </button>
-        </div>
-    </div>
-
-    <!-- 3. TO'LDIRISH MUVAFFAQIYATLI / P2P INVOICE SHEET (Matches Screenshot 18) -->
-    <div id="invoice-modal" onclick="if(event.target.id==='invoice-modal')closeInvoice()" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-end justify-center opacity-0 pointer-events-none transition-opacity duration-200">
-        <div id="invoice-sheet" class="sheet-surface w-full max-w-md rounded-t-3xl p-5 space-y-3.5 transform translate-y-full max-h-[92vh] overflow-y-auto">
-            <div class="flex items-center justify-between">
-                <h3 id="invoice-title" class="font-bold text-lg text-main">To'ldirish muvaffaqiyatli</h3>
-                <button onclick="closeInvoice()" class="w-8 h-8 rounded-full elevated-card flex items-center justify-center text-sub hover:text-main tactile">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-
-            <!-- Base Amount Box -->
-            <div class="elevated-card rounded-xl px-4 py-3 flex items-center gap-2 text-sm">
-                <span class="text-sub font-medium">Miqdor</span>
-                <span id="invoice-base-amount" class="font-extrabold text-main tabular-nums">10000 so'm</span>
-            </div>
-
-            <!-- Critical Warning Banner -->
-            <div class="rounded-xl bg-amber-500/10 border border-amber-500/30 p-3 flex items-start gap-2.5 text-xs leading-relaxed">
-                <span class="text-base shrink-0">🚨</span>
-                <div class="text-main">
-                    <span class="font-extrabold text-rose-500">MUHIM!</span> Quyida ko'rsatilgan summani
-                    <span class="px-1.5 py-0.5 rounded bg-rose-500/15 text-rose-500 font-extrabold">AYNAN</span>
-                    to'lashingiz shart! Hatto <span class="font-bold text-rose-500">1 so'm</span> kam yoki ko'p bo'lsa ham to'lov
-                    <span class="font-bold text-rose-500">avtomatik qabul qilinmaydi.</span>
-                </div>
-            </div>
-
-            <!-- Coral Red Live Timer + Exact Amount Card -->
-            <div class="relative pt-2.5">
-                <div class="absolute top-0 left-1/2 -translate-x-1/2 z-10 px-3 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-extrabold tracking-wider uppercase tabular-nums shadow">
-                    AYNI SHU SUMMA <span id="invoice-timer">29:51</span>
-                </div>
-                <div class="rounded-2xl bg-gradient-to-r from-rose-500 to-rose-400 p-4 flex items-center justify-center gap-3 shadow-lg shadow-rose-500/20">
-                    <span id="invoice-exact-amount" class="font-black text-2xl text-slate-950 tabular-nums tracking-tight">10 328</span>
-                    <button onclick="copyExactInvoiceAmount()" class="bg-ps-blue hover:bg-ps-blueHover text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow tactile">
-                        Nusxalash
-                    </button>
-                </div>
-            </div>
-
-            <!-- Card Number & Owner -->
-            <div id="invoice-cards" class="space-y-2 pt-1 text-xs"></div>
-            <div id="invoice-status" class="elevated-card rounded-xl px-3 py-2 text-[11px] text-sub flex items-center gap-2 hidden">
-                <i class="fa-solid fa-circle-notch fa-spin text-sky-400"></i><span id="invoice-status-text">To'lov kutilmoqda...</span>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="grid grid-cols-2 gap-2.5 pt-1">
-                <button id="invoice-confirm-btn" onclick="confirmSimulatedPayment()" class="py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-xs shadow-lg shadow-emerald-500/20 tactile">
-                    To'ladim (Tasdiqlash)
-                </button>
-                <button id="invoice-close-btn" onclick="closeInvoice()" class="py-3.5 rounded-xl bg-ps-blue hover:bg-ps-blueHover text-white font-bold text-xs shadow-lg shadow-sky-500/20 tactile">
-                    OK
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. 15-DAY STREAK MODAL (Matches Screenshots 15 & 16) -->
-    <div id="streak-modal" onclick="backdropClose(event, 'streak-modal', 'streak-sheet')" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-end justify-center opacity-0 pointer-events-none transition-opacity duration-200">
-        <div id="streak-sheet" class="sheet-surface w-full max-w-md rounded-t-3xl p-5 space-y-4 transform translate-y-full max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between">
-                <h3 class="font-bold text-lg text-main">15 kunlik savdo seriyasi</h3>
-                <button onclick="closeSheet('streak-modal', 'streak-sheet')" class="w-8 h-8 rounded-full elevated-card flex items-center justify-center text-sub hover:text-main tactile">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-
-            <!-- Day 1 Active Goal Card -->
-            <div class="rounded-2xl border-2 border-ps-blue/70 surface-card p-3.5 space-y-2.5">
-                <div class="flex items-start gap-3">
-                    <div class="w-12 h-12 rounded-xl bg-ps-blue text-white flex flex-col items-center justify-center shrink-0">
-                        <span class="font-black text-base leading-none">1</span>
-                        <span class="text-[9px] font-bold uppercase mt-0.5">KUN</span>
-                    </div>
-                    <div>
-                        <div class="font-extrabold text-sm text-main">Bugungi sovg'a: 1 075 so'm balans</div>
-                        <p class="text-[11px] text-sub mt-0.5 leading-snug">10 000 so'mlik shart. Faqat karta orqali muvaffaqiyatli yakunlangan buyurtmalar hisoblanadi.</p>
-                    </div>
-                </div>
-                <div class="w-full h-1.5 rounded-full elevated-card overflow-hidden">
-                    <div id="streak-progress-bar" class="h-full bg-ps-blue rounded-full transition-all duration-500" style="width: 0%"></div>
-                </div>
-                <div class="flex items-center justify-between text-[11px] text-sub font-semibold tabular-nums">
-                    <span>Bugungi karta orqali yakunlangan savdo</span>
-                    <span id="streak-progress-text">0 / 10 000 so'm</span>
-                </div>
-            </div>
-
-            <!-- 2x2 Qanday ishlaydi? Grid -->
-            <div class="space-y-2">
-                <h4 class="font-bold text-xs text-main">Qanday ishlaydi?</h4>
-                <div class="grid grid-cols-2 gap-2 text-[11px]">
-                    <div class="elevated-card rounded-xl p-3 space-y-1">
-                        <div class="font-bold text-main">Har kuni botga kiring</div>
-                        <p class="text-sub leading-snug">Modalni ochish va sovg'ani shu kunning o'zida claim qilish kunlik kirishni tasdiqlaydi.</p>
-                    </div>
-                    <div class="elevated-card rounded-xl p-3 space-y-1">
-                        <div class="font-bold text-main">Qaysi savdo hisoblanadi?</div>
-                        <p class="text-sub leading-snug">Faqat karta orqali to'langan va muvaffaqiyatli yakunlangan buyurtmalar summasi hisoblanadi.</p>
-                    </div>
-                    <div class="elevated-card rounded-xl p-3 space-y-1">
-                        <div class="font-bold text-main">Faqat kunlik jami summa</div>
-                        <p class="text-sub leading-snug">Savdolar soni hisoblanmaydi. Yangi Toshkent kuni boshlangach, belgilangan summaga yetish kifoya.</p>
-                    </div>
-                    <div class="elevated-card rounded-xl p-3 space-y-1">
-                        <div class="font-bold text-main">Bir kun qolsa — reset</div>
-                        <p class="text-sub leading-snug">Navbatdagi kun claim qilinmasa, seriya 1-kunga qaytadi va foizli chegirmalar o'chadi.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Milestones List (Days 1-8) -->
-            <div class="space-y-2">
-                <h4 class="font-bold text-xs text-main">15 kunlik shartlar va mukofotlar</h4>
-                <div id="streak-milestones-list" class="space-y-2">
-                    <!-- Populated via JS -->
-                </div>
-            </div>
-
-            <!-- Bottom Sticky CTA -->
-            <button id="streak-cta-btn" onclick="handleStreakAction()" class="w-full py-3.5 rounded-xl bg-ps-blue hover:bg-ps-blueHover text-white font-bold text-sm shadow-lg shadow-sky-500/25 tactile">
-                Yana 10 000 so'm savdo kerak
-            </button>
-            <div class="text-center text-[10px] text-dim -mt-2">Bugungi savdo server tomonidan tekshiriladi.</div>
-        </div>
-    </div>
-
-    <!-- 5. REFERRAL MODAL (Matches Screenshot 14) -->
-    <div id="referral-modal" onclick="backdropClose(event, 'referral-modal', 'referral-sheet')" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-end justify-center opacity-0 pointer-events-none transition-opacity duration-200">
-        <div id="referral-sheet" class="sheet-surface w-full max-w-md rounded-t-3xl p-5 space-y-4 transform translate-y-full">
-            <div class="flex items-center justify-between">
-                <h3 class="font-bold text-lg text-main">Referallar</h3>
-                <button onclick="closeSheet('referral-modal', 'referral-sheet')" class="w-8 h-8 rounded-full elevated-card flex items-center justify-center text-sub hover:text-main tactile">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-            <p class="text-xs text-main leading-relaxed">
-                Har taklif qilgan referalingiz uchun ular qilgan buyurtmalardan <span class="font-bold">2% ulush</span> olasiz. (stars, premium sotib olsa yoki balansni to'ldirsa)
-            </p>
-            <div class="elevated-card rounded-xl p-3 text-xs text-main leading-relaxed">
-                🎁 <span class="font-bold">Yangi!</span> Referalingiz birinchi xarid qilganda, sizga 2 ta chegirmali xarid beriladi (<span class="font-bold text-sky-400">195 so'm/star</span>, balans orqali).
-            </div>
-            <div class="space-y-1 text-xs font-semibold text-main tabular-nums">
-                <div>Referallaringiz: <span class="font-extrabold">0</span></div>
-                <div>Ulardan zakazlar: <span class="font-extrabold">0</span></div>
-            </div>
-            <button onclick="copyToClipboard('https://t.me/StarKerakBot?start=ref_7794270699')" class="w-full py-3.5 rounded-xl bg-ps-blue hover:bg-ps-blueHover text-white font-bold text-sm shadow-lg shadow-sky-500/25 tactile">
-                Do'stlarni taklif qilish
-            </button>
-        </div>
-    </div>
-
-    <!-- 6. NIMALAR QILA OLAMIZ MODAL (Matches Screenshot 13) -->
-    <div id="whatwecan-modal" onclick="backdropClose(event, 'whatwecan-modal', 'whatwecan-sheet')" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-end justify-center opacity-0 pointer-events-none transition-opacity duration-200">
-        <div id="whatwecan-sheet" class="sheet-surface w-full max-w-md rounded-t-3xl p-5 space-y-3 transform translate-y-full max-h-[88vh] overflow-y-auto">
-            <div class="flex items-center justify-between pb-1">
-                <h3 class="font-bold text-lg text-main">Nimalar qila olamiz?</h3>
-                <button onclick="closeSheet('whatwecan-modal', 'whatwecan-sheet')" class="w-8 h-8 rounded-full elevated-card flex items-center justify-center text-sub hover:text-main tactile">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-            <div class="space-y-2.5 text-xs">
-                <div class="elevated-card rounded-xl p-3.5 space-y-1">
-                    <div class="font-bold text-main text-[13px]">Telegram Stars va Premium</div>
-                    <p class="text-sub leading-relaxed">Stars yoki Premium'ni tezkor xarid qilish, username'ni oldindan tekshirish va buyurtma holatini kuzatish.</p>
-                </div>
-                <div class="elevated-card rounded-xl p-3.5 space-y-1">
-                    <div class="font-bold text-main text-[13px]">Telegram gift bozori</div>
-                    <p class="text-sub leading-relaxed">Oddiy va noyob giftlarni ko'rish, sotuvga qo'yish, sotib olish hamda o'z giftlaringizni boshqarish.</p>
-                </div>
-                <div class="elevated-card rounded-xl p-3.5 space-y-1">
-                    <div class="font-bold text-main text-[13px]">Giveaway va hamkorlik</div>
-                    <p class="text-sub leading-relaxed">Guruh yoki kanallarda sovrinli tanlov yaratish, gift tanlash, ishtirokchilar va g'oliblarni boshqarish.</p>
-                </div>
-                <div class="elevated-card rounded-xl p-3.5 space-y-1">
-                    <div class="font-bold text-main text-[13px]">Referral, tarif va bonuslar</div>
-                    <p class="text-sub leading-relaxed">Do'stlarni taklif qilish, narx-chegirma mukofotlari va maxsus tariflardan foydalanish.</p>
-                </div>
-                <div class="elevated-card rounded-xl p-3.5 space-y-1">
-                    <div class="font-bold text-main text-[13px]">MultiStarKerak</div>
-                    <p class="text-sub leading-relaxed">O'z Telegram botingizni ulab, StarKerak infratuzilmasida savdo boshlash.</p>
-                </div>
-                <div class="elevated-card rounded-xl p-3.5 space-y-1">
-                    <div class="font-bold text-main text-[13px]">PayStars.uz yagona hisobi</div>
-                    <p class="text-sub leading-relaxed">Bot, web dashboard va API'da bitta balans, bitta narx va umumiy buyurtmalar tarixi.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 7. BIZ HAQIMIZDA MODAL (Matches Screenshot 12) -->
-    <div id="about-modal" onclick="backdropClose(event, 'about-modal', 'about-sheet')" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-end justify-center opacity-0 pointer-events-none transition-opacity duration-200">
-        <div id="about-sheet" class="sheet-surface w-full max-w-md rounded-t-3xl p-5 space-y-3 transform translate-y-full max-h-[88vh] overflow-y-auto">
-            <div class="flex items-center justify-between pb-1">
-                <h3 class="font-bold text-lg text-main">Biz haqimizda</h3>
-                <button onclick="closeSheet('about-modal', 'about-sheet')" class="w-8 h-8 rounded-full elevated-card flex items-center justify-center text-sub hover:text-main tactile">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-            <div class="space-y-2.5 text-xs">
-                <div class="elevated-card rounded-xl p-3.5 space-y-1">
-                    <div class="font-bold text-main text-[13px]">PayStars • Star Commerce Network</div>
-                    <p class="text-sub leading-relaxed">StarKerak — Telegram ichidagi raqamli mahsulotlar, gift savdosi va avtomatlashtirilgan xizmatlarni bitta xavfsiz ekotizimga birlashtiradi.</p>
-                </div>
-                <div class="elevated-card rounded-xl p-3.5 space-y-1">
-                    <div class="font-bold text-main text-[13px]">Maqsadimiz</div>
-                    <p class="text-sub leading-relaxed">Telegram foydalanuvchilari va tadbirkorlariga sodda, tushunarli va ishonchli savdo vositalarini taqdim etish.</p>
-                </div>
-                <div class="elevated-card rounded-xl p-3.5 space-y-1">
-                    <div class="font-bold text-main text-[13px]">Xavfsizlik</div>
-                    <p class="text-sub leading-relaxed">Karta buyurtmalari, balans, web sessiyalar va API amallari serverda qayta tekshiriladi. Muhim amallar sessiya, CSRF va imzolangan servis so'rovlari bilan himoyalangan.</p>
-                </div>
-                <div class="elevated-card rounded-xl p-3.5 space-y-1">
-                    <div class="font-bold text-main text-[13px]">Bot versiyasi</div>
-                    <p class="text-sub">StarKerak Bot v2.2.0</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 8. YORDAM MARKAZI MODAL (Matches Screenshot 11) -->
-    <div id="help-modal" onclick="backdropClose(event, 'help-modal', 'help-sheet')" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-end justify-center opacity-0 pointer-events-none transition-opacity duration-200">
-        <div id="help-sheet" class="sheet-surface w-full max-w-md rounded-t-3xl p-5 space-y-3 transform translate-y-full max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between pb-1">
-                <h3 class="font-bold text-lg text-main">Yordam markazi</h3>
-                <button onclick="closeSheet('help-modal', 'help-sheet')" class="w-8 h-8 rounded-full elevated-card flex items-center justify-center text-sub hover:text-main tactile">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-            <div class="space-y-2 text-xs">
-                <div class="elevated-card rounded-xl p-3 space-y-1">
-                    <div class="font-bold text-main">Buyurtma bajarilmadimi?</div>
-                    <p class="text-sub leading-relaxed">Avval Tarix bo'limidan buyurtma holatini tekshiring. "Jarayonda" holatdagi buyurtmani takroran xarid qilmang.</p>
-                </div>
-                <div class="elevated-card rounded-xl p-3 space-y-1">
-                    <div class="font-bold text-main">Balans yoki to'lov muammosi</div>
-                    <p class="text-sub leading-relaxed">To'lov vaqti, summa va Telegram ID'ni tayyorlab, qo'llab-quvvatlash profiliga yozing. Maxfiy kod, parol yoki karta SMS kodini hech kimga bermang.</p>
-                </div>
-                <div class="elevated-card rounded-xl p-3 space-y-1">
-                    <div class="font-bold text-main">Gift chiqarishda xatolik</div>
-                    <p class="text-sub leading-relaxed">Giftni @starkerak profiliga yuborganingizni tekshiring. Kerak bo'lsa "Mening giftlarim" ichidagi yangilash tugmasini bosing.</p>
-                </div>
-                <div class="elevated-card rounded-xl p-3 space-y-1">
-                    <div class="font-bold text-main">Xavfsizlik bo'yicha yordam</div>
-                    <p class="text-sub leading-relaxed">Noma'lum PayStars sessiyasini darhol yakunlang va qo'llab-quvvatlash xizmatiga xabar bering.</p>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-2.5 pt-1">
-                <button onclick="showToast('@PayStarsSupport chat ochildi')" class="py-3 rounded-xl bg-ps-blue hover:bg-ps-blueHover text-white font-bold text-xs tactile">
-                    Yordamga yozish
-                </button>
-                <button onclick="copyToClipboard('https://paystars.uz')" class="py-3 rounded-xl elevated-card text-sky-400 font-bold text-xs tactile">
-                    PayStars.uz
-                </button>
-            </div>
-            <div class="text-center text-[10px] text-dim">StarKerak Bot • v2.2.0</div>
-        </div>
-    </div>
-
-    <!-- 9. SOZLAMALAR MODAL (Matches Screenshot 17) -->
-    <div id="settings-modal" onclick="backdropClose(event, 'settings-modal', 'settings-sheet')" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-end justify-center opacity-0 pointer-events-none transition-opacity duration-200">
-        <div id="settings-sheet" class="sheet-surface w-full max-w-md rounded-t-3xl p-5 space-y-4 transform translate-y-full max-h-[88vh] overflow-y-auto">
-            <div class="flex items-center justify-between">
-                <h3 class="font-bold text-lg text-main">Sozlamalar</h3>
-                <button onclick="closeSheet('settings-modal', 'settings-sheet')" class="w-8 h-8 rounded-full elevated-card flex items-center justify-center text-sub hover:text-main tactile">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-
-            <div class="elevated-card rounded-xl p-3 text-xs text-sub leading-relaxed">
-                Tanlovlar hisobingizga xavfsiz saqlanadi va keyingi qurilmalarda ham qo'llanadi.
-            </div>
-
-            <!-- Ko'rinish Theme Switcher -->
-            <div class="space-y-1.5">
-                <div class="text-xs font-bold text-main">Ko'rinish</div>
-                <div class="grid grid-cols-3 elevated-card p-1 rounded-xl text-xs font-semibold">
-                    <button onclick="setAppTheme('light', this)" class="theme-btn py-2 rounded-lg text-sub transition-all">Kunduzgi</button>
-                    <button onclick="setAppTheme('system', this)" class="theme-btn py-2 rounded-lg text-sub transition-all">Tizim</button>
-                    <button onclick="setAppTheme('dark', this)" class="theme-btn py-2 rounded-lg bg-ps-blue text-white transition-all">Tungi</button>
-                </div>
-            </div>
-
-            <!-- Til Language Switcher -->
-            <div class="space-y-1.5">
-                <div class="text-xs font-bold text-main">Til</div>
-                <div class="grid grid-cols-3 elevated-card p-1 rounded-xl text-xs font-semibold">
-                    <button onclick="setAppLang('uz', this)" class="lang-btn py-2 rounded-lg bg-ps-blue text-white transition-all">O'zbekcha</button>
-                    <button onclick="setAppLang('ru', this)" class="lang-btn py-2 rounded-lg text-sub transition-all">Русский</button>
-                    <button onclick="setAppLang('en', this)" class="lang-btn py-2 rounded-lg text-sub transition-all">English</button>
-                </div>
-            </div>
-
-            <!-- FastAPI ulanishi -->
-            <div class="space-y-1.5">
-                <div class="text-xs font-bold text-main">To'lov API (FastAPI)</div>
-                <div class="elevated-card rounded-xl p-3 space-y-2 text-xs">
-                    <input id="cfg-base" type="url" placeholder="https://sizning-domen.uz" class="w-full px-3 py-2 rounded-lg bg-transparent border border-white/10 text-main outline-none">
-                    <div class="grid grid-cols-2 gap-2">
-                        <input id="cfg-shop-id" type="number" inputmode="numeric" placeholder="shop_id" class="px-3 py-2 rounded-lg bg-transparent border border-white/10 text-main outline-none">
-                        <input id="cfg-shop-key" type="password" placeholder="shop_key" class="px-3 py-2 rounded-lg bg-transparent border border-white/10 text-main outline-none">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="saveApiConfig(false)" class="py-2.5 rounded-lg bg-ps-blue text-white font-bold tactile">Saqlash</button>
-                        <button onclick="testApiConnection()" class="py-2.5 rounded-lg bg-emerald-500 text-white font-bold tactile">Ulanishni tekshirish</button>
-                    </div>
-                    <div id="cfg-result" class="text-[11px] text-sub leading-relaxed">Bo'sh qoldirilsa, to'lovlar simulyatsiya rejimida ishlaydi.</div>
-                </div>
-            </div>
-
-            <!-- Xavfsizlik va sessiyalar -->
-            <div class="space-y-1.5">
-                <div class="text-xs font-bold text-main">Qo'shimcha</div>
-                <button onclick="toggleSessionsDrawer()" class="w-full elevated-card rounded-xl p-3.5 flex items-center justify-between text-left tactile">
-                    <div>
-                        <div class="font-bold text-xs text-main">Xavfsizlik va sessiyalar</div>
-                        <div class="text-[11px] text-sub">PayStars.uz faol web sessiyalarini ko'rish va yakunlash</div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-dim"></i>
-                </button>
-                <div id="active-sessions-box" class="hidden elevated-card rounded-xl p-3 space-y-2 text-xs">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="font-bold text-main">Telegram iOS • Tashkent</div>
-                            <div class="text-[10px] text-emerald-400">Joriy faol sessiya</div>
-                        </div>
-                        <span class="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 text-[10px] font-bold">Faol</span>
-                    </div>
-                </div>
-            </div>
-
-            <div id="settings-saved-label" class="text-center text-xs font-medium text-dim pt-1">Saqlandi</div>
-        </div>
-    </div>
-
-    <!-- 10. DYNAMIC AUXILIARY SHEET (Gift Inspection, My Gifts, Discounts, MultiBot, Roulette Info) -->
-    <div id="aux-modal" onclick="backdropClose(event, 'aux-modal', 'aux-sheet')" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-end justify-center opacity-0 pointer-events-none transition-opacity duration-200">
-        <div id="aux-sheet" class="sheet-surface w-full max-w-md rounded-t-3xl p-5 space-y-4 transform translate-y-full max-h-[88vh] overflow-y-auto">
-            <div class="flex items-center justify-between">
-                <h3 id="aux-title" class="font-bold text-lg text-main">Ma'lumot</h3>
-                <button onclick="closeSheet('aux-modal', 'aux-sheet')" class="w-8 h-8 rounded-full elevated-card flex items-center justify-center text-sub hover:text-main tactile">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-            <div id="aux-body" class="space-y-3"></div>
-        </div>
-    </div>
-
-    <script>
-        // ==================== STATE MANAGEMENT ====================
-        const STORAGE_KEY = 'paystars_miniapp_state_v2';
-        const DEFAULT_STATE = {
-            balance: 0,
-            totalVolume: 0,
-            totalTrades: 0,
-            successfulTrades: 0,
-            dailyCardVolume: 0,
-            rouletteTickets: 0,
-            streakClaimedDay1: false,
-            theme: 'dark',
-            lang: 'uz',
-            ownedGifts: [],
-            transactions: [
-                {
-                    id: '182694',
-                    type: 'stars',
-                    title: "Balansni to'ldirish",
-                    amount: 10338,
-                    date: '2026-10-21 23:17',
-                    status: 'Bekor Qilingan',
-                    statusType: 'cancelled'
-                }
-            ]
-        };
-
-        let appState = loadState();
-        let activePurchaseType = 'stars'; // 'stars' or 'premium'
-        let selectedPremiumMonths = 3;
-        let selectedPremiumPrice = 160000;
-        let selectedPayMethod = 'Karta';
-        let currentInvoiceBase = 10000;
-        let currentInvoiceExact = 10328;
-        let invoiceTimerInterval = null;
-        let isRouletteSpinning = false;
-
-        const MARKET_GIFTS = [
-            { id: 'TimelessBook-4335', price: 190000, emoji: '📘', rarity: 'rare', bg: 'from-slate-700/60 to-slate-800/80', isNew: true },
-            { id: 'BondedRing-442', price: 1999999, emoji: '💍', rarity: 'rare', bg: 'from-emerald-800/60 to-teal-900/80', isNew: true },
-            { id: 'CrimsonRing-108', price: 450000, emoji: '⭕', rarity: 'standard', bg: 'from-amber-800/50 to-stone-800/80', isNew: false },
-            { id: 'StarGrimoire-77', price: 320000, emoji: '📖', rarity: 'rare', bg: 'from-sky-800/60 to-indigo-900/80', isNew: false }
-        ];
-
-        const ROULETTE_PRIZES = [
-            { name: 'DIAMOND', icon: '💎', reward: 25000 },
-            { name: 'ROCKET', icon: '🚀', reward: 15000 },
-            { name: 'RING', icon: '💍', reward: 50000 },
-            { name: 'TROPHY', icon: '🏆', reward: 100000 }
-        ];
-
-        const STREAK_MILESTONES = [
-            { day: 1, title: "5 Stars qiymati — 1 075 so'm balans", req: "Karta orqali yakunlangan savdo jami kamida 10 000 so'm", active: true },
-            { day: 2, title: "10 Stars qiymati — 2 150 so'm balans", req: "Karta orqali yakunlangan savdo jami kamida 15 000 so'm", active: false },
-            { day: 3, title: "Teddy Bear — 15 Starslik gift", req: "Karta orqali yakunlangan savdo jami kamida 20 000 so'm", active: false },
-            { day: 4, title: "Heart Gift — 15 Starslik gift", req: "Karta orqali yakunlangan savdo jami kamida 30 000 so'm", active: false },
-            { day: 5, title: "Gift Box — 25 Starslik gift", req: "Karta orqali yakunlangan savdo jami kamida 40 000 so'm", active: false },
-            { day: 6, title: "1 ta narx-chegirma ticketi", req: "Karta orqali yakunlangan savdo jami kamida 50 000 so'm", active: false },
-            { day: 7, title: "1 ta narx-chegirma ticketi", req: "Karta orqali yakunlangan savdo jami kamida 60 000 so'm", active: false },
-            { day: 8, title: "1 ta narx-chegirma ticketi", req: "Karta orqali yakunlangan savdo jami kamida 75 000 so'm", active: false }
-        ];
-
-        function loadState() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                return raw ? { ...DEFAULT_STATE, ...JSON.parse(raw) } : { ...DEFAULT_STATE };
-            } catch (e) {
-                return { ...DEFAULT_STATE };
-            }
-        }
-
-        function saveState() {
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-            } catch (e) {}
-            syncUI();
-        }
-
-        function formatSum(num) {
-            return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + " so'm";
-        }
-
-        // ==================== REACTIVE UI SYNC ====================
-        function syncUI(animateBalance = false) {
-            const balEl = document.getElementById('header-balance');
-            if (animateBalance) {
-                const obj = { val: parseInt(balEl.dataset.val || 0, 10) };
-                anime({
-                    targets: obj,
-                    val: appState.balance,
-                    round: 1,
-                    duration: 650,
-                    easing: 'easeOutExpo',
-                    update: () => {
-                        balEl.innerText = formatSum(obj.val);
-                    }
-                });
-            } else {
-                balEl.innerText = formatSum(appState.balance);
-            }
-            balEl.dataset.val = appState.balance;
-
-            // Profile Stats
-            document.getElementById('stat-total-volume').innerText = formatSum(appState.totalVolume);
-            document.getElementById('stat-total-count').innerText = appState.totalTrades;
-            const rate = appState.totalTrades > 0 ? ((appState.successfulTrades / appState.totalTrades) * 100).toFixed(1) : '0.0';
-            document.getElementById('stat-success-rate').innerText = rate + '%';
-            document.getElementById('profile-gifts-subtitle').innerText = `${appState.ownedGifts.length} ta aktiv gift`;
-
-            // Roulette Progress
-            const target = 500000;
-            const pct = Math.min(100, (appState.totalVolume / target) * 100);
-            document.getElementById('roulette-progress-bar').style.width = pct + '%';
-            document.getElementById('roulette-current-val').innerText = formatSum(appState.totalVolume);
-            document.getElementById('roulette-tickets').innerText = appState.rouletteTickets;
-
-            const spinBtn = document.getElementById('roulette-spin-btn');
-            if (appState.rouletteTickets > 0 || appState.totalVolume >= target) {
-                spinBtn.className = "w-full py-3 rounded-xl bg-ps-blue hover:bg-ps-blueHover text-white font-bold text-xs tracking-wide shadow-lg shadow-sky-500/25 tactile";
-                spinBtn.innerText = "Barabanni aylantirish 🎰";
-            } else {
-                spinBtn.className = "w-full py-3 rounded-xl elevated-card text-dim font-bold text-xs tracking-wide tactile";
-                spinBtn.innerText = "Maqsad to'lishini kuting";
-            }
-
-            // Streak Progress
-            const dailyTarget = 10000;
-            const streakPct = Math.min(100, (appState.dailyCardVolume / dailyTarget) * 100);
-            document.getElementById('streak-progress-bar').style.width = streakPct + '%';
-            document.getElementById('streak-progress-text').innerText = `${Math.min(appState.dailyCardVolume, dailyTarget).toLocaleString('ru-RU')} / 10 000 so'm`;
-            const streakCta = document.getElementById('streak-cta-btn');
-            if (appState.streakClaimedDay1) {
-                streakCta.innerText = "Bugungi mukofot olingan ✓";
-                streakCta.className = "w-full py-3.5 rounded-xl bg-emerald-500/20 text-emerald-400 font-bold text-sm";
-            } else if (appState.dailyCardVolume >= dailyTarget) {
-                streakCta.innerText = "1 075 so'm mukofotni olish 🎁";
-                streakCta.className = "w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-sm shadow-lg tactile";
-            } else {
-                const rem = dailyTarget - appState.dailyCardVolume;
-                streakCta.innerText = `Yana ${rem.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} so'm savdo kerak`;
-                streakCta.className = "w-full py-3.5 rounded-xl bg-ps-blue hover:bg-ps-blueHover text-white font-bold text-sm shadow-lg shadow-sky-500/25 tactile";
-            }
-
-            renderTransactions('stars');
-        }
-
-        // ==================== TAB NAVIGATION & ANIMATIONS ====================
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-view').forEach(sec => sec.classList.add('hidden'));
-            const activeSec = document.getElementById(`tab-${tabId}`);
-            activeSec.classList.remove('hidden');
-
-            // Stagger entrance via Anime.js
-            const items = activeSec.querySelectorAll('.stagger-item');
-            if (items.length) {
-                anime({
-                    targets: items,
-                    opacity: [0, 1],
-                    translateY: [12, 0],
-                    delay: anime.stagger(45),
-                    duration: 320,
-                    easing: 'easeOutCubic'
-                });
-            } else {
-                anime({
-                    targets: activeSec,
-                    opacity: [0, 1],
-                    translateY: [10, 0],
-                    duration: 280,
-                    easing: 'easeOutCubic'
-                });
-            }
-
-            // Update bottom nav pill
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                const isTarget = btn.dataset.tab === tabId;
-                if (isTarget) {
-                    btn.className = "nav-btn flex flex-col items-center justify-center py-2 rounded-2xl bg-ps-blue text-white shadow-md shadow-sky-500/25 transition-all tactile";
-                    anime({ targets: btn, scale: [0.92, 1], duration: 260, easing: 'spring(1, 80, 12, 0)' });
-                } else {
-                    btn.className = "nav-btn flex flex-col items-center justify-center py-2 rounded-2xl text-sub hover:text-main transition-all tactile";
-                }
-            });
-        }
-
-        // ==================== ROULETTE ENGINE ====================
-        function initRouletteTrack() {
-            const track = document.getElementById('roulette-track');
-            const items = [];
-            for (let i = 0; i < 24; i++) {
-                const p = ROULETTE_PRIZES[i % ROULETTE_PRIZES.length];
-                items.push(`
-                    <div class="flex-shrink-0 w-24 h-20 rounded-xl bg-gradient-to-b from-[#172844] to-[#0E182B] border border-sky-400/20 flex flex-col items-center justify-center gap-1 shadow-inner">
-                        <span class="text-2xl">${p.icon}</span>
-                        <span class="text-[9px] font-extrabold tracking-wider text-white/90">${p.name}</span>
-                    </div>
-                `);
-            }
-            track.innerHTML = items.join('');
-        }
-
-        function handleRouletteAction() {
-            if (isRouletteSpinning) return;
-            if (appState.rouletteTickets <= 0 && appState.totalVolume < 500000) {
-                openRouletteRulesModal();
-                return;
-            }
-            isRouletteSpinning = true;
-            if (appState.rouletteTickets > 0) appState.rouletteTickets--;
-
-            const track = document.getElementById('roulette-track');
-            const winIdx = Math.floor(Math.random() * ROULETTE_PRIZES.length);
-            const prize = ROULETTE_PRIZES[winIdx];
-            const cardWidth = 106; // 96px + 10px gap
-            const targetOffset = -((12 + winIdx) * cardWidth) + 95;
-
-            anime({
-                targets: track,
-                translateX: [0, targetOffset],
-                duration: 3400,
-                easing: 'cubicBezier(0.12, 0.85, 0.22, 1)',
-                complete: () => {
-                    isRouletteSpinning = false;
-                    appState.balance += prize.reward;
-                    appState.transactions.unshift({
-                        id: Math.floor(182700 + Math.random() * 900).toString(),
-                        type: 'stars',
-                        title: `Baraban yutug'i (${prize.name})`,
-                        amount: prize.reward,
-                        date: getCurrentTimestamp(),
-                        status: 'Bajarildi',
-                        statusType: 'done'
-                    });
-                    saveState();
-                    syncUI(true);
-                    showToast(`Tabriklaymiz! ${prize.name} (+${formatSum(prize.reward)})`);
-                }
-            });
-        }
-
-        function openRouletteRulesModal() {
-            document.getElementById('aux-title').innerText = "Savdo barabani";
-            document.getElementById('aux-body').innerHTML = `
-                <div class="elevated-card rounded-xl p-3.5 text-xs text-sub leading-relaxed space-y-2">
-                    <p><strong class="text-main">Qanday aylantiriladi?</strong> Har 500 000 so'm umumiy savdo hajmiga yetganingizda sizga <strong class="text-sky-400">1 ta baraban ticketi</strong> taqdim etiladi.</p>
-                    <p>Sovrinlar: <strong class="text-main">DIAMOND (25 000 so'm)</strong>, <strong class="text-main">ROCKET (15 000 so'm)</strong>, <strong class="text-main">RING (50 000 so'm)</strong> va <strong class="text-main">TROPHY (100 000 so'm)</strong>.</p>
-                </div>
-                <button onclick="grantDemoTicket()" class="w-full py-3 rounded-xl bg-ps-blue hover:bg-ps-blueHover text-white font-bold text-xs tactile">
-                    Demo Ticket olish (Sinov uchun aylantirish)
-                </button>
-            `;
-            openSheet('aux-modal', 'aux-sheet');
-        }
-
-        function grantDemoTicket() {
-            appState.rouletteTickets += 1;
-            saveState();
-            closeSheet('aux-modal', 'aux-sheet');
-            showToast("1 ta sinov ticketi berildi!");
-        }
-
-        // ==================== LEADERBOARD ====================
-        const LEADERBOARD_DATA = {
-            bugun: [
-                { rank: 1, name: 'Юнусович', amount: "710 637 so'm" },
-                { rank: 2, name: 'Саидов', amount: "280 329 so'm" },
-                { rank: 3, name: 'S A R D O R ²⁵', amount: "225 089 so'm" },
-                { rank: 4, name: 'Abdullayev_A', amount: "215 139 so'm" },
-                { rank: 5, name: 'مُنَوَّر', amount: "170 570 so'm" },
-                { rank: 6, name: 'Diyor Isomiddinov', amount: "167 047 so'm" },
-                { rank: 7, name: 'Sarvar', amount: "160 034 so'm" },
-                { rank: 8, name: 'br', amount: "129 442 so'm" }
-            ],
-            hafta: [
-                { rank: 1, name: 'Юнусович', amount: "3 412 900 so'm" },
-                { rank: 2, name: 'Abdullayev_A', amount: "2 190 450 so'm" },
-                { rank: 3, name: 'Саидов', amount: "1 845 120 so'm" },
-                { rank: 4, name: 'S A R D O R ²⁵', amount: "1 320 000 so'm" },
-                { rank: 5, name: 'Diyor Isomiddinov', amount: "980 500 so'm" }
-            ],
-            oy: [
-                { rank: 1, name: 'Юнусович', amount: "14 850 000 so'm" },
-                { rank: 2, name: 'S A R D O R ²⁵', amount: "9 430 200 so'm" },
-                { rank: 3, name: 'Abdullayev_A', amount: "8 115 900 so'm" },
-                { rank: 4, name: 'Саидов', amount: "6 740 000 so'm" },
-                { rank: 5, name: 'Sarvar', amount: "5 290 100 so'm" }
-            ]
-        };
-
-        function switchLeaderboard(idx, period) {
-            const pill = document.getElementById('lb-pill');
-            pill.style.transform = `translateX(${idx * 100}%)`;
-            document.querySelectorAll('.lb-btn').forEach((b, i) => {
-                b.classList.toggle('text-white', i === idx);
-                b.classList.toggle('text-sub', i !== idx);
-            });
-            renderLeaderboard(period);
-        }
-
-        function renderLeaderboard(period) {
-            const list = document.getElementById('leaderboard-list');
-            const rows = LEADERBOARD_DATA[period] || LEADERBOARD_DATA.bugun;
-            list.innerHTML = rows.map(r => {
-                let rankBadge = `<span class="w-6 text-center font-extrabold text-xs text-main tabular-nums">${r.rank}.</span>`;
-                if (r.rank === 1) rankBadge = `<span class="w-6 text-center text-amber-400 text-sm"><i class="fa-solid fa-trophy"></i></span>`;
-                if (r.rank === 2) rankBadge = `<span class="w-6 text-center text-slate-300 text-sm"><i class="fa-solid fa-trophy"></i></span>`;
-                if (r.rank === 3) rankBadge = `<span class="w-6 text-center text-amber-600 text-sm"><i class="fa-solid fa-trophy"></i></span>`;
-
-                return `
-                    <div class="elevated-card rounded-xl px-3.5 py-2.5 flex items-center justify-between lb-row">
-                        <div class="flex items-center gap-2.5">
-                            ${rankBadge}
-                            <span class="font-semibold text-[13px] text-main">${r.name}</span>
-                        </div>
-                        <span class="font-bold text-[13px] text-main tabular-nums">${r.amount}</span>
-                    </div>
-                `;
-            }).join('');
-
-            anime({
-                targets: '.lb-row',
-                opacity: [0, 1],
-                translateX: [-8, 0],
-                delay: anime.stagger(30),
-                duration: 240,
-                easing: 'easeOutQuad'
-            });
-        }
-
-        // ==================== GIFTLAR MARKETPLACE ====================
-        function renderGiftsGrid() {
-            const filter = document.getElementById('gift-filter').value;
-            const sort = document.getElementById('gift-sort').value;
-            let items = [...MARKET_GIFTS];
-
-            if (filter === 'rare') items = items.filter(g => g.rarity === 'rare');
-            if (filter === 'standard') items = items.filter(g => g.rarity === 'standard');
-
-            if (sort === 'price-asc') items.sort((a, b) => a.price - b.price);
-            if (sort === 'price-desc') items.sort((a, b) => b.price - a.price);
-
-            const grid = document.getElementById('gifts-grid');
-            grid.innerHTML = items.map(g => `
-                <div onclick="openGiftBuyModal('${g.id}', ${g.price}, '${g.emoji}')" class="surface-card rounded-2xl overflow-hidden cursor-pointer group hover:border-sky-500/40 tactile">
-                    <div class="relative h-36 bg-gradient-to-br ${g.bg} gift-pattern-leaf flex items-center justify-center">
-                        <span class="text-6xl group-hover:scale-110 transition-transform duration-300 drop-shadow-lg">${g.emoji}</span>
-                        <span class="absolute bottom-2.5 right-2.5 w-6 h-6 rounded-full bg-ps-blue text-white flex items-center justify-center text-[11px] shadow">
-                            <i class="fa-brands fa-telegram"></i>
-                        </span>
-                    </div>
-                    <div class="p-3">
-                        <div class="font-bold text-xs text-sky-400 truncate">${g.id}</div>
-                        <div class="font-extrabold text-xs text-main mt-0.5 tabular-nums">${formatSum(g.price)}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function refreshGifts(btn) {
-            anime({
-                targets: btn.querySelector('i'),
-                rotate: '+=360',
-                duration: 450,
-                easing: 'easeInOutQuad'
-            });
-            renderGiftsGrid();
-            showToast("Giftlar ro'yxati yangilandi");
-        }
-
-        function openGiftBuyModal(id, price, emoji) {
-            document.getElementById('aux-title').innerText = id;
-            document.getElementById('aux-body').innerHTML = `
-                <div class="elevated-card rounded-2xl p-6 flex flex-col items-center justify-center gap-2">
-                    <span class="text-6xl">${emoji}</span>
-                    <div class="font-extrabold text-base text-main mt-1">${id}</div>
-                    <div class="text-xs font-bold text-sky-400 tabular-nums">${formatSum(price)}</div>
-                </div>
-                <div class="grid grid-cols-2 gap-2.5">
-                    <button onclick="purchaseGift('${id}', ${price}, '${emoji}', 'Balans')" class="py-3.5 rounded-xl elevated-card text-main font-bold text-xs tactile">
-                        Balansdan olish
-                    </button>
-                    <button onclick="purchaseGift('${id}', ${price}, '${emoji}', 'Karta')" class="py-3.5 rounded-xl bg-ps-blue hover:bg-ps-blueHover text-white font-bold text-xs shadow-lg shadow-sky-500/20 tactile">
-                        Karta orqali olish
-                    </button>
-                </div>
-            `;
-            openSheet('aux-modal', 'aux-sheet');
-        }
-
-        function quickBuyBaseGift(name, starsCost) {
-            const price = starsCost * 215;
-            openGiftBuyModal(`${name} (${starsCost} Stars)`, price, name === 'Teddy Bear' ? '🧸' : name === 'Heart Gift' ? '💝' : name === 'Gift Box' ? '🎁' : '🌹');
-        }
-
-        function purchaseGift(id, price, emoji, method) {
-            if (method === 'Balans' && appState.balance < price) {
-                showToast("Balansda mablag' yetarli emas!");
-                return;
-            }
-            if (method === 'Balans') {
-                appState.balance -= price;
-            } else {
-                appState.dailyCardVolume += price;
-            }
-            appState.totalVolume += price;
-            appState.totalTrades += 1;
-            appState.successfulTrades += 1;
-            appState.ownedGifts.push({ id, price, emoji, date: getCurrentTimestamp() });
-            appState.transactions.unshift({
-                id: Math.floor(182700 + Math.random() * 900).toString(),
-                type: 'giftlar',
-                title: `Gift: ${id}`,
-                amount: price,
-                date: getCurrentTimestamp(),
-                status: 'Bajarildi',
-                statusType: 'done'
-            });
-            saveState();
-            syncUI(true);
-            closeSheet('aux-modal', 'aux-sheet');
-            showToast(`${id} muvaffaqiyatli xarid qilindi!`);
-        }
-
-        // ==================== GIVEAWAY TAB ====================
-        function switchGiveawayTab(tab, btn) {
-            document.querySelectorAll('.gw-tab').forEach(b => {
-                b.className = "px-3.5 py-2 rounded-xl text-sub hover:text-main font-semibold text-xs whitespace-nowrap transition-all gw-tab";
-            });
-            btn.className = "px-3.5 py-2 rounded-xl bg-ps-blue text-white font-semibold text-xs whitespace-nowrap transition-all gw-tab";
-
-            const body = document.getElementById('giveaway-body');
-            if (tab === 'reklama') {
-                body.innerHTML = `
-                    <div class="py-16 flex flex-col items-center justify-center text-center space-y-3">
-                        <div class="w-14 h-14 rounded-2xl surface-card flex items-center justify-center text-sky-400 text-xl">
-                            <i class="fa-regular fa-star"></i>
-                        </div>
-                        <p class="text-xs font-medium text-sub">Hozircha reklama qilingan giveawaylar yo'q</p>
-                        <button onclick="openCreateGiveawayModal()" class="mt-2 px-4 py-2.5 rounded-xl bg-ps-blue hover:bg-ps-blueHover text-white font-bold text-xs shadow-lg shadow-sky-500/20 tactile">
-                            Giveaway yaratish
-                        </button>
-                    </div>
-                `;
-            } else if (tab === 'ishtirok') {
-                body.innerHTML = `
-                    <div class="surface-card rounded-2xl p-4 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2.5">
-                                <span class="text-2xl">🎁</span>
-                                <div>
-                                    <div class="font-bold text-xs text-main">PayStars Official #42</div>
-                                    <div class="text-[11px] text-sub">Sovrin: 500 Telegram Stars</div>
-                                </div>
-                            </div>
-                            <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold">Faol</span>
-                        </div>
-                        <button onclick="showToast('Siz muvaffaqiyatli ishtirokchiga aylandingiz!')" class="w-full py-2.5 rounded-xl bg-ps-blue text-white font-bold text-xs tactile">
-                            Ishtirok etish
-                        </button>
-                    </div>
-                `;
-            } else {
-                body.innerHTML = `
-                    <div class="py-16 flex flex-col items-center justify-center text-center space-y-3">
-                        <div class="w-14 h-14 rounded-2xl surface-card flex items-center justify-center text-sub text-xl">
-                            <i class="fa-solid fa-box-open"></i>
-                        </div>
-                        <p class="text-xs font-medium text-sub">Ma'lumotlar topilmadi</p>
-                    </div>
-                `;
-            }
-        }
-
-        function openCreateGiveawayModal() {
-            document.getElementById('aux-title').innerText = "Yangi Giveaway yaratish";
-            document.getElementById('aux-body').innerHTML = `
-                <div class="space-y-3 text-xs">
-                    <input type="text" placeholder="Kanal yoki guruh @username" class="w-full elevated-card rounded-xl px-3.5 py-3 text-main focus:outline-none focus:border-sky-500">
-                    <input type="number" value="100" placeholder="Stars miqdori" class="w-full elevated-card rounded-xl px-3.5 py-3 text-main font-bold tabular-nums focus:outline-none focus:border-sky-500">
-                    <button onclick="closeSheet('aux-modal', 'aux-sheet'); showToast('Giveaway moderatsiyaga yuborildi!')" class="w-full py-3.5 rounded-xl bg-ps-blue text-white font-bold tactile">
-                        Yaratish
-                    </button>
-                </div>
-            `;
-            openSheet('aux-modal', 'aux-sheet');
-        }
-
-        // ==================== TARIX (TRANSACTION HISTORY) ====================
-        function switchTarikhTab(idx, category) {
-            const pill = document.getElementById('tx-pill');
-            pill.style.transform = `translateX(${idx * 100}%)`;
-            document.querySelectorAll('.tx-btn').forEach((b, i) => {
-                b.classList.toggle('text-white', i === idx);
-                b.classList.toggle('text-sub', i !== idx);
-            });
-            renderTransactions(category);
-        }
-
-        function renderTransactions(category) {
-            const filtered = appState.transactions.filter(t => t.type === category);
-            document.getElementById('tx-count').innerText = `(${filtered.length})`;
-            const list = document.getElementById('tx-list');
-
-            if (!filtered.length) {
-                list.innerHTML = `
-                    <div class="py-12 text-center text-xs text-sub surface-card rounded-2xl">
-                        Ushbu bo'limda hali tranzaksiyalar yo'q
-                    </div>
-                `;
-                return;
-            }
-
-            list.innerHTML = filtered.map(tx => {
-                const isCancelled = tx.statusType === 'cancelled';
-                const statusBadge = isCancelled
-                    ? `<span class="px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-[10px] font-bold">${tx.status}</span>`
-                    : `<span class="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold">${tx.status}</span>`;
-
-                return `
-                    <div onclick="openTxReceipt('${tx.id}', '${tx.title}', ${tx.amount}, '${tx.date}', '${tx.status}')" class="surface-card rounded-2xl p-3.5 flex items-center justify-between cursor-pointer tactile">
-                        <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-10 h-10 rounded-xl bg-lime-500/15 flex items-center justify-center shrink-0">
-                                <span class="w-6 h-6 rounded-full bg-lime-400 text-slate-950 flex items-center justify-center text-xs font-black">
-                                    <i class="fa-solid fa-arrow-down"></i>
-                                </span>
-                            </div>
-                            <div class="min-w-0">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="font-bold text-[13px] text-main truncate">${tx.title}</span>
-                                    <span class="px-1.5 py-0.5 rounded elevated-card text-[10px] font-mono text-sub tabular-nums shrink-0">#${tx.id}</span>
-                                </div>
-                                <div class="text-xs font-bold text-sub mt-0.5 tabular-nums">${formatSum(tx.amount)}</div>
-                            </div>
-                        </div>
-                        <div class="flex flex-col items-end gap-1 shrink-0 ml-2">
-                            <span class="text-[10px] text-dim tabular-nums">${tx.date}</span>
-                            ${statusBadge}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function openTxReceipt(id, title, amount, date, status) {
-            document.getElementById('aux-title').innerText = `Buyurtma #${id}`;
-            document.getElementById('aux-body').innerHTML = `
-                <div class="elevated-card rounded-2xl p-4 space-y-2.5 text-xs">
-                    <div class="flex justify-between"><span class="text-sub">Xizmat</span><span class="font-bold text-main">${title}</span></div>
-                    <div class="flex justify-between"><span class="text-sub">Summa</span><span class="font-bold text-main tabular-nums">${formatSum(amount)}</span></div>
-                    <div class="flex justify-between"><span class="text-sub">Sana</span><span class="font-mono text-main tabular-nums">${date}</span></div>
-                    <div class="flex justify-between"><span class="text-sub">Holat</span><span class="font-bold text-sky-400">${status}</span></div>
-                </div>
-            `;
-            openSheet('aux-modal', 'aux-sheet');
-        }
-
-        // ==================== PURCHASE MODAL (STARS & PREMIUM) ====================
-        function openStarsModal() {
-            activePurchaseType = 'stars';
-            document.getElementById('purchase-modal-title').innerText = "Stars sotib olish";
-            document.getElementById('stars-qty-block').classList.remove('hidden');
-            document.getElementById('premium-duration-block').classList.add('hidden');
-            document.getElementById('premium-popover').classList.add('hidden');
-            updatePurchaseCalc();
-            openSheet('purchase-modal', 'purchase-sheet');
-        }
-
-        function openPremiumModal() {
-            activePurchaseType = 'premium';
-            document.getElementById('purchase-modal-title').innerText = "Premium sotib olish";
-            document.getElementById('stars-qty-block').classList.add('hidden');
-            document.getElementById('premium-duration-block').classList.remove('hidden');
-            updatePurchaseCalc();
-            openSheet('purchase-modal', 'purchase-sheet');
-        }
-
-        function togglePremiumDropdown() {
-            const pop = document.getElementById('premium-popover');
-            pop.classList.toggle('hidden');
-            if (!pop.classList.contains('hidden')) {
-                anime({ targets: pop, opacity: [0, 1], scale: [0.95, 1], duration: 200, easing: 'easeOutQuad' });
-            }
-        }
-
-        function selectPremiumPlan(months, price, label) {
-            selectedPremiumMonths = months;
-            selectedPremiumPrice = price;
-            document.getElementById('premium-selected-label').innerText = label;
-            [3, 6, 12].forEach(m => {
-                document.getElementById(`check-${m}`).classList.toggle('opacity-0', m !== months);
-            });
-            document.getElementById('premium-popover').classList.add('hidden');
-            updatePurchaseCalc();
-        }
-
-        function fillMyUsername() {
-            document.getElementById('username-input').value = 'zakon_ceo1';
-            updatePurchaseCalc();
-            showToast("@zakon_ceo1 tanlandi");
-        }
-
-        function setStarQty(val) {
-            document.getElementById('qty-input').value = val;
-            updatePurchaseCalc();
-        }
-
-        function selectPayMethod(method, btn) {
-            selectedPayMethod = method;
-            document.getElementById('selected-pay-name').innerText = method;
-            document.querySelectorAll('.pay-btn').forEach(b => {
-                b.className = "pay-btn flex flex-col items-center justify-center py-2.5 px-1 rounded-xl elevated-card text-sub tactile";
-            });
-            btn.className = "pay-btn flex flex-col items-center justify-center py-2.5 px-1 rounded-xl elevated-card border-sky-500 bg-sky-500/15 text-main tactile";
-        }
-
-        function updatePurchaseCalc() {
-            const user = document.getElementById('username-input').value.trim();
-            const submitBtn = document.getElementById('purchase-submit-btn');
-            let total = 0;
-
-            if (activePurchaseType === 'stars') {
-                const qty = Math.max(0, parseInt(document.getElementById('qty-input').value || '0', 10));
-                total = qty * 215;
-            } else {
-                total = selectedPremiumPrice;
-            }
-
-            document.getElementById('purchase-total-price').innerText = "≈ " + formatSum(total);
-
-            if (user.length > 0 && total > 0) {
-                submitBtn.className = "w-full py-3.5 rounded-xl bg-ps-blue hover:bg-ps-blueHover text-white font-bold text-sm shadow-lg shadow-sky-500/25 tactile";
-            } else {
-                submitBtn.className = "w-full py-3.5 rounded-xl bg-slate-500/40 text-white/70 font-bold text-sm tactile";
-            }
-        }
-
-        document.getElementById('username-input').addEventListener('input', updatePurchaseCalc);
-
-        function submitPurchase() {
-            const user = document.getElementById('username-input').value.trim();
-            if (!user) {
-                showToast("Iltimos, avval username kiriting!");
-                document.getElementById('username-input').focus();
-                return;
-            }
-
-            let total = activePurchaseType === 'stars'
-                ? Math.max(50, parseInt(document.getElementById('qty-input').value || '50', 10)) * 215
-                : selectedPremiumPrice;
-
-            const title = activePurchaseType === 'stars'
-                ? `${document.getElementById('qty-input').value} Stars (@${user.replace('@', '')})`
-                : `Premium ${selectedPremiumMonths} oy (@${user.replace('@', '')})`;
-
-            if (selectedPayMethod === 'Balans') {
-                if (appState.balance < total) {
-                    showToast("Balansda mablag' yetarli emas!");
-                    return;
-                }
-                appState.balance -= total;
-                appState.totalVolume += total;
-                appState.totalTrades += 1;
-                appState.successfulTrades += 1;
-                appState.transactions.unshift({
-                    id: Math.floor(182700 + Math.random() * 900).toString(),
-                    type: 'stars',
-                    title,
-                    amount: total,
-                    date: getCurrentTimestamp(),
-                    status: 'Bajarildi',
-                    statusType: 'done'
-                });
-                saveState();
-                syncUI(true);
-                closeSheet('purchase-modal', 'purchase-sheet');
-                showToast("Xarid muvaffaqiyatli bajarildi!");
-            } else {
-                // Card / P2P invoice flow matching Screenshot 18
-                closeSheet('purchase-modal', 'purchase-sheet');
-                setTimeout(() => {
-                    openInvoiceSheet(total, title, false);
-                }, 220);
-            }
-        }
-
-        // ==================== TOP-UP & P2P INVOICE FLOW ====================
-        function openTopupModal() {
-            openSheet('topup-input-modal', 'topup-input-sheet');
-        }
-
-        function openWithdrawModal() {
-            document.getElementById('aux-title').innerText = "Balansdan o'tkazish";
-            document.getElementById('aux-body').innerHTML = `
-                <div class="elevated-card rounded-xl p-3.5 text-xs text-sub">
-                    Joriy balans: <strong class="text-main tabular-nums">${formatSum(appState.balance)}</strong>. Mablag'ni Stars, Premium yoki Gift xaridlarida komissiyasiz ishlatishingiz mumkin.
-                </div>
-                <button onclick="closeSheet('aux-modal', 'aux-sheet'); openStarsModal()" class="w-full py-3 rounded-xl bg-ps-blue text-white font-bold text-xs tactile">
-                    Stars sotib olish
-                </button>
-            `;
-            openSheet('aux-modal', 'aux-sheet');
-        }
-
-        function generateTopupInvoice() {
-            const amount = Math.max(5000, parseInt(document.getElementById('topup-amount-input').value || '10000', 10));
-            closeSheet('topup-input-modal', 'topup-input-sheet');
-            setTimeout(() => {
-                openInvoiceSheet(amount, "Balansni to'ldirish", true);
-            }, 220);
-        }
-
-        let pendingInvoiceOrder = null;
-        let invoicePollTimer = null;
-
-        // ---------- FastAPI ulanish sozlamalari ----------
-        const API_CFG_KEY = 'paystars_api_cfg_v1';
-        function getApiConfig() {
-            try {
-                const c = JSON.parse(localStorage.getItem(API_CFG_KEY) || '{}');
-                if (c.base && c.shopId && c.shopKey) return { base: c.base.replace(/\/+$/, ''), shopId: parseInt(c.shopId, 10), shopKey: c.shopKey };
-            } catch (e) {}
-            return null;
-        }
-        function loadApiConfigForm() {
-            try {
-                const c = JSON.parse(localStorage.getItem(API_CFG_KEY) || '{}');
-                document.getElementById('cfg-base').value = c.base || '';
-                document.getElementById('cfg-shop-id').value = c.shopId || '';
-                document.getElementById('cfg-shop-key').value = c.shopKey || '';
-            } catch (e) {}
-        }
-        function saveApiConfig(silent) {
-            const cfg = {
-                base: document.getElementById('cfg-base').value.trim(),
-                shopId: document.getElementById('cfg-shop-id').value.trim(),
-                shopKey: document.getElementById('cfg-shop-key').value.trim()
-            };
-            try { localStorage.setItem(API_CFG_KEY, JSON.stringify(cfg)); } catch (e) {}
-            if (silent === true) return;
-            showToast(cfg.base && cfg.shopId && cfg.shopKey ? "API sozlamalari saqlandi" : "API o'chirildi — simulyatsiya rejimi");
-        }
-        async function apiCall(path, body) {
-            const cfg = getApiConfig();
-            if (!cfg) throw new Error('API sozlanmagan');
-            const ctrl = new AbortController();
-            const to = setTimeout(() => ctrl.abort(), 15000);
-            try {
-                const r = await fetch(cfg.base + path, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-Shop-Key': cfg.shopKey },
-                    body: JSON.stringify({ shop_id: cfg.shopId, ...body }),
-                    signal: ctrl.signal
-                });
-                return await r.json();
-            } finally { clearTimeout(to); }
-        }
-        async function testApiConnection() {
-            saveApiConfig(true);
-            const out = document.getElementById('cfg-result');
-            if (!getApiConfig()) { out.innerText = "Domen, shop_id va shop_key kiriting."; return; }
-            out.innerText = "Tekshirilmoqda...";
-            try {
-                const d = await apiCall('/api/ping', {});
-                if (!d.ok) { out.innerHTML = `<span class="text-rose-500">✖ ${d.error || 'Xato'}</span>`; return; }
-                out.innerHTML = `<span class="text-emerald-400">✔ Ulandi:</span> ${d.name} (#${d.shop_id})<br>` +
-                    `Obuna: ${d.subscription_active ? 'faol' : 'tugagan'} (${(d.subscription_expires || '—').slice(0, 16)})<br>` +
-                    `Avto-tasdiq: ${d.connected ? 'ulangan' : 'ULANMAGAN'} · Kartalar: ${d.cards}<br>` +
-                    `Tarif: ${d.tariff || '—'} · Limit: ${d.notif_limit === null ? '∞' : d.notif_used + '/' + d.notif_limit}`;
-            } catch (e) {
-                out.innerHTML = `<span class="text-rose-500">✖ Serverga ulanib bo'lmadi: ${e.message}</span>`;
-            }
-        }
-
-        function fmtCard(n) { return String(n).replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ').trim(); }
-        function maskCard(n) { const d = String(n).replace(/\D/g, ''); return d.length >= 12 ? `${d.slice(0, 4)} **** **** ${d.slice(-4)}` : fmtCard(d); }
-        function renderInvoiceCards(cards) {
-            const box = document.getElementById('invoice-cards');
-            const head = cards.length > 1 ? `<div class="text-[11px] text-amber-400 font-bold">Istalgan kartaga o'tkazing (${cards.length} ta)</div>` : '';
-            box.innerHTML = head + cards.map(c => {
-                const raw = String(c.card_number).replace(/\D/g, '');
-                return `<div class="elevated-card rounded-xl p-2.5 space-y-1">
-                    <div class="flex items-center justify-between">
-                        <span class="text-sub font-medium">${(c.provider || 'Karta')}</span>
-                        <div class="flex items-center gap-2">
-                            <span class="font-mono font-bold text-main text-[13px] tracking-wider">${fmtCard(raw)}</span>
-                            <button onclick="copyToClipboard('${raw}')" class="px-2.5 py-1 rounded-lg elevated-card text-sky-400 font-bold text-[11px] tactile">Nusxalash</button>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between"><span class="text-sub font-medium">Karta egasi</span><span class="font-extrabold text-main">${c.card_holder || c.holder || '—'}</span></div>
-                </div>`;
-            }).join('');
-        }
-        function setInvoiceStatus(text, spin = true) {
-            const box = document.getElementById('invoice-status');
-            box.classList.remove('hidden');
-            document.getElementById('invoice-status-text').innerText = text;
-            box.querySelector('i').className = spin ? 'fa-solid fa-circle-notch fa-spin text-sky-400' : 'fa-solid fa-circle-info text-amber-400';
-        }
-        function startInvoiceTimer(seconds) {
-            if (invoiceTimerInterval) clearInterval(invoiceTimerInterval);
-            let left = Math.max(0, Math.floor(seconds));
-            const timerEl = document.getElementById('invoice-timer');
-            const tick = () => {
-                const m = String(Math.floor(left / 60)).padStart(2, '0');
-                const s = String(left % 60).padStart(2, '0');
-                timerEl.innerText = `${m}:${s}`;
-                left = Math.max(0, left - 1);
-            };
-            tick();
-            invoiceTimerInterval = setInterval(tick, 1000);
-        }
-
-        function openInvoiceSheet(baseAmount, title, isTopup) {
-            currentInvoiceBase = baseAmount;
-            pendingInvoiceOrder = { baseAmount, exactAmount: baseAmount, title, isTopup, live: false };
-            document.getElementById('invoice-title').innerText = isTopup ? "To'ldirish muvaffaqiyatli" : "To'lov hisob-fakturasi";
-            document.getElementById('invoice-base-amount').innerText = `${baseAmount} so'm`;
-            document.getElementById('invoice-status').classList.add('hidden');
-            const cfg = getApiConfig();
-
-            if (!cfg) {
-                // Simulyatsiya rejimi (API sozlanmagan)
-                const randomCents = Math.floor(111 + Math.random() * 888);
-                currentInvoiceExact = baseAmount + randomCents;
-                pendingInvoiceOrder.exactAmount = currentInvoiceExact;
-                document.getElementById('invoice-exact-amount').innerText = currentInvoiceExact.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-                renderInvoiceCards([{ provider: 'Karta', card_number: '5614680012349034', card_holder: 'A/T' }]);
-                document.getElementById('invoice-confirm-btn').classList.remove('hidden');
-                startInvoiceTimer(29 * 60 + 51);
-                openSheet('invoice-modal', 'invoice-sheet');
-                return;
-            }
-
-            // Jonli rejim: FastAPI /api/reserve
-            document.getElementById('invoice-confirm-btn').classList.add('hidden');
-            document.getElementById('invoice-exact-amount').innerText = '...';
-            document.getElementById('invoice-cards').innerHTML = '';
-            document.getElementById('invoice-timer').innerText = '--:--';
-            setInvoiceStatus("To'lov yaratilmoqda...");
-            openSheet('invoice-modal', 'invoice-sheet');
-            const order = pendingInvoiceOrder;
-            order.live = true;
-            order.requestId = 'web-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
-            apiCall('/api/reserve', { amount: baseAmount, request_id: order.requestId }).then(d => {
-                if (pendingInvoiceOrder !== order) return;
-                if (!d.ok) { setInvoiceStatus(d.error || "To'lov yaratib bo'lmadi", false); document.getElementById('invoice-exact-amount').innerText = '—'; return; }
-                order.paymentId = d.payment_id;
-                order.exactAmount = d.amount;
-                currentInvoiceExact = d.amount;
-                document.getElementById('invoice-exact-amount').innerText = String(d.amount).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-                renderInvoiceCards(d.cards && d.cards.length ? d.cards : [{ provider: d.provider, card_number: d.card_number, card_holder: d.card_holder }]);
-                const left = d.expires_ts && d.now_ts ? d.expires_ts - d.now_ts : 600;
-                order.deadline = Date.now() + left * 1000;
-                startInvoiceTimer(left);
-                setInvoiceStatus("To'lov kutilmoqda — avtomatik tasdiqlanadi...");
-                pollInvoice(order);
-            }).catch(e => {
-                if (pendingInvoiceOrder !== order) return;
-                setInvoiceStatus("Serverga ulanib bo'lmadi: " + e.message, false);
-            });
-        }
-
-        function pollInvoice(order) {
-            if (invoicePollTimer) clearTimeout(invoicePollTimer);
-            const run = async () => {
-                if (pendingInvoiceOrder !== order) return;
-                try {
-                    const d = await apiCall('/api/check', { payment_id: order.paymentId });
-                    if (pendingInvoiceOrder !== order) return;
-                    if (d.ok && d.status === 'completed') { finalizePayment(order); return; }
-                    if (d.ok && (d.status === 'expired' || d.status === 'cancelled')) {
-                        setInvoiceStatus(d.status === 'expired' ? "To'lov muddati tugadi. Qaytadan urinib ko'ring." : "To'lov bekor qilindi.", false);
-                        if (invoiceTimerInterval) clearInterval(invoiceTimerInterval);
-                        return;
-                    }
-                } catch (e) { /* tarmoq xatosi — qayta uriniladi */ }
-                invoicePollTimer = setTimeout(run, 3000);
-            };
-            invoicePollTimer = setTimeout(run, 2500);
-        }
-
-        function stopInvoicePolling() {
-            if (invoicePollTimer) { clearTimeout(invoicePollTimer); invoicePollTimer = null; }
-            if (invoiceTimerInterval) { clearInterval(invoiceTimerInterval); invoiceTimerInterval = null; }
-        }
-
-        function closeInvoice() {
-            const order = pendingInvoiceOrder;
-            stopInvoicePolling();
-            if (order && order.live && order.requestId && !order.done) {
-                apiCall('/api/cancel', { request_id: order.requestId }).catch(() => {});
-            }
-            pendingInvoiceOrder = null;
-            closeSheet('invoice-modal', 'invoice-sheet');
-        }
-
-        function copyExactInvoiceAmount() {
-            copyToClipboard(String(currentInvoiceExact));
-        }
-
-        function finalizePayment(order) {
-            const { baseAmount, exactAmount, title, isTopup } = order;
-            order.done = true;
-            if (isTopup) {
-                appState.balance += baseAmount;
-            } else {
-                appState.totalVolume += baseAmount;
-                appState.dailyCardVolume += baseAmount;
-                appState.totalTrades += 1;
-                appState.successfulTrades += 1;
-            }
-            appState.transactions.unshift({
-                id: order.paymentId ? String(order.paymentId) : Math.floor(182700 + Math.random() * 900).toString(),
-                type: 'stars',
-                title,
-                amount: exactAmount,
-                date: getCurrentTimestamp(),
-                status: 'Bajarildi',
-                statusType: 'done'
-            });
-            pendingInvoiceOrder = null;
-            stopInvoicePolling();
-            saveState();
-            syncUI(true);
-            closeSheet('invoice-modal', 'invoice-sheet');
-            showToast(isTopup ? `Balans +${formatSum(baseAmount)} ga to'ldirildi!` : "To'lov avtomatik tasdiqlandi!");
-        }
-
-        function confirmSimulatedPayment() {
-            if (!pendingInvoiceOrder || pendingInvoiceOrder.live) return;
-            finalizePayment(pendingInvoiceOrder);
-        }
-
-        // ==================== STREAK & PROFILE SUB-MODALS ====================
-        function openStreakModal() {
-            const list = document.getElementById('streak-milestones-list');
-            list.innerHTML = STREAK_MILESTONES.map(m => {
-                const isDay1 = m.day === 1;
-                return `
-                    <div class="rounded-2xl p-3 flex items-center justify-between gap-2.5 ${isDay1 ? 'border border-ps-blue/70 surface-card' : 'elevated-card'}">
-                        <div class="flex items-center gap-3 min-w-0">
-                            <span class="w-9 h-9 rounded-xl ${isDay1 ? 'bg-ps-blue text-white' : 'surface-card text-sky-400'} font-extrabold text-xs flex items-center justify-center shrink-0">
-                                ${m.day}
-                            </span>
-                            <div class="min-w-0">
-                                <div class="font-bold text-xs text-main truncate">${m.title}</div>
-                                <div class="text-[10px] text-sub leading-snug mt-0.5">${m.req}</div>
-                            </div>
-                        </div>
-                        <span class="text-[10px] font-bold ${isDay1 ? 'text-sky-400' : 'text-dim'} shrink-0">
-                            ${isDay1 ? 'Bugun' : 'Qulflangan'}
-                        </span>
-                    </div>
-                `;
-            }).join('');
-            openSheet('streak-modal', 'streak-sheet');
-        }
-
-        function handleStreakAction() {
-            if (appState.streakClaimedDay1) {
-                showToast("Bugungi mukofot allaqachon olingan");
-                return;
-            }
-            if (appState.dailyCardVolume >= 10000) {
-                appState.streakClaimedDay1 = true;
-                appState.balance += 1075;
-                saveState();
-                syncUI(true);
-                showToast("1 075 so'm balans hisobingizga qo'shildi!");
-            } else {
-                closeSheet('streak-modal', 'streak-sheet');
-                setTimeout(() => openStarsModal(), 220);
-            }
-        }
-
-        function openDiscountsModal() {
-            document.getElementById('aux-title').innerText = "Maxsus chegirmalar";
-            document.getElementById('aux-body').innerHTML = `
-                <div class="elevated-card rounded-2xl p-4 space-y-2 text-xs">
-                    <div class="flex justify-between items-center">
-                        <span class="font-bold text-main">Standart tarif</span>
-                        <span class="px-2 py-0.5 rounded bg-sky-500/15 text-sky-400 font-bold tabular-nums">215 so'm / Star</span>
-                    </div>
-                    <p class="text-sub">Barcha foydalanuvchilar uchun komissiyasiz tezkor yetkazib berish.</p>
-                </div>
-                <div class="elevated-card rounded-2xl p-4 space-y-2 text-xs border border-amber-500/30">
-                    <div class="flex justify-between items-center">
-                        <span class="font-bold text-amber-400">Referal / Seriya tarifi</span>
-                        <span class="px-2 py-0.5 rounded bg-amber-500/15 text-amber-400 font-bold tabular-nums">195 so'm / Star</span>
-                    </div>
-                    <p class="text-sub">Do'stlarni taklif qilganingizda yoki 15 kunlik savdo seriyasida ochiladi.</p>
-                </div>
-            `;
-            openSheet('aux-modal', 'aux-sheet');
-        }
-
-        function openMyGiftsModal() {
-            document.getElementById('aux-title').innerText = `Mening giftlarim (${appState.ownedGifts.length})`;
-            if (!appState.ownedGifts.length) {
-                document.getElementById('aux-body').innerHTML = `
-                    <div class="py-8 text-center space-y-3">
-                        <div class="text-4xl">🎁</div>
-                        <p class="text-xs text-sub">Sizda hozircha aktiv giftlar mavjud emas.</p>
-                        <button onclick="closeSheet('aux-modal', 'aux-sheet'); switchTab('giftlar')" class="px-4 py-2.5 rounded-xl bg-ps-blue text-white font-bold text-xs tactile">
-                            Giftlar bozoriga o'tish
-                        </button>
-                    </div>
-                `;
-            } else {
-                document.getElementById('aux-body').innerHTML = appState.ownedGifts.map(g => `
-                    <div class="elevated-card rounded-xl p-3 flex items-center justify-between text-xs">
-                        <div class="flex items-center gap-2.5">
-                            <span class="text-2xl">${g.emoji}</span>
-                            <div>
-                                <div class="font-bold text-main">${g.id}</div>
-                                <div class="text-[10px] text-sub tabular-nums">${g.date}</div>
-                            </div>
-                        </div>
-                        <button onclick="showToast('@zakon_ceo1 profiliga yuborish so\\'rovi yaratildi')" class="px-3 py-1.5 rounded-lg bg-ps-blue text-white font-bold text-[11px] tactile">
-                            Chiqarish
-                        </button>
-                    </div>
-                `).join('');
-            }
-            openSheet('aux-modal', 'aux-sheet');
-        }
-
-        function openMultiBotModal() {
-            document.getElementById('aux-title').innerText = "MultiStarKerak Bot";
-            document.getElementById('aux-body').innerHTML = `
-                <div class="elevated-card rounded-xl p-3.5 text-xs text-sub leading-relaxed">
-                    @BotFather dan yangi bot tokenini oling va quyiga joylashtiring. Sizning shaxsiy Star va Premium savdo botingiz avtomatik ishga tushadi.
-                </div>
-                <input type="text" placeholder="123456789:AAF_BotFather_Token..." class="w-full elevated-card rounded-xl px-3.5 py-3 text-xs font-mono text-main focus:outline-none focus:border-sky-500">
-                <button onclick="closeSheet('aux-modal', 'aux-sheet'); showToast('Token tekshirilmoqda...')" class="w-full py-3.5 rounded-xl bg-ps-blue text-white font-bold text-xs tactile">
-                    Botni ulash
-                </button>
-            `;
-            openSheet('aux-modal', 'aux-sheet');
-        }
-
-        function openReferralModal() { openSheet('referral-modal', 'referral-sheet'); }
-        function openWhatWeCanModal() { openSheet('whatwecan-modal', 'whatwecan-sheet'); }
-        function openAboutModal() { openSheet('about-modal', 'about-sheet'); }
-        function openHelpModal() { openSheet('help-modal', 'help-sheet'); }
-        function openSettingsModal() { loadApiConfigForm(); openSheet('settings-modal', 'settings-sheet'); }
-
-        // ==================== SETTINGS: THEME & LANGUAGE ====================
-        function setAppTheme(mode, btn) {
-            appState.theme = mode;
-            const html = document.documentElement;
-            if (mode === 'light') {
-                html.classList.remove('dark');
-            } else if (mode === 'dark') {
-                html.classList.add('dark');
-            } else {
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                html.classList.toggle('dark', prefersDark);
-            }
-            document.querySelectorAll('.theme-btn').forEach(b => {
-                b.className = "theme-btn py-2 rounded-lg text-sub transition-all";
-            });
-            if (btn) btn.className = "theme-btn py-2 rounded-lg bg-ps-blue text-white transition-all";
-            saveState();
-            flashSettingsSaved();
-        }
-
-        const I18N = {
-            uz: { miniApp: 'мини-приложение', buyStars: 'Stars olish', buyPremium: 'Premium olish' },
-            ru: { miniApp: 'мини-приложение', buyStars: 'Купить Stars', buyPremium: 'Купить Premium' },
-            en: { miniApp: 'mini app', buyStars: 'Buy Stars', buyPremium: 'Buy Premium' }
-        };
-
-        function setAppLang(lang, btn) {
-            appState.lang = lang;
-            document.querySelectorAll('.lang-btn').forEach(b => {
-                b.className = "lang-btn py-2 rounded-lg text-sub transition-all";
-            });
-            if (btn) btn.className = "lang-btn py-2 rounded-lg bg-ps-blue text-white transition-all";
-            const dict = I18N[lang] || I18N.uz;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const k = el.dataset.i18n;
-                if (dict[k]) el.innerText = dict[k];
-            });
-            saveState();
-            flashSettingsSaved();
-        }
-
-        function flashSettingsSaved() {
-            const el = document.getElementById('settings-saved-label');
-            el.innerText = "Saqlandi ✓";
-            el.classList.add('text-emerald-400');
-            setTimeout(() => {
-                el.innerText = "Saqlandi";
-                el.classList.remove('text-emerald-400');
-            }, 1500);
-        }
-
-        function toggleSessionsDrawer() {
-            document.getElementById('active-sessions-box').classList.toggle('hidden');
-        }
-
-        // ==================== SHEET SPRING HELPERS ====================
-        function openSheet(modalId, sheetId) {
-            const modal = document.getElementById(modalId);
-            const sheet = document.getElementById(sheetId);
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            anime({
-                targets: sheet,
-                translateY: ['100%', '0%'],
-                duration: 340,
-                easing: 'cubicBezier(0.22, 1, 0.36, 1)'
-            });
-        }
-
-        function closeSheet(modalId, sheetId) {
-            const modal = document.getElementById(modalId);
-            const sheet = document.getElementById(sheetId);
-            anime({
-                targets: sheet,
-                translateY: ['0%', '100%'],
-                duration: 240,
-                easing: 'easeInQuad',
-                complete: () => {
-                    modal.classList.add('opacity-0', 'pointer-events-none');
-                }
-            });
-        }
-
-        function backdropClose(e, modalId, sheetId) {
-            if (e.target.id === modalId) closeSheet(modalId, sheetId);
-        }
-
-        // ==================== UTILITIES ====================
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-msg').innerText = msg;
-            anime.remove(toast);
-            anime({
-                targets: toast,
-                opacity: [0, 1],
-                translateY: [-16, 0],
-                duration: 250,
-                easing: 'easeOutCubic',
-                complete: () => {
-                    setTimeout(() => {
-                        anime({
-                            targets: toast,
-                            opacity: 0,
-                            translateY: -16,
-                            duration: 220,
-                            easing: 'easeInQuad'
-                        });
-                    }, 2200);
-                }
-            });
-        }
-
-        function copyToClipboard(text) {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            document.body.removeChild(ta);
-            showToast("Nusxalandi: " + text);
-        }
-
-        function getCurrentTimestamp() {
-            const d = new Date();
-            const pad = n => String(n).padStart(2, '0');
-            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-        }
-
-        // ==================== BOOTSTRAP ====================
-        window.addEventListener('DOMContentLoaded', () => {
-            if (appState.theme === 'light') document.documentElement.classList.remove('dark');
-            initRouletteTrack();
-            renderLeaderboard('bugun');
-            renderGiftsGrid();
-            switchGiveawayTab('reklama', document.querySelector('.gw-tab'));
-            syncUI(false);
-
-            // Initial entrance animation
-            anime({
-                targets: '#tab-profil .stagger-item',
-                opacity: [0, 1],
-                translateY: [14, 0],
-                delay: anime.stagger(50),
-                duration: 380,
-                easing: 'easeOutCubic'
-            });
-        });
-    </script>
+    <section class="box steps" id="steps"><ol id="stl"></ol></section>
+
+    <section class="box">
+      <div class="sec">
+        <div class="row" style="padding:0"><div class="lbl" data-i="amount"></div><button class="cp" data-copy="amount"></button></div>
+        <div class="val mono" id="amt"></div>
+      </div>
+      <div id="cards"></div>
+    </section>
+
+    <div class="warn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M12 7v6M12 17h.01"/></svg></span><span id="wtx"></span></div>
+  </div>
+</main>
+</div>
+
+<div class="ov hide" id="ov">
+  <div class="mod" role="dialog" aria-modal="true">
+    <div class="hd"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M12 7v6M12 17h.01"/></svg></span><h3 data-i="rule"></h3></div>
+    <p data-i="only"></p>
+    <div class="big mono" id="mamt"></div>
+    <div class="t" data-i="exact"></div>
+    <div class="warn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M12 7v6M12 17h.01"/></svg></span><span data-i="paynet"></span></div>
+    <button class="btn" id="okb" type="button">✓ <span data-i="ok"></span></button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+var TOKEN=(location.pathname.match(/\/pay\/([a-z0-9]{20})/)||[])[1]||"";
+var D={
+uz:{secure:"Xavfsiz to'lov",pending:"To'lov kutilmoqda",left:"To'lov uchun qolgan vaqt",guide:"Qadamma-qadam yo'riqnoma",amount:"O'tkazma summasi",card:"Karta raqami",holder:"Qabul qiluvchi",copy:"Nusxa",copied:"Nusxalandi",warn:"Aynan {a} UZS o'tkazing — boshqa summa avtomatik tasdiqlanmaydi",rule:"Muhim qoida",only:"Faqat shu summani o'tkazing",exact:"Summani so'mgacha aniq o'tkazing. Boshqa summa avtomatik tasdiqlanmaydi.",paynet:"Paynet orqali to'lamang",ok:"Tushunarli",paid:"To'lov tasdiqlandi",paidsub:"Rahmat! To'lov muvaffaqiyatli qabul qilindi.",expired:"Vaqt tugadi",expiredsub:"To'lov muddati tugagan. Botga qaytib, yangi to'lov yarating.",cancelled:"To'lov bekor qilingan",cancelledsub:"Botga qaytib, yangi to'lov yarating.",notfound:"To'lov topilmadi",notfoundsub:"Havola noto'g'ri yoki eskirgan.",back:"Telegramga qaytish",notyet:"To'lov hali topilmadi. Birozdan keyin qayta urinib ko'ring.",neterr:"Aloqa xatosi",steps:["Bank ilovasini oching (Humo, Uzcard, Payme, Click va h.k.)","«Kartaga o'tkazma» bo'limini tanlang","Karta raqami va aniq summani kiriting","O'tkazmani tasdiqlang — to'lov avtomatik tasdiqlanadi"]},
+ru:{secure:"Безопасная оплата",pending:"Ожидает оплаты",left:"Осталось времени на оплату",guide:"Пошаговая инструкция",amount:"Сумма перевода",card:"Номер карты",holder:"Получатель",copy:"Копировать",copied:"Скопировано",warn:"Переведите ровно {a} UZS — другая сумма не подтвердится автоматически",rule:"Важное правило",only:"Переводите только эту сумму",exact:"Переведите сумму точно до сума. Другая сумма не подтвердится автоматически.",paynet:"Не оплачивайте через Paynet",ok:"Понятно",paid:"Оплата подтверждена",paidsub:"Спасибо! Платёж успешно получен.",expired:"Время истекло",expiredsub:"Срок оплаты истёк. Вернитесь в бота и создайте новый платёж.",cancelled:"Платёж отменён",cancelledsub:"Вернитесь в бота и создайте новый платёж.",notfound:"Платёж не найден",notfoundsub:"Ссылка неверна или устарела.",back:"Вернуться в Telegram",notyet:"Платёж пока не найден. Попробуйте чуть позже.",neterr:"Ошибка связи",steps:["Откройте банковское приложение (Humo, Uzcard, Payme, Click и т.д.)","Выберите перевод на карту","Введите номер карты и точную сумму","Подтвердите перевод — оплата подтвердится автоматически"]},
+en:{secure:"Secure payment",pending:"Awaiting payment",left:"Time left to pay",guide:"Step-by-step guide",amount:"Transfer amount",card:"Card number",holder:"Recipient",copy:"Copy",copied:"Copied",warn:"Transfer exactly {a} UZS — any other amount will not be confirmed automatically",rule:"Important rule",only:"Transfer only this amount",exact:"Send the amount exactly, to the last sum. Any other amount will not be confirmed automatically.",paynet:"Do not pay via Paynet",ok:"Got it",paid:"Payment confirmed",paidsub:"Thank you! Your payment has been received.",expired:"Time is up",expiredsub:"The payment window has expired. Go back to the bot and create a new payment.",cancelled:"Payment cancelled",cancelledsub:"Go back to the bot and create a new payment.",notfound:"Payment not found",notfoundsub:"The link is invalid or outdated.",back:"Back to Telegram",notyet:"Payment not found yet. Please try again in a moment.",neterr:"Network error",steps:["Open your banking app (Humo, Uzcard, Payme, Click, etc.)","Choose a card-to-card transfer","Enter the card number and the exact amount","Confirm — the payment is confirmed automatically"]}
+};
+var $=function(id){return document.getElementById(id)};
+var lang="uz",info=null,fetchedAt=0,busy=false,timer=null,poll=null;
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+function sess(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v)}catch(e){return null}}
+function t(k){return (D[lang]&&D[lang][k])||D.uz[k]||k}
+function fmt(n){return String(Math.round(Number(n)||0)).replace(/\B(?=(\d{3})+(?!\d))/g," ")}
+function card4(c){return String(c||"").replace(/\D/g,"").replace(/(\d{4})(?=\d)/g,"$1 ")}
+function toast(m){var e=$("toast");e.textContent=m;e.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(function(){e.classList.remove("on")},1500)}
+function copy(text,btn){
+  function ok(){if(btn){var o=btn.innerHTML;btn.classList.add("done");btn.textContent="✓ "+t("copied");setTimeout(function(){btn.classList.remove("done");btn.innerHTML=o},1400)}toast(t("copied"))}
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(ok,fb)}else fb();
+  function fb(){var a=document.createElement("textarea");a.value=text;a.setAttribute("readonly","");a.style.cssText="position:fixed;opacity:0;top:0";document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(e){}document.body.removeChild(a)}
+}
+var CP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M5 15V6a2 2 0 012-2h9"/></svg>';
+function cpBtn(){var b=document.createElement("button");b.className="cp";b.type="button";b.innerHTML=CP+"<span>"+t("copy")+"</span>";return b}
+
+function applyI18n(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-i]").forEach(function(n){n.textContent=t(n.dataset.i)});
+  document.querySelectorAll("#langs button").forEach(function(b){b.classList.toggle("on",b.dataset.l===lang)});
+  var l=$("stl");l.textContent="";
+  t("steps").forEach(function(s,i){var li=document.createElement("li"),e=document.createElement("em"),sp=document.createElement("span");e.textContent=i+1;sp.textContent=s;li.appendChild(e);li.appendChild(sp);l.appendChild(li)});
+  if(info)render();
+}
+function setTheme(v){document.documentElement.dataset.theme=v;document.querySelectorAll("#themes button").forEach(function(b){b.classList.toggle("on",b.dataset.t===v)});store("theme",v)}
+
+function left(){if(!info||info.status!=="pending")return 0;return Math.max(0,Math.round(info.left-(Date.now()-fetchedAt)/1000))}
+function tick(){
+  var s=left(),m=Math.floor(s/60),x=s%60;
+  $("time").textContent=(m<10?"0":"")+m+":"+(x<10?"0":"")+x;
+  var tot=Math.max(1,info?info.total:1),on=Math.ceil(10*s/tot);
+  var sg=$("segs").children;for(var i=0;i<sg.length;i++)sg[i].classList.toggle("on",i<on);
+  if(info&&info.status==="pending"&&s<=0&&!busy)load(false);
+}
+function show(name){["load","res","pay"].forEach(function(id){$(id).classList.toggle("hide",id!==name)})}
+function result(kind,title,sub,backUrl){
+  var r=$("res");r.className="box res "+(kind==="ok"?"ok":"bad");r.textContent="";
+  var big=document.createElement("div");big.className="big";
+  big.innerHTML=kind==="ok"?'<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  var h=document.createElement("h2");h.textContent=title;
+  var p=document.createElement("p");p.textContent=sub;
+  r.appendChild(big);r.appendChild(h);r.appendChild(p);
+  if(info&&info.amount&&kind==="ok"){var a=document.createElement("div");a.className="val mono sm";a.textContent=fmt(info.amount)+" UZS";r.appendChild(a)}
+  if(backUrl){var b=document.createElement("a");b.className="btn";b.href=backUrl;b.textContent=t("back");r.appendChild(b)}
+  show("res");
+}
+function render(){
+  if(!info)return;
+  $("shop").textContent=info.title||"";
+  document.title=(info.title||"")+" · "+t("secure");
+  var back=info.bot?"https://t.me/"+info.bot:"";
+  if(info.status==="completed")return result("ok",t("paid"),t("paidsub"),back);
+  if(info.status==="expired")return result("bad",t("expired"),t("expiredsub"),back);
+  if(info.status==="cancelled")return result("bad",t("cancelled"),t("cancelledsub"),back);
+  show("pay");
+  $("stt").textContent=t("pending");
+  var a=fmt(info.amount);
+  $("amt").textContent=a+" UZS";$("mamt").textContent=a+" UZS";
+  $("wtx").textContent=t("warn").replace("{a}",a);
+  var c=document.querySelector('[data-copy="amount"]');c.innerHTML=CP+"<span>"+t("copy")+"</span>";c.onclick=function(){copy(String(info.amount),c)};
+  var box=$("cards");box.textContent="";
+  (info.cards||[]).forEach(function(cd){
+    var w=document.createElement("div");w.className="sec cardtile";
+    var top=document.createElement("div");top.className="lbl";
+    var pv=document.createElement("span");pv.className="prov";pv.textContent=cd.provider||"";
+    top.textContent=t("card");top.appendChild(pv);
+    var num=document.createElement("div");num.className="val sm mono";num.textContent=card4(cd.card_number);
+    var cb=cpBtn();cb.style.marginTop="12px";cb.onclick=function(){copy(String(cd.card_number).replace(/\D/g,""),cb)};
+    w.appendChild(top);w.appendChild(num);
+    if(cd.holder){
+      var hd=document.createElement("div");hd.className="hold";
+      var l=document.createElement("div"),s=document.createElement("small"),b=document.createElement("b");
+      s.textContent=t("holder");b.textContent=cd.holder;l.appendChild(s);l.appendChild(b);
+      hd.appendChild(l);hd.appendChild(cb);cb.style.marginTop="0";w.appendChild(hd);
+    }else w.appendChild(cb);
+    box.appendChild(w);
+  });
+  if(!sess("rule_"+TOKEN)){$("ov").classList.remove("hide")}
+  tick();
+}
+function api(path,opt){
+  return fetch(path,Object.assign({cache:"no-store",credentials:"omit"},opt||{})).then(function(r){return r.json().catch(function(){return{ok:false}}).then(function(j){j._http=r.status;return j})});
+}
+function load(manual){
+  if(!TOKEN){info=null;show("res");result("bad",t("notfound"),t("notfoundsub"));return Promise.resolve()}
+  busy=true;if(manual)$("rf").classList.add("spin");
+  var req=manual?api("/api/pay/"+TOKEN+"/check",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"}):api("/api/pay/"+TOKEN);
+  return req.then(function(j){
+    if(j._http===404||j.ok===false&&j._http===404){info=null;result("bad",t("notfound"),t("notfoundsub"));stop();return}
+    if(j._http===429){if(manual)toast(t("neterr"));return}
+    if(!j.ok)return;
+    var prev=info&&info.status;info=j;fetchedAt=Date.now();render();
+    if(info.status!=="pending")stop();
+    else if(manual&&!j.confirmed)toast(t("notyet"));
+  }).catch(function(){if(manual)toast(t("neterr"))}).then(function(){busy=false;$("rf").classList.remove("spin")});
+}
+function stop(){clearInterval(timer);clearInterval(poll);timer=poll=null}
+function start(){
+  var s=$("segs");for(var i=0;i<10;i++)s.appendChild(document.createElement("i"));
+  timer=setInterval(function(){if(info)tick()},1000);
+  poll=setInterval(function(){if(!busy&&!document.hidden)load(false)},4000);
+  document.addEventListener("visibilitychange",function(){if(!document.hidden&&!busy)load(false)});
+}
+
+document.querySelectorAll("#langs button").forEach(function(b){b.onclick=function(){lang=b.dataset.l;store("lang",lang);applyI18n()}});
+document.querySelectorAll("#themes button").forEach(function(b){b.onclick=function(){setTheme(b.dataset.t)}});
+$("gd").onclick=function(){$("steps").classList.toggle("open")};
+$("rf").onclick=function(){if(!busy)load(true)};
+$("okb").onclick=function(){sess("rule_"+TOKEN,"1");$("ov").classList.add("hide")};
+
+var sl=store("lang"),nav=(navigator.language||"uz").slice(0,2).toLowerCase();
+lang=D[sl]?sl:(D[nav]?nav:"uz");
+var th=store("theme");setTheme(th==="dark"||th==="light"?th:(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+applyI18n();start();load(false);
+})();
+</script>
 </body>
 </html>
